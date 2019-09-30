@@ -1,0 +1,9 @@
+{
+  "settings": {
+    "api_url": "http://shama.nrschools.net/",
+    "test_api_url": "http://testshama.nrschools.net/"
+  },
+  "android": {
+    "latest_version": "0.9.1"
+  }
+}

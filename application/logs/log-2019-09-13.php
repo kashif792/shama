@@ -1,0 +1,11 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2019-09-13 06:02:06 --> Severity: error --> Exception: Too few arguments to function MY_Controller::GetSubjectsByClass(), 2 passed in C:\wamp64\www\shama\application\controllers\Reports.php on line 285 and exactly 3 expected C:\wamp64\www\shama\application\core\MY_Controller.php 424
+ERROR - 2019-09-13 10:34:34 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from location where id=
+ERROR - 2019-09-13 11:10:20 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from location where id=
+ERROR - 2019-09-13 11:10:25 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from location where id=
+ERROR - 2019-09-13 11:10:30 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from location where id=
+ERROR - 2019-09-13 11:10:47 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from location where id=
+ERROR - 2019-09-13 11:11:07 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from location where id=
+ERROR - 2019-09-13 11:11:43 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from location where id=
+ERROR - 2019-09-13 11:16:53 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from location where id=
