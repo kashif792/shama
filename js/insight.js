@@ -58,10 +58,10 @@ $(document).ready(function(){
        
         if($("#midresult").css('display') == 'block')
         {
-            $(".midresult").removeClass('lsubmenu-icon-rotate')
+            $(".result-icon").removeClass('lsubmenu-icon-rotate')
         }
         if($("#midresult").css('display') == 'none'){
-            $(".lsubmenu-icon").addClass('lsubmenu-icon-rotate')
+            $(".result-icon").addClass('lsubmenu-icon-rotate')
         }
         $("#midresult").slideToggle('slow')
      })

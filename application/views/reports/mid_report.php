@@ -460,6 +460,7 @@ require APPPATH.'views/__layout/footer.php';
                         $scope.getGradedata();
                     }
                     else{
+                        $scope.studentlist = [];
                         $scope.fallsemester = [];
                         $scope.springsemester = [];
                         message('','hide')

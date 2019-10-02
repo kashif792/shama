@@ -3511,3 +3511,6 @@ div#midbefore_container table td {
     font-weight: bold;
 
 }
+#midresult li a {
+    padding-left: 40px;
+}

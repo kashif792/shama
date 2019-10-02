@@ -1690,6 +1690,7 @@ class Ips extends MY_Controller
         $studentarray = array();
         if (!is_null($this->input->get('inputclassid')) && !is_null($this->input->get('inputsectionid')) && !is_null($this->input->get('inputsemesterid')) && !is_null($this->input->get('inputsessionid')))
         {
+            
             if ($this->input->get('inputsemesterid') == 'b')
             {
                 $studentlist = $this->operation->GetRowsByQyery("Select ss.studentid,iv.screenname,um.meta_value,iv.profile_image from student_semesters ss  INNER JOIN invantageuser iv on iv.id = ss.studentid INNER JOIN user_meta um on um.user_id = ss.studentid   where ss.classid = " . $this->input->get('inputclassid') . " AND ss.sectionid =" . $this->input->get('inputsectionid') . " AND ss.sessionid = " . $this->input->get('inputsessionid') . " AND um.meta_key = 'roll_number' AND ss.status = 'r'");

@@ -95,7 +95,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                             <tr ng-repeat="s in subjectlist"  ng-init="$last && finished()" >
                                                 <td>{{s.subject}}</td>
                                                 <td>{{s.evalution[0].mid}}</td>
-                                                 <td>{{s.evalution[0].final}}</td>
+                                                <td>{{s.evalution[0].final}}</td>
                                                 <td>{{s.evalution[0].sessional_marks}}</td>
                                                 <td>{{s.evalution[0].student_obtain_subject_marks}}</td>
                                                 <td>{{s.evalution[0].final_subject_total_marks}}</td>
@@ -480,6 +480,7 @@ require APPPATH.'views/__layout/footer.php';
                         $scope.getGradedata();
                     }
                     else{
+                        $scope.studentlist = [];
                         $scope.fallsemester = [];
                         $scope.springsemester = [];
                         message('','hide')

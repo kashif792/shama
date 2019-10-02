@@ -332,7 +332,7 @@
 			<a  href="javascript:void(0)" id="reports">
 				<i class="fa fa-user" aria-hidden="true"></i>
 				<span class="link_text"> Result Card</span>
-				<i class="fa fa-chevron-down lsubmenu-icon"></i>
+				<i class="fa fa-chevron-down result-icon pull-right"></i>
 			</a>
 			<ul class="nav nav-pills nav-stacked" id="midresult" style="display: none">
 				<li>
