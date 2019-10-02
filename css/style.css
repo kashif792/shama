@@ -3504,3 +3504,10 @@ div#midbefore_container table td {
     font-size: 12px;
     padding: 0 4px 0 4px;
 }
+.blue_back
+{
+    background: #1d96b2;
+    color: #fff;
+    font-weight: bold;
+
+}

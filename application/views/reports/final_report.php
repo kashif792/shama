@@ -21,7 +21,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 <div class="panel panel-default">
                     <!-- widget title -->
                     <div class="panel-heading">
-                        <label>Mid Term Report</label>
+                        <label>Final Result Card</label>
                         <label class="right-controllers">
                             <a href="javascript:void(0)" class="link-student" ng-click="printreport()" title="Print"><i class="fa fa-print" aria-hidden="true"></i></a>
                         </label>
@@ -71,6 +71,9 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                         <thead>
                                             <tr>
                                                 <th>Subject</th>
+                                                <th>Mid Term Marks</th>
+                                                <th>Final Term Marks</th>
+                                                <th>Sessional Marks</th>
                                                 <th>Obtained Marks</th>
                                                 <th>Total Marks</th>
                                                 <th>Grade</th>
@@ -78,18 +81,35 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                             </tr>
                                         </thead>
                                         <tbody class="report-body">
-                                           <tr ng-repeat="s in subjectlist"  ng-init="$last && finished()" >
+                                            
+                                            <tr ng-show="subjectlist.length > 0">
+                                                <td class="blue_back">Total Marks</td>
+                                                <td class="blue_back">{{total_mid_marks}}</td>
+                                                <td class="blue_back">{{total_final_marks}}</td>
+                                                <td class="blue_back">{{total_sessional_marks}}</td>
+                                                <td class="blue_back"></td>
+                                                <td class="blue_back"></td>
+                                                <td class="blue_back"></td>
+                                                
+                                            </tr>
+                                            <tr ng-repeat="s in subjectlist"  ng-init="$last && finished()" >
                                                 <td>{{s.subject}}</td>
                                                 <td>{{s.evalution[0].mid}}</td>
-                                                <td>{{s.evalution[0].total_marks}}</td>
+                                                 <td>{{s.evalution[0].final}}</td>
+                                                <td>{{s.evalution[0].sessional_marks}}</td>
+                                                <td>{{s.evalution[0].student_obtain_subject_marks}}</td>
+                                                <td>{{s.evalution[0].final_subject_total_marks}}</td>
                                                 <td>{{s.evalution[0].grade}}</td>
                                                 
                                             </tr>
                                             <tr ng-show="subjectlist.length > 0">
                                                 <td class="blue_back">Total Obtained Marks</td>
                                                 <td class="blue_back">{{obtain_marks}}</td>
-                                                <td class="blue_back">{{total_marks}}</td>
-                                                <td class="blue_back"></td>
+                                                <td class="blue_back">{{final_total_marks}}</td>
+                                                <td class="blue_back">{{session_total_marks}}</td>
+                                                <td class="blue_back">{{student_total_obtain_subject_marks}}</td>
+                                                <td class="blue_back">{{final_count_subject_total_marks}}</td>
+                                                <td class="blue_back">{{grade}}</td>
                                                 
                                             </tr>
                                              <tr ng-hide="subjectlist.length > 0">
@@ -486,22 +506,24 @@ require APPPATH.'views/__layout/footer.php';
                 
             }
 
-            httppostrequest('<?php echo base_url(); ?>midstudentreportdata',data).then(function(response){
+            httppostrequest('<?php echo base_url(); ?>finalstudentreportdata',data).then(function(response){
                 console.log(response);
                 if(response.length > 0)
                 {
                     //$scope.subjectlist = response;
-                    if(response[0].semester == 'Fall')
-                    {
-                        $scope.subjectlist = response[0].result;
-                    }
-                    else{
-                        $scope.springsemester = response[0].result;
-                    }
+                    $scope.subjectlist = response[0].result;
+                    
                      $scope.grade = response[0].grade;
                      $scope.obtain_marks = response[0].obtain_marks;
+                     $scope.final_total_marks = response[0].final_total_marks;
+                     $scope.session_total_marks = response[0].session_total_marks;
+                     $scope.final_count_subject_total_marks = response[0].final_count_subject_total_marks;
+                     $scope.student_total_obtain_subject_marks = response[0].student_total_obtain_subject_marks;
                      $scope.percent = response[0].percent;
-                     $scope.total_marks = response[0].total_marks;
+                     $scope.grade = response[0].grade;
+                     $scope.total_mid_marks = response[0].total_mid_marks;
+                     $scope.total_final_marks = response[0].total_final_marks;
+                     $scope.total_sessional_marks = response[0].total_sessional_marks;
                 }
                 else{
                     $scope.resultlist = [];

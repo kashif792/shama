@@ -20,7 +20,10 @@ defined('BREAK_START') OR define('BREAK_START', '9:36');
 defined('BREAK_END') OR define('BREAK_END', '10:10');
 
 // Mid Term Total Marks
+defined('QUIZ_TOTAL_MARKS') OR define('QUIZ_TOTAL_MARKS', '10');
 defined('MID_TOTAL_MARKS') OR define('MID_TOTAL_MARKS', '30');
+defined('FINAL_TOTAL_MARKS') OR define('FINAL_TOTAL_MARKS', '50');
+defined('SISSIONAL_MARKS') OR define('SISSIONAL_MARKS', '20');
 
 /*
 |--------------------------------------------------------------------------

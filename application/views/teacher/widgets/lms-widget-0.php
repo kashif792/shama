@@ -904,12 +904,14 @@ $scope.doneProgressReport = function(){
                     if(response != null &&  response.length > 0)
                     {
                         var cont_str = '';
-                        var columnname = ['m','f']
+                        var columnname = ['m','f'];
+                        var quiz_total_marks = '<?php echo QUIZ_TOTAL_MARKS ?>';
                         for (var i = 0; i <= response.length-1; i++) {
                             cont_str += '<tr>'
                             cont_str += '<td width="60%">'+response[i].name+'</td>'
                             for (var k = 0; k < response[i].marks.length; k++) {
-                                cont_str += '<td width="20%"><input type="number" min="0" max="100" name="term_result" id="mid_result" data-studentsemesterid= "'+semesterid+'" data-studentsessionid= "'+sessionid+'" data-studentid = "'+response[i].studentid+'" data-marksid = "'+response[i].id+'" data-classid = "'+classid+'" data-sectionid = "'+sectionid+'" data-subjectid = "'+subjectid+'"  data-column ="'+columnname[k]+'"  data-quizid="'+response[i].quizid[k].quizid+'" value="'+response[i].marks[k].studentmarks+'"/></td>'
+
+                                cont_str += '<td width="20%"><input type="number" min="0" max="'+quiz_total_marks+'" name="term_result" id="mid_result" data-studentsemesterid= "'+semesterid+'" data-studentsessionid= "'+sessionid+'" data-studentid = "'+response[i].studentid+'" data-marksid = "'+response[i].id+'" data-classid = "'+classid+'" data-sectionid = "'+sectionid+'" data-subjectid = "'+subjectid+'"  data-column ="'+columnname[k]+'"  data-quizid="'+response[i].quizid[k].quizid+'" value="'+response[i].marks[k].studentmarks+'"/></td>'
                             }
                            cont_str += '</tr>'
                         }
@@ -1032,7 +1034,15 @@ $scope.doneProgressReport = function(){
                             cont_str += '<tr>'
                             cont_str += '<td width="60%">'+response[i].name+'</td>'
                             for (var k = 0; k < response[i].marks.length; k++) {
-                                cont_str += '<td width="20%"><input type="number" min="0" max="100" name="term_result" id="term_result" data-studentsemesterid= "'+semesterid+'" data-studentsessionid= "'+sessionid+'" data-studentid = "'+response[i].studentid+'" data-marksid = "'+response[i].id+'" data-classid = "'+classid+'" data-sectionid = "'+sectionid+'" data-subjectid = "'+subjectid+'" data-termid = "'+termid+'" data-column ="'+columnname[k]+'" value="'+response[i].marks[k].studentmarks+'"/></td>'
+                                if(columnname[k]=='m')
+                                {
+                                    var term_total_marks = '<?php echo MID_TOTAL_MARKS ?>';
+                                }
+                                else
+                                {
+                                    var term_total_marks = '<?php echo FINAL_TOTAL_MARKS ?>';
+                                }
+                                cont_str += '<td width="20%"><input type="number" min="0" max="'+term_total_marks+'" name="term_result" id="term_result" data-studentsemesterid= "'+semesterid+'" data-studentsessionid= "'+sessionid+'" data-studentid = "'+response[i].studentid+'" data-marksid = "'+response[i].id+'" data-classid = "'+classid+'" data-sectionid = "'+sectionid+'" data-subjectid = "'+subjectid+'" data-termid = "'+termid+'" data-column ="'+columnname[k]+'" value="'+response[i].marks[k].studentmarks+'"/></td>'
                             }
                            cont_str += '</tr>'
                         }

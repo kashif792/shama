@@ -16,3 +16,28 @@ ERROR - 2019-10-02 12:15:55 --> Query error: You have an error in your SQL synta
 ERROR - 2019-10-02 12:16:55 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by subjectid' at line 1 - Invalid query: SELECT id,classid,sectionid,tacher_uid FROM `quize` WHERE subjectid = 1017 AND classid = 85 AND sectionid = 78 AND semsterid = 1 AND sessionid = 42 AND tacher_uid =  group by subjectid
 ERROR - 2019-10-02 12:17:55 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by subjectid' at line 1 - Invalid query: SELECT id,classid,sectionid,tacher_uid FROM `quize` WHERE subjectid = 1017 AND classid = 85 AND sectionid = 78 AND semsterid = 1 AND sessionid = 42 AND tacher_uid =  group by subjectid
 ERROR - 2019-10-02 12:18:55 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by subjectid' at line 1 - Invalid query: SELECT id,classid,sectionid,tacher_uid FROM `quize` WHERE subjectid = 1017 AND classid = 85 AND sectionid = 78 AND semsterid = 1 AND sessionid = 42 AND tacher_uid =  group by subjectid
+ERROR - 2019-10-02 12:19:55 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'group by subjectid' at line 1 - Invalid query: SELECT id,classid,sectionid,tacher_uid FROM `quize` WHERE subjectid = 1017 AND classid = 85 AND sectionid = 78 AND semsterid = 1 AND sessionid = 42 AND tacher_uid =  group by subjectid
+ERROR - 2019-10-02 09:39:39 --> Severity: error --> Exception: syntax error, unexpected '$evalution_array' (T_VARIABLE) C:\wamp64\www\shama\application\controllers\Reports.php 603
+ERROR - 2019-10-02 09:40:07 --> Severity: error --> Exception: Unsupported operand types C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 09:40:33 --> Severity: error --> Exception: Unsupported operand types C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 09:58:23 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 09:59:11 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 09:59:16 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 09:59:18 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:00:40 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:00:43 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:00:44 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:00:45 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:00:45 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:00:45 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:00:45 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:00:50 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:01:24 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:01:25 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 10:01:25 --> Severity: error --> Exception: syntax error, unexpected ')' C:\wamp64\www\shama\application\controllers\Reports.php 601
+ERROR - 2019-10-02 11:23:25 --> Severity: error --> Exception: Call to undefined function float() C:\wamp64\www\shama\application\controllers\Reports.php 610
+ERROR - 2019-10-02 11:23:30 --> Severity: error --> Exception: Call to undefined function float() C:\wamp64\www\shama\application\controllers\Reports.php 610
+ERROR - 2019-10-02 11:55:26 --> Severity: error --> Exception: Call to undefined function int() C:\wamp64\www\shama\application\controllers\Reports.php 604
+ERROR - 2019-10-02 12:07:08 --> Severity: error --> Exception: syntax error, unexpected ';', expecting ')' C:\wamp64\www\shama\application\controllers\Reports.php 616
+ERROR - 2019-10-02 12:07:35 --> Severity: error --> Exception: syntax error, unexpected ';', expecting ')' C:\wamp64\www\shama\application\controllers\Reports.php 616
+ERROR - 2019-10-02 12:07:36 --> Severity: error --> Exception: syntax error, unexpected ';', expecting ')' C:\wamp64\www\shama\application\controllers\Reports.php 616

@@ -342,7 +342,7 @@
 					</a>
 				</li>
 				<li>
-					<a  href="javascript:void(0)">
+					<a  href="<?php echo base_url(); ?>finalreport">
 					<i class="fa fa-plus" aria-hidden="true"></i>
 					<span class="link_text"> Final Result</span>
 					</a>

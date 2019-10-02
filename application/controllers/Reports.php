@@ -38,6 +38,16 @@ class Reports extends MY_Controller
         $this->data['campuscity'] = $this->usercity;
         $this->load->view("reports/mid_report",$this->data);
     }
+    public function FinalReportView()
+    {
+        if(!($this->session->userdata('id')))
+        {
+            parent::redirectUrl('signin');
+        }
+        $this->data['schoolname'] = $this->campus;
+        $this->data['campuscity'] = $this->usercity;
+        $this->load->view("reports/final_report",$this->data);
+    }
     /**
      * Class report
      */
@@ -493,6 +503,165 @@ class Reports extends MY_Controller
                         'total_marks'=>round($all_total_marks,2),
                         'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
                         'grade'=>parent::GetGrade((float)(($student_obtain_marks/$all_total_marks)*100),$inputsessionid),
+                    ); 
+                }
+            }
+        }
+        echo json_encode($studentresult);
+    }
+    function FinalStudentReportBySubjectwize()
+    {
+        $request = json_decode( file_get_contents('php://input'));
+        $inputclassid = $this->security->xss_clean(trim($request->inputclassid));
+        $inputsectionid = $this->security->xss_clean(trim($request->inputsectionid));
+        //$inputsemesterid = $this->security->xss_clean(trim($request->inputsemesterid));
+        $inputsemesterid = 1;
+        $inputsessionid = $this->security->xss_clean(trim($request->inputsessionid));
+        $studentid = $this->security->xss_clean(trim($request->inputstudentid));
+
+        $error_array = array();
+        if (!is_int((int) $inputclassid) || !is_int((int) $inputsectionid)  || !is_int((int) $inputsessionid) || !is_int((int) $studentid) ) {
+            array_push($error_array,"Invalid data");
+        }
+             
+        if(count($error_array))
+        {
+            echo json_encode($error_array);
+            exit();
+        }
+
+        $studentresult = array();
+        if(count($error_array) == false)
+        {
+            $iteration = 0;
+            if($inputsemesterid == 'b')
+            {
+                $iteration = 1;
+            }
+            else{
+              
+                
+                $this->operation->table_name = 'semester';
+                $is_semester_dates_found = $this->operation->GetByWhere(array('id'=>$inputsemesterid));
+                
+            }
+            $subjectlist = parent::GetSubjectsByClass($inputclassid,(int)$inputsemesterid,$inputsessionid);
+             //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
+             //echo $inputclassid;
+            //echo $inputsemesterid;
+        //exit;
+             
+            if(count($subjectlist))
+            {   
+                $semesterlist = array('Fall','Spring');
+                $student_obtain_marks = 0;
+                $semester_name = "Fall";
+                $session_total_marks = 0;
+                $final_count_subject_total_marks = 0;
+                $final_result = "FAIL";
+                for ($i=0; $i <= $iteration ; $i++) { 
+                    
+                   $result = array();
+                   if($inputsemesterid == 'b')
+                    {
+                        $inputsemesterid = parent::GetSemesterByName($semesterlist[$i]);
+                        $inputsemesterid = $inputsemesterid[0]->id;
+                        $semester_name =  $inputsemesterid[0]->semester_name;
+                    }
+                    else{
+                        if($is_semester_dates_found[0]->semester_name == 'Fall')
+                        {
+                            $semester_name = "Fall";
+                        }
+                        else{
+                            $semester_name = "Spring";
+                        }
+                    }
+            
+                    foreach ($subjectlist as $key => $value) {
+                        
+
+                        $evalution_array = array();
+                        
+                        
+                        $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 1");
+                        $final = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 2");
+                        $sessional_marks = $this->operation->GetRowsByQyery('SELECT count(id) as total_quize,sum(marks) as total_sessional FROM quizzes_marks  where subject_id = '.$value->id.' AND student_id= '.$studentid." ");
+
+                        $mid_total_marks = $mid[0]->marks;
+                        $obtain_marks = $mid[0]->marks;
+                        $student_mid_obtain_marks += $mid_total_marks;
+                        $fin_total_marks += $final[0]->marks;
+                        $all_total_marks += MID_TOTAL_MARKS;
+                        $final_total_marks += FINAL_TOTAL_MARKS;
+
+                        // Calculate Total Sessional Marks
+                        $total_quize_marks = $sessional_marks[0]->total_quize*QUIZ_TOTAL_MARKS;
+                        $subject_sessional_marks = ($sessional_marks[0]->total_sessional/$total_quize_marks)*SISSIONAL_MARKS;
+                        $session_total_marks += (int)(round($subject_sessional_marks));
+                        $final_subject_total_marks = MID_TOTAL_MARKS+FINAL_TOTAL_MARKS+SISSIONAL_MARKS;
+                        $final_count_subject_total_marks += MID_TOTAL_MARKS+FINAL_TOTAL_MARKS+SISSIONAL_MARKS;
+                         // Calculate Obtain Marks
+                        $student_obtain_subject_marks = (int)$mid[0]->marks+(int)$final[0]->marks+(int)$subject_sessional_marks;
+                        $student_total_obtain_subject_marks += (int)$student_obtain_subject_marks;
+                        // Pass AND Fail Condition
+                        if($value->subject_name=='English')
+                        {
+                            if(parent::GetGrade((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid)!="F")
+                            {
+                                $final_result = "PASS";
+                            }
+                        }
+                        if($value->subject_name=='Math')
+                        {
+                            if(parent::GetGrade((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid)!="F")
+                            {
+                                $final_result = "PASS";
+                            }
+                        }
+                        if($value->subject_name=='Science')
+                        {
+                            if(parent::GetGrade((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid)!="F")
+                            {
+                                $final_result = "PASS";
+                            }
+                        }
+                        // End here 
+                        $evalution_array[] = array(
+                            
+                            'mid'=>(count($mid) ? $mid[0]->marks : 0),
+                            'final'=>(count($final) ? $final[0]->marks : 0),
+                            'sessional_marks'=>(int)(round($subject_sessional_marks)),
+                            'student_obtain_subject_marks'=>(int)($student_obtain_subject_marks),
+                            
+                            'grade'=>parent::GetGrade((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid),
+                            'obtain_marks'=>$obtain_marks,
+                            'total_marks'=>MID_TOTAL_MARKS,
+                            'final_subject_total_marks' => (int)($final_subject_total_marks),
+                        );    
+                        $result[] = array(
+                            'serail'=>$value->id,
+                            'subject'=>$value->subject_name,
+                            'evalution'=>$evalution_array,
+                          
+                        );
+                    }
+                    
+                    $studentresult[] = array(
+                        'result'=>$result,
+                        'semester'=>$semester_name,
+                        'obtain_marks'=> round($student_mid_obtain_marks,2),
+                        'total_marks'=>round($all_total_marks,2),
+                        'session_total_marks'=>round($session_total_marks,2),
+                        'final_total_marks'=>round($fin_total_marks,2),
+                        'final_count_subject_total_marks'=>round($final_count_subject_total_marks,2),
+                        'student_total_obtain_subject_marks'=>round($student_total_obtain_subject_marks,2),
+                        //'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
+                        'total_mid_marks'=>(int)MID_TOTAL_MARKS,
+                        'total_final_marks'=>(int)FINAL_TOTAL_MARKS,
+                        'total_sessional_marks'=>(int)SISSIONAL_MARKS,
+                        //'grade'=>parent::GetGrade((float)(($student_total_obtain_subject_marks/$final_count_subject_total_marks)*100),$inputsessionid),
+                        'grade'=>$final_result,
                     ); 
                 }
             }

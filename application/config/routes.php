@@ -382,9 +382,13 @@ $route['saveformula'] = 'Principal_Extension_controller/SaveEvaluation';
 $route['makeactivesemesterdates'] = 'Principal_Extension_controller/MakeSemesterActive';
 $route['getevalution'] = 'Principal_Extension_controller/GetEvaluation';
 $route['classreport'] = 'Reports/ClassReportView';
-// Mid Report
+// Reports
 $route['midreport'] = 'Reports/MidReportView';
+$route['finalreport'] = 'Reports/FinalReportView';
+
 $route['midstudentreportdata'] = 'Reports/MidStudentReportBySubjectwize';
+$route['finalstudentreportdata'] = 'Reports/FinalStudentReportBySubjectwize';
+
 $route['studentreport/(:any)/(:any)/(:any)/(:any)/(:any)'] = 'Reports/StudentReport/$1/$2/$3/$4/$5';
 $route['savegrade'] = 'Reports/SaveGrades';
 $route['removegrade'] = 'Reports/RemoveGrade';
