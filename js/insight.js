@@ -54,6 +54,18 @@ $(document).ready(function(){
         $("#lsubmenu").slideToggle('slow')
      })
     
+    $("#reports").click(function(){
+       
+        if($("#midresult").css('display') == 'block')
+        {
+            $(".midresult").removeClass('lsubmenu-icon-rotate')
+        }
+        if($("#midresult").css('display') == 'none'){
+            $(".lsubmenu-icon").addClass('lsubmenu-icon-rotate')
+        }
+        $("#midresult").slideToggle('slow')
+     })
+    
 
     /**
      * ---------------------------------------------------------

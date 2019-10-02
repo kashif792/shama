@@ -19,6 +19,9 @@ defined('ASSEMBLY_END') OR define('ASSEMBLY_END', '7:50');
 defined('BREAK_START') OR define('BREAK_START', '9:36');
 defined('BREAK_END') OR define('BREAK_END', '10:10');
 
+// Mid Term Total Marks
+defined('MID_TOTAL_MARKS') OR define('MID_TOTAL_MARKS', '30');
+
 /*
 |--------------------------------------------------------------------------
 | File and Directory Modes

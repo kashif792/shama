@@ -27,7 +27,17 @@ class Reports extends MY_Controller
         }
         
     }
-
+    /** Result Card **/
+    public function MidReportView()
+    {
+        if(!($this->session->userdata('id')))
+        {
+            parent::redirectUrl('signin');
+        }
+        $this->data['schoolname'] = $this->campus;
+        $this->data['campuscity'] = $this->usercity;
+        $this->load->view("reports/mid_report",$this->data);
+    }
     /**
      * Class report
      */
@@ -374,6 +384,121 @@ class Reports extends MY_Controller
         echo json_encode($studentresult);
     }
     
+    function MidStudentReportBySubjectwize()
+    {
+        $request = json_decode( file_get_contents('php://input'));
+        $inputclassid = $this->security->xss_clean(trim($request->inputclassid));
+        $inputsectionid = $this->security->xss_clean(trim($request->inputsectionid));
+        //$inputsemesterid = $this->security->xss_clean(trim($request->inputsemesterid));
+        $inputsemesterid = 1;
+        $inputsessionid = $this->security->xss_clean(trim($request->inputsessionid));
+        $studentid = $this->security->xss_clean(trim($request->inputstudentid));
+
+        $error_array = array();
+        if (!is_int((int) $inputclassid) || !is_int((int) $inputsectionid)  || !is_int((int) $inputsessionid) || !is_int((int) $studentid) ) {
+            array_push($error_array,"Invalid data");
+        }
+             
+        if(count($error_array))
+        {
+            echo json_encode($error_array);
+            exit();
+        }
+
+        $studentresult = array();
+        if(count($error_array) == false)
+        {
+            $iteration = 0;
+            if($inputsemesterid == 'b')
+            {
+                $iteration = 1;
+            }
+            else{
+              
+                
+                $this->operation->table_name = 'semester';
+                $is_semester_dates_found = $this->operation->GetByWhere(array('id'=>$inputsemesterid));
+                
+            }
+            $subjectlist = parent::GetSubjectsByClass($inputclassid,(int)$inputsemesterid,$inputsessionid);
+             //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
+             //echo $inputclassid;
+            //echo $inputsemesterid;
+        //exit;
+             
+            if(count($subjectlist))
+            {   
+                $semesterlist = array('Fall','Spring');
+                $student_obtain_marks = 0;
+                $semester_name = "Fall";
+                for ($i=0; $i <= $iteration ; $i++) { 
+                    
+                   $result = array();
+                   if($inputsemesterid == 'b')
+                    {
+                        $inputsemesterid = parent::GetSemesterByName($semesterlist[$i]);
+                        $inputsemesterid = $inputsemesterid[0]->id;
+                        $semester_name =  $inputsemesterid[0]->semester_name;
+                    }
+                    else{
+                        if($is_semester_dates_found[0]->semester_name == 'Fall')
+                        {
+                            $semester_name = "Fall";
+                        }
+                        else{
+                            $semester_name = "Spring";
+                        }
+                    }
+            
+                    foreach ($subjectlist as $key => $value) {
+                        $sum_subject = array();
+                        $student_quiz = array();
+                        
+                        
+
+                        $student_quiz[0] = (array_sum($sum_subject)/count($subjectlist));
+                        $student_quiz[1] = (array_sum($sum_subject)); 
+
+                      
+                        $evalution_array = array();
+    
+                        
+                        $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 1");
+                        //$final = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 2");
+
+                        $total_marks = $mid[0]->marks;
+                        $obtain_marks = $mid[0]->marks;
+                        $student_obtain_marks += $total_marks;
+                        $all_total_marks += MID_TOTAL_MARKS;
+                        
+                        $evalution_array[] = array(
+                            
+                            'mid'=>(count($mid) ? $mid[0]->marks : 0),
+                            'grade'=>parent::GetGrade((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid),
+                            'obtain_marks'=>$obtain_marks,
+                            'total_marks'=>MID_TOTAL_MARKS,
+                        );    
+                        $result[] = array(
+                            'serail'=>$value->id,
+                            'subject'=>$value->subject_name,
+                            'evalution'=>$evalution_array,
+                          
+                        );
+                    }
+
+                    $studentresult[] = array(
+                        'result'=>$result,
+                        'semester'=>$semester_name,
+                        'obtain_marks'=> round($student_obtain_marks,2),
+                        'total_marks'=>round($all_total_marks,2),
+                        'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
+                        'grade'=>parent::GetGrade((float)(($student_obtain_marks/$all_total_marks)*100),$inputsessionid),
+                    ); 
+                }
+            }
+        }
+        echo json_encode($studentresult);
+    }
     /**
      * Student report
      */
@@ -753,7 +878,7 @@ class Reports extends MY_Controller
 
         $active_session = parent::GetUserActiveSession();
 
-		$this->operation->table_name = 'semester_dates';
+        $this->operation->table_name = 'semester_dates';
 
         $active_semester = $this->operation->GetByWhere(array('session_id'=>$active_session[0]->id,'status'=>'a'));
             

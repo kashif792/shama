@@ -328,6 +328,27 @@
 			</a>
 		
 		</li>
+		<li class="">
+			<a  href="javascript:void(0)" id="reports">
+				<i class="fa fa-user" aria-hidden="true"></i>
+				<span class="link_text"> Result Card</span>
+				<i class="fa fa-chevron-down lsubmenu-icon"></i>
+			</a>
+			<ul class="nav nav-pills nav-stacked" id="midresult" style="display: none">
+				<li>
+					<a  href="<?php echo base_url(); ?>midreport">
+					<i class="fa fa-list" aria-hidden="true"></i>
+					<span class="link_text"> Mid Term Result</span>
+					</a>
+				</li>
+				<li>
+					<a  href="javascript:void(0)">
+					<i class="fa fa-plus" aria-hidden="true"></i>
+					<span class="link_text"> Final Result</span>
+					</a>
+				</li>
+			</ul>
+		</li>
 		<li class="<?php 
 					if($this->uri->segment(1) == 'classreport' || $this->uri->segment(1) == 'studentreport'){
 						echo 'active';
