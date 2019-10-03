@@ -47,10 +47,10 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                         <label for="inputSection">Section:</label>
                                         <select class="form-control"  ng-options="item.name for item in sectionslist track by item.id"  name="inputSection" id="inputSection"  ng-model="filterobj.section" ng-change="changeclass()"></select>
                                     </div>
-                                    <!-- <div class="form-group">
+                                    <div class="form-group">
                                         <label for="inputSemester">Semester:</label>
                                         <select class="form-control"    ng-options="item.name for item in semesterlist track by item.id"  name="inputSemester" id="inputSemester"  ng-model="filterobj.semester" ng-change="changeclass()"></select>
-                                    </div> -->
+                                    </div>
                                     <div class="form-group">
                                         <div class="form-group">
                                             <label for="inputDate">Student:</label>
@@ -501,7 +501,7 @@ require APPPATH.'views/__layout/footer.php';
                 inputclassid:$scope.filterobj.studentid.id,
                 inputclassid:$scope.filterobj.class.id,
                 inputsectionid:$scope.filterobj.section.id,
-                //inputsemesterid:$scope.filterobj.semester.id,
+                inputsemesterid:$scope.filterobj.semester.id,
                 inputsessionid:$scope.filterobj.session.id,
                 inputstudentid:$scope.filterobj.studentid.id,
                 

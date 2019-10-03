@@ -399,8 +399,8 @@ class Reports extends MY_Controller
         $request = json_decode( file_get_contents('php://input'));
         $inputclassid = $this->security->xss_clean(trim($request->inputclassid));
         $inputsectionid = $this->security->xss_clean(trim($request->inputsectionid));
-        //$inputsemesterid = $this->security->xss_clean(trim($request->inputsemesterid));
-        $inputsemesterid = 1;
+        $inputsemesterid = $this->security->xss_clean(trim($request->inputsemesterid));
+        //$inputsemesterid = 1;
         $inputsessionid = $this->security->xss_clean(trim($request->inputsessionid));
         $studentid = $this->security->xss_clean(trim($request->inputstudentid));
 
@@ -434,6 +434,7 @@ class Reports extends MY_Controller
              //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
              //echo $inputclassid;
             //echo $inputsemesterid;
+            //print_r($subjectlist);
         //exit;
              
             if(count($subjectlist))
@@ -514,12 +515,14 @@ class Reports extends MY_Controller
         $request = json_decode( file_get_contents('php://input'));
         $inputclassid = $this->security->xss_clean(trim($request->inputclassid));
         $inputsectionid = $this->security->xss_clean(trim($request->inputsectionid));
-        //$inputsemesterid = $this->security->xss_clean(trim($request->inputsemesterid));
-        $inputsemesterid = 1;
+        $inputsemesterid = $this->security->xss_clean(trim($request->inputsemesterid));
+        //$inputsemesterid = 1;
         $inputsessionid = $this->security->xss_clean(trim($request->inputsessionid));
         $studentid = $this->security->xss_clean(trim($request->inputstudentid));
 
         $error_array = array();
+        
+        
         if (!is_int((int) $inputclassid) || !is_int((int) $inputsectionid)  || !is_int((int) $inputsessionid) || !is_int((int) $studentid) ) {
             array_push($error_array,"Invalid data");
         }
@@ -548,6 +551,9 @@ class Reports extends MY_Controller
             $subjectlist = parent::GetSubjectsByClass($inputclassid,(int)$inputsemesterid,$inputsessionid);
              //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
              //echo $inputclassid;
+            //echo $inputsemesterid;
+            //print_r($subjectlist);
+            //echo $inputclassid;
             //echo $inputsemesterid;
         //exit;
              
