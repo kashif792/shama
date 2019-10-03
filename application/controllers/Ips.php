@@ -1459,7 +1459,7 @@ class Ips extends MY_Controller
                     }
                     else
                     {
-                        $marksarray = array(array('studentmarks' => 0), array('studentmarks' => 0));
+                        $marksarray = array(array('studentmarks' => 0));
                         
                     }
 

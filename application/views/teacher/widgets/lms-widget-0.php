@@ -30,7 +30,7 @@
                                                 <div class="panel panel-default" ng-repeat="sub in s.subjectlist">
                                                     <div class="panel-heading">
                                                         <h4 class="panel-title subjectheading">
-                                                            <a data-toggle="collapse"  class="subject {{sub.cssclass}}" data-parent="#sectioncontainer_{{p.classid}}{{s.sid}}" href="#sub_{{p.classid}}{{sub.sbid}}">
+                                                            <a data-toggle="collapse" ng-click="getSubjectProgressReport(sub.sbid,s.sid,p.semsterid,p.sessionid,p.classid);getSubjectEvualtionReport(p.classid,s.sid,sub.sbid,p.semsterid,p.sessionid)"   class="subject {{sub.cssclass}}" data-parent="#sectioncontainer_{{p.classid}}{{s.sid}}" href="#sub_{{p.classid}}{{sub.sbid}}">
                                                                 {{sub.subject_name}}
                                                             </a>
                                                         </h4>

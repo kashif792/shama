@@ -484,7 +484,7 @@ class Reports extends MY_Controller
                         
                         $evalution_array[] = array(
                             
-                            'mid'=>(count($mid) ? $mid[0]->marks : 0),
+                            'mid'=>(count($mid) ? $mid[0]->marks : "Waiting Result"),
                             'grade'=>parent::GetGrade((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid),
                             'obtain_marks'=>$obtain_marks,
                             'total_marks'=>MID_TOTAL_MARKS,
@@ -635,8 +635,8 @@ class Reports extends MY_Controller
                         // End here 
                         $evalution_array[] = array(
                             
-                            'mid'=>(count($mid) ? $mid[0]->marks : 0),
-                            'final'=>(count($final) ? $final[0]->marks : 0),
+                            'mid'=>(count($mid) ? $mid[0]->marks : "Waiting Result"),
+                            'final'=>(count($final) ? $final[0]->marks : "Waiting Result"),
                             'sessional_marks'=>(int)(round($subject_sessional_marks)),
                             'student_obtain_subject_marks'=>(int)($student_obtain_subject_marks),
                             
