@@ -744,7 +744,7 @@ class Ips extends MY_Controller
                 }
             }
         }
-        //echo json_encode($lessondetailarray);
+        echo json_encode($lessondetailarray);
     }
     function GetStudentName($studentid)
     {
@@ -1419,6 +1419,7 @@ class Ips extends MY_Controller
                 foreach ($resultlist as $key => $value)
                 {
                     // get Quizes 
+
                     $roles = $this->session->userdata('roles');
                     if ($roles[0]['role_id'] == 4)
                     {
@@ -1428,8 +1429,15 @@ class Ips extends MY_Controller
                     {
                         $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND s.status = 'a' AND se.status = 'a'  AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . " AND q.quiz_term = 'bt' order by q.quiz_term asc");
                     }
+                    
+                    if(count($query)==0)
+                    {
+                        $resultarray[] = "";
+                        exit;
+                    }
                     $marksarray = array();
                     $quizidarray = array();
+                    //$quizidarray = array('quizid' => 0);
                     if (count($query))
                     {
                         foreach ($query as $key => $value1)
@@ -1452,7 +1460,9 @@ class Ips extends MY_Controller
                     else
                     {
                         $marksarray = array(array('studentmarks' => 0), array('studentmarks' => 0));
+                        
                     }
+
                     $resultarray[] = array('id' => $value->id, 'quizid' => $quizidarray ,'marks' => $marksarray, 'studentid' => $value->studentid, 'name' => parent::getUserMeta($value->studentid, 'sfullname') . " (" . parent::getUserMeta($value->studentid, 'roll_number') . ")",);
                 }
             }
@@ -1481,6 +1491,11 @@ class Ips extends MY_Controller
                     else
                     {
                         $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND s.status = 'a' AND se.status = 'a'  AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . " AND q.quiz_term = 'at' order by q.quiz_term asc");
+                    }
+                    if(count($query)==0)
+                    {
+                        $resultarray[] = "";
+                        exit;
                     }
                     $marksarray = array();
                     $quizidarray = array();
@@ -1693,11 +1708,11 @@ class Ips extends MY_Controller
             
             if ($this->input->get('inputsemesterid') == 'b')
             {
-                $studentlist = $this->operation->GetRowsByQyery("Select ss.studentid,iv.screenname,um.meta_value,iv.profile_image from student_semesters ss  INNER JOIN invantageuser iv on iv.id = ss.studentid INNER JOIN user_meta um on um.user_id = ss.studentid   where ss.classid = " . $this->input->get('inputclassid') . " AND ss.sectionid =" . $this->input->get('inputsectionid') . " AND ss.sessionid = " . $this->input->get('inputsessionid') . " AND um.meta_key = 'roll_number' AND ss.status = 'r'");
+                $studentlist = $this->operation->GetRowsByQyery("Select ss.studentid,iv.screenname,um.meta_value,iv.profile_image from student_semesters ss  INNER JOIN invantageuser iv on iv.id = ss.studentid INNER JOIN user_meta um on um.user_id = ss.studentid   where ss.classid = " . $this->input->get('inputclassid') . " AND ss.sectionid =" . $this->input->get('inputsectionid') . " AND ss.sessionid = " . $this->input->get('inputsessionid') . " AND um.meta_key = 'roll_number'");
             }
             else
             {
-                $studentlist = $this->operation->GetRowsByQyery("Select ss.studentid,iv.screenname,um.meta_value,iv.profile_image from student_semesters ss  INNER JOIN invantageuser iv on iv.id = ss.studentid INNER JOIN user_meta um on um.user_id = ss.studentid   where ss.classid = " . $this->input->get('inputclassid') . " AND ss.sectionid =" . $this->input->get('inputsectionid') . " AND ss.semesterid = " . $this->input->get('inputsemesterid') . " AND ss.sessionid = " . $this->input->get('inputsessionid') . " AND um.meta_key = 'roll_number' AND ss.status = 'r'");
+                $studentlist = $this->operation->GetRowsByQyery("Select ss.studentid,iv.screenname,um.meta_value,iv.profile_image from student_semesters ss  INNER JOIN invantageuser iv on iv.id = ss.studentid INNER JOIN user_meta um on um.user_id = ss.studentid   where ss.classid = " . $this->input->get('inputclassid') . " AND ss.sectionid =" . $this->input->get('inputsectionid') . " AND ss.semesterid = " . $this->input->get('inputsemesterid') . " AND ss.sessionid = " . $this->input->get('inputsessionid') . " AND um.meta_key = 'roll_number'");
             }
             if (count($studentlist))
             {

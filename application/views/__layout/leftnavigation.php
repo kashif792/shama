@@ -331,10 +331,15 @@
 		<li class="">
 			<a  href="javascript:void(0)" id="reports">
 				<i class="fa fa-user" aria-hidden="true"></i>
-				<span class="link_text"> Result Card</span>
+				<span class="link_text"> Reports</span>
 				<i class="fa fa-chevron-down result-icon pull-right"></i>
 			</a>
 			<ul class="nav nav-pills nav-stacked" id="midresult" style="display: none">
+				<li><a  href="<?php echo base_url(); ?>classreport">
+				<i class="fa fa-signal" aria-hidden="true"></i>
+				<span class="link_text"> Class Reports</span>
+				</a>
+			</li>
 				<li>
 					<a  href="<?php echo base_url(); ?>midreport">
 					<i class="fa fa-list" aria-hidden="true"></i>
@@ -349,7 +354,7 @@
 				</li>
 			</ul>
 		</li>
-		<li class="<?php 
+		<!-- <li class="<?php 
 					if($this->uri->segment(1) == 'classreport' || $this->uri->segment(1) == 'studentreport'){
 						echo 'active';
 					}
@@ -358,7 +363,7 @@
 				<i class="fa fa-signal" aria-hidden="true"></i>
 				<span class="link_text"> Reports</span>
 			</a>
-		</li>
+		</li> -->
 		<?php } ?>
   </ul>
 </div>

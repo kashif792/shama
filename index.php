@@ -62,7 +62,7 @@
 		case 'zilonlahore':
 			$env = 'development';
 			break;
-		case '192.168.1.2':
+		case '192.168.1.2': case '192.168.1.21':
 			$env = 'development';
 			break;
 

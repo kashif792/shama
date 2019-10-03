@@ -184,7 +184,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Quizzes Marks Before Mid Term</h4>
-                <div class="row" id="result_mid_message">Marks will be saved automatically</div>
+                <div class="row" ng-show="evulationarray.length > 0" id="result_mid_message">Marks will be saved automatically</div>
             </div>
             
             <div class="modal-body" ng-init="no_data = 0;" style="min-height: 400px;max-height: 400px;overflow: auto;">
@@ -192,7 +192,7 @@
                     <div id="midbefore_container" class="marks_container"  style="overflow: auto;">
                         <table style="width: 100%;">
                         <thead>
-                            <tr>
+                            <tr ng-show="evulationarray.length > 0">
                                 <th>Student</th>
                                 <th ng-repeat="e in evulationarray" ng-if="e.term_status == 'bt'">
                                         {{e.name}} 
@@ -222,7 +222,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">Add Quizzes Marks After Mid Term</h4>
-                <div class="row" id="result_mid_message">Marks will be saved automatically</div>
+                <div ng-show="evulationarray.length > 0" class="row" id="result_mid_message">Marks will be saved automatically</div>
             </div>
             
             <div class="modal-body" ng-init="no_data = 0;" style="min-height: 400px;max-height: 400px;overflow: auto;">
@@ -230,7 +230,8 @@
                     <div id="midbefore_container" class="marks_container"  style="overflow: auto;">
                         <table style="width: 100%;">
                         <thead>
-                            <tr>
+
+                            <tr ng-show="evulationarray.length > 0">
                                 <th>Student</th>
                                 <th ng-repeat="e in evulationarray" ng-if="e.term_status == 'at'">
                                         {{e.name}} 
@@ -495,6 +496,7 @@
              $scope.eprocessfinished = false;
              $scope.isCourseTabActive = false
             GetEvulationHeader(subjectid,classid,sectionid,semsterid,sessionid);
+            
         }
 
          $scope.getPlanList = function(subjectid)
@@ -693,7 +695,9 @@ $scope.doneProgressReport = function(){
                                     inputsemester:semsterid,
                                     inputsession:sessionid})).then(function(response){
                     getQuizDetail(subjectid,classid,sectionid,semsterid,sessionid)
-                    //console.log(response);
+                    
+                    
+                    console.log(response);
                     if(response != null && response.length > 0)
                     {
                         $scope.evulationarray = response;
@@ -732,7 +736,7 @@ $scope.doneProgressReport = function(){
                                     inputsectionid:sectionid,
                                     inputsemester:semsterid,
                                     inputsession:sessionid})).then(function(response){
-                   //console.log(response);
+                   
                     if(response != null)
                     {
                       $scope.evulationlist = response;
@@ -891,8 +895,10 @@ $scope.doneProgressReport = function(){
         $scope.addmidtermresult = function(classid,sectionid,subjectid,semesterid,sessionid)
         {
             try{
-                 $scope.subjid = subjectid
+                 $scope.subjid = subjectid;
+                 var cont_str = '';
                 studentData = [];
+
                 httprequest(urlist.getmidtermsubjectresult,({
                                 class_id:classid,
                                 section_id:sectionid,
@@ -900,10 +906,12 @@ $scope.doneProgressReport = function(){
                                 semesterid:semesterid,
                                 sessionid:sessionid,
                                 })).then(function(response){
-                    //console.log(response)
+                    //getQuizDetail(subjectid,classid,sectionid,semsterid,sessionid)
+                    GetEvulationHeader(subjectid,classid,sectionid,semesterid,sessionid);
+                    
                     if(response != null &&  response.length > 0)
                     {
-                        var cont_str = '';
+                        
                         var columnname = ['m','f'];
                         var quiz_total_marks = '<?php echo QUIZ_TOTAL_MARKS ?>';
                         for (var i = 0; i <= response.length-1; i++) {
@@ -911,14 +919,14 @@ $scope.doneProgressReport = function(){
                             cont_str += '<td width="60%">'+response[i].name+'</td>'
                             for (var k = 0; k < response[i].marks.length; k++) {
 
-                                cont_str += '<td width="20%"><input type="number" min="0" max="'+quiz_total_marks+'" name="term_result" id="mid_result" data-studentsemesterid= "'+semesterid+'" data-studentsessionid= "'+sessionid+'" data-studentid = "'+response[i].studentid+'" data-marksid = "'+response[i].id+'" data-classid = "'+classid+'" data-sectionid = "'+sectionid+'" data-subjectid = "'+subjectid+'"  data-column ="'+columnname[k]+'"  data-quizid="'+response[i].quizid[k].quizid+'" value="'+response[i].marks[k].studentmarks+'"/></td>'
+                                cont_str += '<td width="20%"><input type="number" min="0" max="'+quiz_total_marks+'" name="term_result" id="mid_result" data-studentsemesterid= "'+semesterid+'" data-studentsessionid= "'+sessionid+'" data-studentid = "'+response[i].studentid+'" data-marksid = "'+response[i].id+'" data-classid = "'+classid+'" data-sectionid = "'+sectionid+'" data-subjectid = "'+subjectid+'"  data-column ="m"  data-quizid="'+response[i].quizid[k].quizid+'" value="'+response[i].marks[k].studentmarks+'"/></td>'
                             }
                            cont_str += '</tr>'
                         }
                         $("#resultmidbody").html(cont_str)
                     }
                     else{
-                        $("#resultmidbody").html("<tr><td colspan='3'>No student in class</td></tr>")
+                        $("#resultmidbody").html("<tr><td colspan='3' class='text-center'>No Quizzes found</td></tr>")
                     }
                 });
 
@@ -971,6 +979,7 @@ $scope.doneProgressReport = function(){
             try{
                  $scope.subjid = subjectid
                 studentData = [];
+                var cont_str = '';
                 httprequest(urlist.getfinaltermsubjectresult,({
                                 class_id:classid,
                                 section_id:sectionid,
@@ -978,10 +987,10 @@ $scope.doneProgressReport = function(){
                                 semesterid:semesterid,
                                 sessionid:sessionid,
                                 })).then(function(response){
-                    
+                    GetEvulationHeader(subjectid,classid,sectionid,semesterid,sessionid);
                     if(response != null &&  response.length > 0)
                     {
-                        var cont_str = '';
+                        
                         var columnname = ['m','f']
                         for (var i = 0; i <= response.length-1; i++) {
                             cont_str += '<tr>'
@@ -994,7 +1003,7 @@ $scope.doneProgressReport = function(){
                         $("#resultfinalbody").html(cont_str)
                     }
                     else{
-                        $("#resultfinalbody").html("<tr><td colspan='3'>No student in class</td></tr>")
+                        $("#resultfinalbody").html("<tr><td colspan='3' class='text-center'>No Quizzes found</td></tr>")
                     }
                 });
 
@@ -1069,6 +1078,7 @@ $scope.doneProgressReport = function(){
             $scope.isExamTabActive = true;
             getQuizDetail($scope.subjid,$scope.classid,$scope.sectionid,$scope.semesterid,$scope.sessionid)
 
+            
         })
 
         $(document).on('change','#term_result',function(){
