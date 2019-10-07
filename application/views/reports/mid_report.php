@@ -8,7 +8,9 @@ require APPPATH.'views/__layout/topbar.php';
 // require_left_navigation
 require APPPATH.'views/__layout/leftnavigation.php';
 ?>
-
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <div class="col-sm-10 col-md-10 col-lg-10 class-page "  ng-controller="class_report_ctrl" ng-init="processfinished=false">
     <?php
         // require_footer
@@ -27,6 +29,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                         </label>
                         <label class="right-controllers">
                             <a href="javascript:void(0)" class="link-student" ng-click="download()" title="Download"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+                            <!-- <a href="javascript:void(0)" class="link-student" onclick="getPDF()" title="Download"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a> -->
                         </label>
                     </div>
                     <div class="panel-body whide" id="class_report" >
@@ -63,7 +66,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
                             </div>
                         </div>
                         
-                        <div class="row padding-top">
+                        <div class="row padding-top canvas_div_pdf">
+
                             <div class="col-sm-12">
                                 <div>
                                            <div>
@@ -299,7 +303,7 @@ require APPPATH.'views/__layout/footer.php';
 
         $scope.changeclass = function()
         {
-            //$scope.getSubjectList();
+            $scope.getSubjectList();
             $scope.loadStudentByClass();
             $scope.active = 1;
             $scope.getGradedata();
@@ -313,7 +317,59 @@ require APPPATH.'views/__layout/footer.php';
             $scope.processfinished = true;
             $scope.eprocessfinished = true;
         }
+        // Generate PDF
+        function buildTableBody(data, columnsheader,columns) {
+            try{
+                var body = [];
+                if(columnsheader.length > 0)
+                {
+                    body.push(columnsheader);
+                }
 
+                data.forEach(function(row) {
+                    var dataRow = [];
+
+                    columns.forEach(function(column) {
+                        var columnvalue = null;
+                        if(column == 'subject')
+                        {
+                            columnvalue = row[column].toString();
+                            dataRow.push(columnvalue);
+                        }
+                        
+
+                    });
+
+                    
+
+                    if(dataRow.length > 0)
+                    {
+                        body.push(dataRow);
+                    }
+                    
+                });
+
+                return body;
+            }
+            catch(e){
+                console.log(e)
+            }
+        }
+        function table(data, columnsheader, columns ) {
+            try{
+                return {
+                    table: {
+                        headerRows: 1,
+                        body: buildTableBody(data,columnsheader,columns)
+                    }
+                };
+            }
+            catch(e){
+                console.log(e)
+            }
+            
+        } 
+        // End here 
 
         $scope.renderprintdata = function()
         {
@@ -322,7 +378,7 @@ require APPPATH.'views/__layout/footer.php';
                 var docDefinition = {
                     pageOrientation: 'landscape',
                     content: [
-                        {text:'Class Report',style:'report_header'},
+                        {text:'Mid Term Report',style:'report_header'},
                         {
                             margin: [0, 10, 0, 5],
                             columns: [
@@ -353,7 +409,8 @@ require APPPATH.'views/__layout/footer.php';
                                 },
                             ]
                         },
-                        table($scope.evulationlist,$scope.evalution_header,["screenname","score","term_result"]),
+                        table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Comments"],["Subject","Obtained Marks","Total Marks","Comments"]),
+                        
                    ],
 
                     styles: {
@@ -368,7 +425,6 @@ require APPPATH.'views/__layout/footer.php';
             }
             catch(e){}
         }
-
         $scope.printreport = function()
         {
             var reportobj = $scope.renderprintdata();
@@ -378,16 +434,34 @@ require APPPATH.'views/__layout/footer.php';
 
       $scope.download = function()
         {
-            var reportobj = $scope.renderprintdata();
-            if($scope.filterobj.semester.id == 'b')
-            {
-                var filename = decodeURIComponent($scope.filterobj.class.name)+"-"+decodeURIComponent($scope.filterobj.section.name)+"-final";
-            }
-            else{
-                var filename = decodeURIComponent($scope.filterobj.class.name)+"-"+decodeURIComponent($scope.filterobj.section.name)+"-"+decodeURIComponent($scope.filterobj.semester.name);
-            }
+
+            try{
             
-             pdfMake.createPdf(reportobj).download(filename);
+
+            var data ={
+                inputclassid:$scope.filterobj.studentid.id,
+                inputclassid:$scope.filterobj.class.id,
+                inputsectionid:$scope.filterobj.section.id,
+                inputsemesterid:$scope.filterobj.semester.id,
+                inputsessionid:$scope.filterobj.session.id,
+                inputstudentid:$scope.filterobj.studentid.id,
+                
+            }
+
+            httppostrequest('<?php echo base_url(); ?>midreportpdf',data).then(function(response){
+                console.log(response);
+                if(response.length > 0)
+                {
+                    
+                }
+                else{
+                    
+                }
+            });
+           }
+            catch(ex){
+                console.log(ex)
+            }
         }
 
 
@@ -518,10 +592,83 @@ require APPPATH.'views/__layout/footer.php';
            
         }
   });
+    function midpdf()
+            {
+                console.log("calling!");
+                console.log($("#inputRSession").val());
+                console.log($("#select_class").val());
+                console.log($("#inputSection").val());
+                console.log($("#inputSemester").val());
+                console.log($("#InputStudent").val());
+                $("#session_id").val($("#inputRSession").val());
+                $("#class_id").val($("#select_class").val());
+                $("#section_id").val($("#inputSection").val());
+                $("#semester_id").val($("#inputSemester").val());
+                $("#student_id").val($("#InputStudent").val());
+
+                $("#formpdf").submit();
+                // $.ajax({
+                //     'url': "<?php echo base_url()?>midreportpdf",
+                //     'type': 'POST',
+                //     'success': function (data) {
+                //         console.log(data);
+                        
+                //     }
+                // });
+            }
 </script>
+<form action="<?php echo base_url()?>midreportpdf" id="formpdf" method="post" target="_blank">
+    <input type="hidden" name="session_id"  id="session_id" >
+    <input type="hidden" name="class_id"  id="class_id" >
+    <input type="hidden" name="section_id"  id="section_id" >
+    <input type="hidden" name="semester_id" id="semester_id"  >
+    <input type="hidden" name="student_id" id="student_id" >
+</form>
 
 <style type="text/css">
     form.tab-form-demo .tab-pane {
         margin: 20px 20px;
     }
 </style>
+<!-- <script type="text/javascript">
+    function getPDF(){
+        if($("#InputStudent").val()==0)
+        {
+            alert("Please select Student");
+            return false;
+        }
+        var HTML_Width = $(".canvas_div_pdf").width();
+        var HTML_Height = $(".canvas_div_pdf").height();
+        var top_left_margin = 15;
+        var PDF_Width = HTML_Width+(top_left_margin*2);
+        var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
+        var canvas_image_width = HTML_Width;
+        var canvas_image_height = HTML_Height;
+        
+        var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
+        
+        $(".canvas_div_pdf").prepend('<div class="car-offers" >I want to download the current screen as a PDF/Image using html2canvas.js.</div>');
+        var header = '<div class="car-offers" >I want to download the current screen as a PDF/Image using html2canvas.js.</div>';
+        var body = $(".canvas_div_pdf")[0];
+        
+        html2canvas(body,{allowTaint:true}).then(function(canvas) {
+            canvas.getContext('3d');
+            
+            console.log(canvas.height+"  "+canvas.width);
+            
+            
+            var imgData = canvas.toDataURL("image/jpeg", 1.0);
+            var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
+            pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
+            
+            
+            for (var i = 1; i <= totalPDFPages; i++) { 
+                pdf.addPage(PDF_Width, PDF_Height);
+                pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
+            }
+            $(".car-offers").remove();
+            pdf.save("<?php echo uniqid()?>.pdf");
+
+        });
+    };
+</script> -->

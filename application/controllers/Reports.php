@@ -484,8 +484,8 @@ class Reports extends MY_Controller
                         
                         $evalution_array[] = array(
                             
-                            'mid'=>(count($mid) ? $mid[0]->marks : "Waiting Result"),
-                            'grade'=>parent::GetGrade((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid),
+                            'mid'=>(count($mid) ? $mid[0]->marks : " - "),
+                            'grade'=>(count($mid) ? parent::GetGrade((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid) : " - ") ,
                             'obtain_marks'=>$obtain_marks,
                             'total_marks'=>MID_TOTAL_MARKS,
                         );    
@@ -496,11 +496,18 @@ class Reports extends MY_Controller
                           
                         );
                     }
-
+                    if($student_obtain_marks==0)
+                    {
+                        $total_obtain_mid_marks = " - ";
+                    }
+                    else
+                    {
+                        $total_obtain_mid_marks = round($student_obtain_marks,2);
+                    }
                     $studentresult[] = array(
                         'result'=>$result,
                         'semester'=>$semester_name,
-                        'obtain_marks'=> round($student_obtain_marks,2),
+                        'obtain_marks'=> $total_obtain_mid_marks,
                         'total_marks'=>round($all_total_marks,2),
                         'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
                         'grade'=>parent::GetGrade((float)(($student_obtain_marks/$all_total_marks)*100),$inputsessionid),
@@ -1248,5 +1255,150 @@ class Reports extends MY_Controller
             echo json_encode($result);
         }
         catch(Exception $e){}
+    }
+    
+    function MidStudentPdfReport()
+    {
+        $inputclassid = 85;
+        $inputsectionid = 78;
+        $inputsemesterid = 1;
+        //$inputsemesterid = 1;
+        $inputsessionid = 42;
+        $studentid = 407;
+        $error_array = array();
+        if (!is_int((int) $inputclassid) || !is_int((int) $inputsectionid)  || !is_int((int) $inputsessionid) || !is_int((int) $studentid) ) {
+            array_push($error_array,"Invalid data");
+        }
+             
+        if(count($error_array))
+        {
+            echo json_encode($error_array);
+            exit();
+        }
+
+        $studentresult = array();
+        if(count($error_array) == false)
+        {
+            $iteration = 0;
+            if($inputsemesterid == 'b')
+            {
+                $iteration = 1;
+            }
+            else{
+              
+                
+                $this->operation->table_name = 'semester';
+                $is_semester_dates_found = $this->operation->GetByWhere(array('id'=>$inputsemesterid));
+                
+            }
+            $subjectlist = parent::GetSubjectsByClass($inputclassid,(int)$inputsemesterid,$inputsessionid);
+             //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
+            
+             
+            if(count($subjectlist))
+            {   
+                $semesterlist = array('Fall','Spring');
+                $student_obtain_marks = 0;
+                $semester_name = "Fall";
+                for ($i=0; $i <= $iteration ; $i++) { 
+                    
+                   $result = array();
+                   if($inputsemesterid == 'b')
+                    {
+                        $inputsemesterid = parent::GetSemesterByName($semesterlist[$i]);
+                        $inputsemesterid = $inputsemesterid[0]->id;
+                        $semester_name =  $inputsemesterid[0]->semester_name;
+                    }
+                    else{
+                        if($is_semester_dates_found[0]->semester_name == 'Fall')
+                        {
+                            $semester_name = "Fall";
+                        }
+                        else{
+                            $semester_name = "Spring";
+                        }
+                    }
+            
+                    foreach ($subjectlist as $key => $value) {
+                        $sum_subject = array();
+                        $student_quiz = array();
+                        
+                        
+
+                        $student_quiz[0] = (array_sum($sum_subject)/count($subjectlist));
+                        $student_quiz[1] = (array_sum($sum_subject)); 
+
+                      
+                        $evalution_array = array();
+    
+                        
+                        $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 1");
+                        //$final = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 2");
+
+                        $total_marks = $mid[0]->marks;
+                        $obtain_marks = $mid[0]->marks;
+                        $student_obtain_marks += $total_marks;
+                        $all_total_marks += MID_TOTAL_MARKS;
+                        
+                        $evalution_array[] = array(
+                            
+                            'mid'=>(count($mid) ? $mid[0]->marks : " - "),
+                            'grade'=>(count($mid) ? parent::GetGrade((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid) : " - ") ,
+                            'obtain_marks'=>$obtain_marks,
+                            'total_marks'=>MID_TOTAL_MARKS,
+                        );    
+                        $result[] = array(
+                            'serail'=>$value->id,
+                            'subject'=>$value->subject_name,
+                            'evalution'=>$evalution_array,
+                          
+                        );
+                    }
+                    if($student_obtain_marks==0)
+                    {
+                        $total_obtain_mid_marks = " - ";
+                    }
+                    else
+                    {
+                        $total_obtain_mid_marks = round($student_obtain_marks,2);
+                    }
+
+                    $studentresult[] = array(
+                        'result'=>$result,
+                        'semester'=>$semester_name,
+                        'obtain_marks'=> $total_obtain_mid_marks,
+                        'total_marks'=>round($all_total_marks,2),
+                        'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
+                        'grade'=>parent::GetGrade((float)(($student_obtain_marks/$all_total_marks)*100),$inputsessionid),
+                    ); 
+                }
+            }
+        }
+        $data['studentresult'] = $studentresult;
+         $this->load->view('reports/mid_report_pdf',$data);
+        //print_r($_POST);
+        //exit;
+        // Get output html
+        $html = $this->output->get_output();
+        
+        // Load pdf library
+        $this->load->library('pdf');
+        
+        // Load HTML content
+        $this->dompdf->loadHtml($html);
+        
+        // (Optional) Setup the paper size and orientation
+        $this->dompdf->setPaper('A4', 'landscape');
+        
+        // Render the HTML as PDF
+        $this->dompdf->render();
+        
+        // Output the generated PDF (1 = download and 0 = preview)
+        $this->dompdf->stream("welcome.pdf", array("Attachment"=>0));
+
+        //exit;
+        // $result = array("message"=>"Success");
+        // echo json_encode($result); 
+        
     }
 }
