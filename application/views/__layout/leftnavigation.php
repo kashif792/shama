@@ -2,6 +2,7 @@
 	<div class="client-log-container" title="Learning InVantage"></div>
   	<ul class="nav nav-pills nav-stacked">
   		<?php 
+  		
   		 $roles = $this->session->userdata('roles');
   		 if ($roles[0]['role_id'] ==1){ ?>
   		 	<li class="<?php 

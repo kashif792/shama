@@ -397,6 +397,7 @@ require APPPATH.'views/__layout/footer.php';
         function buildTableBody(data, columnsheader, columns) {
             try{
                 var body = [];
+
                 if(columnsheader.length > 0)
                 {
                     body.push(columnsheader);
@@ -414,8 +415,10 @@ require APPPATH.'views/__layout/footer.php';
 
                     columns.forEach(function(column) {
                         var columnvalue = null;
+                        //console.log(column);
                         if(column == 'screenname')
                         {
+                            console.log(row[column]);
                             columnvalue = row[column].toString();
                             dataRow.push(columnvalue);
                         }
@@ -450,7 +453,7 @@ require APPPATH.'views/__layout/footer.php';
                     
                 });
 
-                return body;
+                //return body;
             }
             catch(e){
                 console.log(e)

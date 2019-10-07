@@ -318,29 +318,48 @@ require APPPATH.'views/__layout/footer.php';
             $scope.eprocessfinished = true;
         }
         // Generate PDF
-        function buildTableBody(data, columnsheader,columns) {
+        function buildTableBody(data,obtain_marks,total_marks, columnsheader,columns) {
+            //console.log(data);
             try{
                 var body = [];
                 if(columnsheader.length > 0)
                 {
                     body.push(columnsheader);
                 }
+                else{
+                    var temp = [];
 
+                    temp.push("Subject");
+                    temp.push("Obtained Marks");
+                    temp.push("Total Marks");
+                    temp.push("Grade");
+                    temp.push("Comments");
+                    body.push(temp)
+                }
                 data.forEach(function(row) {
                     var dataRow = [];
-
+                    
                     columns.forEach(function(column) {
                         var columnvalue = null;
                         if(column == 'subject')
                         {
                             columnvalue = row[column].toString();
+                            
                             dataRow.push(columnvalue);
                         }
-                        
+                        if(column == 'evalution')
+                        {
+                            columnvalue = row[column][0].mid;
+                            dataRow.push(columnvalue);
+                            columnvalue = row[column][0].total_marks;
+                            dataRow.push(columnvalue);
+                            columnvalue = row[column][0].grade;
+                            dataRow.push(columnvalue);
+                            columnvalue = "";
+                            dataRow.push(columnvalue);
+                        }
 
                     });
-
-                    
 
                     if(dataRow.length > 0)
                     {
@@ -348,20 +367,38 @@ require APPPATH.'views/__layout/footer.php';
                     }
                     
                 });
+                
+                    var temp = [];
 
+                    temp.push("Total Obtained Marks");
+                    temp.push(obtain_marks);
+                    temp.push(total_marks);
+                    temp.push("");
+                    temp.push("");
+                    body.push(temp)
+               
                 return body;
             }
             catch(e){
                 console.log(e)
             }
         }
-        function table(data, columnsheader, columns ) {
+        function table(data,obtain_marks,total_marks, columnsheader, columns ) {
             try{
                 return {
                     table: {
                         headerRows: 1,
-                        body: buildTableBody(data,columnsheader,columns)
+                        widths: ['*', '*', '*', '*', '*'],
+                        body: buildTableBody(data,obtain_marks,total_marks,columnsheader,columns)
+                    },
+                    layout: {
+                    fillColor: function (rowIndex, node, columnIndex) {
+
+                            return (rowIndex % 2 === 0) ? '#f1f1f1' : null;
+                        
+                        
                     }
+                }
                 };
             }
             catch(e){
@@ -378,7 +415,8 @@ require APPPATH.'views/__layout/footer.php';
                 var docDefinition = {
                     pageOrientation: 'landscape',
                     content: [
-                        {text:'Mid Term Report',style:'report_header'},
+                        {image:'<?php echo $logo ?>',style:'report_logo'},
+                        {text:'Mid Term Exam Result',style:'report_header'},
                         {
                             margin: [0, 10, 0, 5],
                             columns: [
@@ -395,30 +433,108 @@ require APPPATH.'views/__layout/footer.php';
                             ]
                         },
                         {
-                            margin: [0, 5, 0, 5],
+                            margin: [0, 5, 0, 10],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Campus: <?php echo $schoolname."-".$campuscity; ?>',
+                                    text: 'Student Name: '+$scope.filterobj.studentid.name,
                                     alignment: 'left',
                                 },
-                               {
+                                {
                                     width: '*',
-                                    text: 'Subject: '+$scope.filterobj.subjectid.name,
+                                    text: 'Campus: <?php echo $schoolname."-".$campuscity; ?>',
                                     alignment: 'right',
                                 },
                             ]
                         },
-                        table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Comments"],["Subject","Obtained Marks","Total Marks","Comments"]),
                         
+                        table($scope.subjectlist,$scope.obtain_marks,$scope.total_marks,["Subject","Obtained Marks","Total Marks","Grade","Comments"],["subject","evalution"]),  
+                        //table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Grade"],["subject","evalution",]),
+                        {
+                            margin: [0, 20, 0, 5],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Attendance made: -------------------------------------------------------------------------',
+                                    alignment: 'left',
+                                },
+                                 {
+                                    width: '*',
+                                    text: 'Out of a total: -------------------------------------------------------------------------',
+                                    alignment: 'right',
+                                },
+                            ]
+                        },
+                        {
+                            margin: [0, 10, 0, 5],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Conduct: --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },
+                        
+                         {
+                            margin: [0, 10, 0, 5],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Attitudes: --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },
+                        {
+                            margin: [0, 10, 0, 5],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Interst: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },
+                        {
+                            margin: [0, 10, 0, 5],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Director Remarks: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },
+                        {
+                            margin: [0, 10, 0, 5],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Principal Remarks: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },                      
+
                    ],
 
                     styles: {
                         report_header: {
-                            fontSize: 24,
-                            bold: true,
+                            fontSize: 14,
+                            bold: false,
+                            alignment: 'center',
+                            margin: [0, 10, 0, 5]
+                        },
+                        report_logo: {
                             alignment: 'center'
-                        }
+                        },
+                        
                     }
                 };
                 return docDefinition;
@@ -434,34 +550,16 @@ require APPPATH.'views/__layout/footer.php';
 
       $scope.download = function()
         {
-
-            try{
+            var reportobj = $scope.renderprintdata();
+            if($scope.filterobj.semester.id == 'b')
+            {
+                var filename = decodeURIComponent($scope.filterobj.class.name)+"-"+decodeURIComponent($scope.filterobj.section.name)+"-final";
+            }
+            else{
+                var filename = decodeURIComponent($scope.filterobj.class.name)+"-"+decodeURIComponent($scope.filterobj.section.name)+"-"+decodeURIComponent($scope.filterobj.semester.name);
+            }
             
-
-            var data ={
-                inputclassid:$scope.filterobj.studentid.id,
-                inputclassid:$scope.filterobj.class.id,
-                inputsectionid:$scope.filterobj.section.id,
-                inputsemesterid:$scope.filterobj.semester.id,
-                inputsessionid:$scope.filterobj.session.id,
-                inputstudentid:$scope.filterobj.studentid.id,
-                
-            }
-
-            httppostrequest('<?php echo base_url(); ?>midreportpdf',data).then(function(response){
-                console.log(response);
-                if(response.length > 0)
-                {
-                    
-                }
-                else{
-                    
-                }
-            });
-           }
-            catch(ex){
-                console.log(ex)
-            }
+             pdfMake.createPdf(reportobj).download(filename);
         }
 
 
@@ -592,6 +690,7 @@ require APPPATH.'views/__layout/footer.php';
            
         }
   });
+
     function midpdf()
             {
                 console.log("calling!");
