@@ -474,12 +474,12 @@ require APPPATH.'views/__layout/footer.php';
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Attendance made: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
+                                    text: 'Attendance made: '+$scope.total_attendence+' %',
                                     alignment: 'left',
                                 },
                                  {
                                     width: '*',
-                                    text: 'Out of a total: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
+                                    text: 'Out of a total: '+$scope.total_lesson,
                                     alignment: 'right',
                                 },
                             ]
@@ -698,6 +698,8 @@ require APPPATH.'views/__layout/footer.php';
                      $scope.obtain_marks = response[0].obtain_marks;
                      $scope.percent = response[0].percent;
                      $scope.total_marks = response[0].total_marks;
+                     $scope.total_attendence = response[0].total_attendence;
+                     $scope.total_lesson = response[0].total_lesson;
                 }
                 else{
                     $scope.resultlist = [];

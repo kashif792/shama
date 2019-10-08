@@ -461,7 +461,8 @@ class Reports extends MY_Controller
                             $semester_name = "Spring";
                         }
                     }
-            
+                    $countread = 0;
+                    $total_lesson = 0;
                     foreach ($subjectlist as $key => $value) {
                         $sum_subject = array();
                         $student_quiz = array();
@@ -471,6 +472,34 @@ class Reports extends MY_Controller
                         $student_quiz[0] = (array_sum($sum_subject)/count($subjectlist));
                         $student_quiz[1] = (array_sum($sum_subject)); 
 
+                        // Get Attendance made
+                        $studentprogress = $this->operation->GetRowsByQyery('SELECT s.id as semid,s.read_date FROM `semester_lesson_plan` s WHERE subjectid = ' . $value->id . ' AND semsterid = ' . $inputsemesterid . ' AND sectionid = ' . $inputsectionid . ' order by s.read_date asc');
+                        if (count($studentprogress))
+                            {
+                                $sparray = array();
+                                
+                                foreach ($studentprogress as $key => $spvalue)
+                                {
+                                    $ar = $this->GetStudentProgress($spvalue->semid, $studentid);
+                                    $show = false;
+                                    if ($datetime1 != null)
+                                    {
+                                        $datetime2 = new DateTime($spvalue->read_date);
+                                        $show = $datetime1 >= $datetime2;
+                                    }
+                                    $ar['show'] = $show ? 1 : 0;
+                                    //
+                                    if($ar['status']=='read')
+                                    {
+                                        $countread++;
+                                    }
+                                    
+                                    $sparray[] = $ar;
+                                }
+                                $total_lesson += count($sparray);
+                            }
+                            
+                        // ENd here
                       
                         $evalution_array = array();
     
@@ -510,12 +539,20 @@ class Reports extends MY_Controller
                     $session_dates =date("Y",strtotime($session_date_q[0]->datefrom)).' - '.date("Y",strtotime($session_date_q[0]->dateto));
                     $semester_date_q = $this->operation->GetRowsByQyery("SELECT * FROM semester_dates  where semester_id = ".$inputsemesterid. " AND session_id =".$inputsessionid);
                     $semester_dates =date("M d, Y",strtotime($semester_date_q[0]->start_date)).' - '.date("M d, Y",strtotime($semester_date_q[0]->end_date));
-                    
+                    // Calculation Attendence 
+                    $total_attendence = ($countread/$total_lesson)*100;
+                    // echo $countread.'<br>';
+                    // echo $totalt_attendence.'<br>';
+                    // echo $total_lesson;
+                    // exit;
+                    // ENd Here
                     $studentresult[] = array(
                         'result'=>$result,
                         'semester'=>$semester_name,
                         'session_dates'=>$session_dates,
                         'semester_dates'=>$semester_dates,
+                        'total_attendence'=>round($total_attendence,2),
+                        'total_lesson'=>(int)($total_lesson),
                         'obtain_marks'=> $total_obtain_mid_marks,
                         'total_marks'=>round($all_total_marks,2),
                         'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
@@ -525,6 +562,23 @@ class Reports extends MY_Controller
             }
         }
         echo json_encode($studentresult);
+    }
+    function GetStudentProgress($lessonid, $studentid)
+    {
+        $studentprogress = $this->operation->GetRowsByQyery('SELECT * FROM `lessonprogress` where lessonid =' . $lessonid . " AND studentid=" . $studentid);
+        $sparray = array();
+        if (count($studentprogress))
+        {
+            foreach ($studentprogress as $key => $spvalue)
+            {
+                $sparray = array('lessonid' => $spvalue->lessonid, 'status' => $spvalue->status, 'last_updated' => $spvalue->last_updated,);
+            }
+        }
+        else
+        {
+            $sparray = array('lessonid' => $lessonid, 'status' => 'unread',);
+        }
+        return $sparray;
     }
     function FinalStudentReportBySubjectwize()
     {
