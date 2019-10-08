@@ -475,9 +475,8 @@ class Reports extends MY_Controller
                         $evalution_array = array();
     
                         
-                        $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 1");
-                        //$final = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 2");
-
+                        $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid."");
+                        
                         $total_marks = $mid[0]->marks;
                         $obtain_marks = $mid[0]->marks;
                         $student_obtain_marks += $total_marks;
@@ -505,9 +504,18 @@ class Reports extends MY_Controller
                     {
                         $total_obtain_mid_marks = round($student_obtain_marks,2);
                     }
+                    // Get Session Date and Semester Dates
+                    
+                    $session_date_q = $this->operation->GetRowsByQyery("SELECT * FROM sessions  where id = ".$inputsessionid);
+                    $session_dates =date("Y",strtotime($session_date_q[0]->datefrom)).' - '.date("Y",strtotime($session_date_q[0]->dateto));
+                    $semester_date_q = $this->operation->GetRowsByQyery("SELECT * FROM semester_dates  where semester_id = ".$inputsemesterid. " AND session_id =".$inputsessionid);
+                    $semester_dates =date("M d, Y",strtotime($semester_date_q[0]->start_date)).' - '.date("M d, Y",strtotime($semester_date_q[0]->end_date));
+                    
                     $studentresult[] = array(
                         'result'=>$result,
                         'semester'=>$semester_name,
+                        'session_dates'=>$session_dates,
+                        'semester_dates'=>$semester_dates,
                         'obtain_marks'=> $total_obtain_mid_marks,
                         'total_marks'=>round($all_total_marks,2),
                         'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),

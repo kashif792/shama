@@ -413,37 +413,56 @@ require APPPATH.'views/__layout/footer.php';
             try{
 
                 var docDefinition = {
-                    pageOrientation: 'landscape',
+                    pageOrientation: 'portrait',
                     content: [
                         {image:'<?php echo $logo ?>',style:'report_logo'},
                         {text:'Mid Term Exam Result',style:'report_header'},
                         {
-                            margin: [0, 10, 0, 5],
+                            margin: [0, 5, 0, 15],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Grade: '+$scope.filterobj.class.name+"-"+$scope.filterobj.section.name+'-'+$scope.filterobj.semester.name,
+                                    text: 'From: '+$scope.semester_dates,
                                     alignment: 'left',
+
                                 },
                                  {
                                     width: '*',
-                                    text: 'Session: '+$scope.filterobj.session.name,
+                                    text: 'Term: '+$scope.filterobj.semester.name,
                                     alignment: 'right',
+                                    margin: [0, 0, 70, 0],
                                 },
                             ]
                         },
                         {
-                            margin: [0, 5, 0, 10],
+                            margin: [0, 5, 0, 15],
+                            columns: [
+                                 {
+                                    width: '*',
+                                    text: 'Session: '+$scope.session_date,
+                                    alignment: 'left',
+                                },
+                                {
+                                    width: '*',
+                                    text: 'Date: <?php echo date('M d, Y') ?>',
+                                    alignment: 'right',
+                                    margin: [0, 0, 22, 0],
+                                },
+                            ]
+                        },
+                        {
+                            margin: [0, 5, 0, 40],
                             columns: [
                                {
                                     width: '*',
                                     text: 'Student Name: '+$scope.filterobj.studentid.name,
                                     alignment: 'left',
                                 },
-                                {
+                                 {
                                     width: '*',
-                                    text: 'Campus: <?php echo $schoolname."-".$campuscity; ?>',
+                                    text: 'Grade: '+$scope.filterobj.class.name+" ("+$scope.filterobj.section.name+')',
                                     alignment: 'right',
+
                                 },
                             ]
                         },
@@ -451,26 +470,26 @@ require APPPATH.'views/__layout/footer.php';
                         table($scope.subjectlist,$scope.obtain_marks,$scope.total_marks,["Subject","Obtained Marks","Total Marks","Grade","Comments"],["subject","evalution"]),  
                         //table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Grade"],["subject","evalution",]),
                         {
-                            margin: [0, 20, 0, 5],
+                            margin: [0, 40, 0, 15],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Attendance made: -------------------------------------------------------------------------',
+                                    text: 'Attendance made: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
                                     alignment: 'left',
                                 },
                                  {
                                     width: '*',
-                                    text: 'Out of a total: -------------------------------------------------------------------------',
+                                    text: 'Out of a total: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
                                     alignment: 'right',
                                 },
                             ]
                         },
                         {
-                            margin: [0, 10, 0, 5],
+                            margin: [0, 12, 0, 25],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Conduct: --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    text: 'Conduct: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
                                     alignment: 'left',
                                 },
                                  
@@ -478,44 +497,44 @@ require APPPATH.'views/__layout/footer.php';
                         },
                         
                          {
-                            margin: [0, 10, 0, 5],
+                            margin: [0, 12, 0, 25],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Attitudes: --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    text: 'Attitudes: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
                                     alignment: 'left',
                                 },
                                  
                             ]
                         },
                         {
-                            margin: [0, 10, 0, 5],
+                            margin: [0, 12, 0, 25],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Interst: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    text: 'Interest: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
                                     alignment: 'left',
                                 },
                                  
                             ]
                         },
                         {
-                            margin: [0, 10, 0, 5],
+                            margin: [0, 12, 0, 25],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Director Remarks: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    text: 'Director Remarks: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
                                     alignment: 'left',
                                 },
                                  
                             ]
                         },
                         {
-                            margin: [0, 10, 0, 5],
+                            margin: [0, 12, 0, 25],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Principal Remarks: -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------',
+                                    text: 'Principal Remarks: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
                                     alignment: 'left',
                                 },
                                  
@@ -529,7 +548,7 @@ require APPPATH.'views/__layout/footer.php';
                             fontSize: 14,
                             bold: false,
                             alignment: 'center',
-                            margin: [0, 10, 0, 5]
+                            margin: [0, 10, 0, 40]
                         },
                         report_logo: {
                             alignment: 'center'
@@ -672,7 +691,10 @@ require APPPATH.'views/__layout/footer.php';
                     else{
                         $scope.springsemester = response[0].result;
                     }
+                    
                      $scope.grade = response[0].grade;
+                     $scope.session_date = response[0].session_dates;
+                     $scope.semester_dates = response[0].semester_dates;
                      $scope.obtain_marks = response[0].obtain_marks;
                      $scope.percent = response[0].percent;
                      $scope.total_marks = response[0].total_marks;
@@ -691,83 +713,5 @@ require APPPATH.'views/__layout/footer.php';
         }
   });
 
-    function midpdf()
-            {
-                console.log("calling!");
-                console.log($("#inputRSession").val());
-                console.log($("#select_class").val());
-                console.log($("#inputSection").val());
-                console.log($("#inputSemester").val());
-                console.log($("#InputStudent").val());
-                $("#session_id").val($("#inputRSession").val());
-                $("#class_id").val($("#select_class").val());
-                $("#section_id").val($("#inputSection").val());
-                $("#semester_id").val($("#inputSemester").val());
-                $("#student_id").val($("#InputStudent").val());
-
-                $("#formpdf").submit();
-                // $.ajax({
-                //     'url': "<?php echo base_url()?>midreportpdf",
-                //     'type': 'POST',
-                //     'success': function (data) {
-                //         console.log(data);
-                        
-                //     }
-                // });
-            }
+    
 </script>
-<form action="<?php echo base_url()?>midreportpdf" id="formpdf" method="post" target="_blank">
-    <input type="hidden" name="session_id"  id="session_id" >
-    <input type="hidden" name="class_id"  id="class_id" >
-    <input type="hidden" name="section_id"  id="section_id" >
-    <input type="hidden" name="semester_id" id="semester_id"  >
-    <input type="hidden" name="student_id" id="student_id" >
-</form>
-
-<style type="text/css">
-    form.tab-form-demo .tab-pane {
-        margin: 20px 20px;
-    }
-</style>
-<!-- <script type="text/javascript">
-    function getPDF(){
-        if($("#InputStudent").val()==0)
-        {
-            alert("Please select Student");
-            return false;
-        }
-        var HTML_Width = $(".canvas_div_pdf").width();
-        var HTML_Height = $(".canvas_div_pdf").height();
-        var top_left_margin = 15;
-        var PDF_Width = HTML_Width+(top_left_margin*2);
-        var PDF_Height = (PDF_Width*1.5)+(top_left_margin*2);
-        var canvas_image_width = HTML_Width;
-        var canvas_image_height = HTML_Height;
-        
-        var totalPDFPages = Math.ceil(HTML_Height/PDF_Height)-1;
-        
-        $(".canvas_div_pdf").prepend('<div class="car-offers" >I want to download the current screen as a PDF/Image using html2canvas.js.</div>');
-        var header = '<div class="car-offers" >I want to download the current screen as a PDF/Image using html2canvas.js.</div>';
-        var body = $(".canvas_div_pdf")[0];
-        
-        html2canvas(body,{allowTaint:true}).then(function(canvas) {
-            canvas.getContext('3d');
-            
-            console.log(canvas.height+"  "+canvas.width);
-            
-            
-            var imgData = canvas.toDataURL("image/jpeg", 1.0);
-            var pdf = new jsPDF('p', 'pt',  [PDF_Width, PDF_Height]);
-            pdf.addImage(imgData, 'JPG', top_left_margin, top_left_margin,canvas_image_width,canvas_image_height);
-            
-            
-            for (var i = 1; i <= totalPDFPages; i++) { 
-                pdf.addPage(PDF_Width, PDF_Height);
-                pdf.addImage(imgData, 'JPG', top_left_margin, -(PDF_Height*i)+(top_left_margin*4),canvas_image_width,canvas_image_height);
-            }
-            $(".car-offers").remove();
-            pdf.save("<?php echo uniqid()?>.pdf");
-
-        });
-    };
-</script> -->
