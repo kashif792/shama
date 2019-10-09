@@ -744,7 +744,7 @@ class Ips extends MY_Controller
                 }
             }
         }
-       // echo json_encode($lessondetailarray);
+        echo json_encode($lessondetailarray);
     }
     function GetStudentName($studentid)
     {
