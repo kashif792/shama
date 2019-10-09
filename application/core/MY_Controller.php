@@ -405,9 +405,11 @@ class MY_Controller extends CI_Controller {
             $is_semester_dates_found = $this->operation->GetByWhere(array('school_id'=>$location_id));
         }
         else{
+
             $this->operation->table_name = 'semester_dates';
             $this->operation->primary_key ='session_id';
-            $is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid,'status'=>'a'));
+            //$is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid,'status'=>'a'));
+            $is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid));
         }
       
         return (int) $is_semester_dates_found[0]->id;

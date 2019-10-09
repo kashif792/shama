@@ -307,6 +307,7 @@ require APPPATH.'views/__layout/footer.php';
             $scope.loadStudentByClass();
             $scope.active = 1;
             $scope.getGradedata();
+
         }
 
 
@@ -683,25 +684,17 @@ require APPPATH.'views/__layout/footer.php';
                 //console.log(response);
                 if(response.length > 0)
                 {
-                    //$scope.subjectlist = response;
-                    if(response[0].semester == 'Fall')
-                    {
-                        $scope.subjectlist = response[0].result;
-                    }
-                    else{
-                        $scope.springsemester = response[0].result;
-                    }
-                    
-                     $scope.grade = response[0].grade;
-                     $scope.session_date = response[0].session_dates;
-                     $scope.semester_dates = response[0].semester_dates;
-                     $scope.obtain_marks = response[0].obtain_marks;
-                     $scope.percent = response[0].percent;
-                     $scope.total_marks = response[0].total_marks;
-                     $scope.total_attendence = response[0].total_attendence;
-                     $scope.total_lesson = response[0].total_lesson;
-                     $scope.total_marks = response[0].total_marks;
-                     $scope.count_attendence = response[0].count_attendence;
+                    $scope.subjectlist = response[0].result;
+                    $scope.grade = response[0].grade;
+                    $scope.session_date = response[0].session_dates;
+                    $scope.semester_dates = response[0].semester_dates;
+                    $scope.obtain_marks = response[0].obtain_marks;
+                    $scope.percent = response[0].percent;
+                    $scope.total_marks = response[0].total_marks;
+                    $scope.total_attendence = response[0].total_attendence;
+                    $scope.total_lesson = response[0].total_lesson;
+                    $scope.total_marks = response[0].total_marks;
+                    $scope.count_attendence = response[0].count_attendence;
                      
                 }
                 else{

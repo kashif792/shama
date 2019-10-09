@@ -434,7 +434,7 @@ class Reports extends MY_Controller
             }
             $subjectlist = parent::GetSubjectsByClass($inputclassid,(int)$inputsemesterid,$inputsessionid);
              //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
-             
+             //print_r($subjectlist);
         //exit;
              
             if(count($subjectlist))
@@ -540,9 +540,7 @@ class Reports extends MY_Controller
                     $semester_dates =date("M d, Y",strtotime($semester_date_q[0]->start_date)).' - '.date("M d, Y",strtotime($semester_date_q[0]->end_date));
                     // Calculation Attendence 
                     $total_attendence = ($countread/$total_lesson)*100;
-                    // echo $countread.'<br>';
-                    // echo $totalt_attendence.'<br>';
-                    // echo $total_lesson;
+                   
                     // exit;
                     // ENd Here
                     $studentresult[] = array(
@@ -657,8 +655,12 @@ class Reports extends MY_Controller
                         
                         $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 1");
                         $final = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 2");
-                        $sessional_marks = $this->operation->GetRowsByQyery('SELECT count(id) as total_quize,sum(marks) as total_sessional FROM quizzes_marks  where subject_id = '.$value->id.' AND student_id= '.$studentid." ");
+                        $sessional_marks = $this->operation->GetRowsByQyery('SELECT sum(marks) as total_sessional FROM quizzes_marks  where subject_id = '.$value->id.' AND student_id= '.$studentid." ");
+                        // Get Total Quizes of subject
+                        $total_subject_sessional_marks = $this->operation->GetRowsByQyery('SELECT count(*) AS total_quize  FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid WHERE q.subjectid = '.$value->id.'  AND q.classid = '.$inputclassid.' AND q.sectionid = '.$inputsectionid.' AND q.semsterid = '.$inputsemesterid.' AND q.sessionid = '.$inputsessionid);
+                        //echo $total_subject_sessional_marks[0]->total_quize
 
+                        // End here
                         $mid_total_marks = $mid[0]->marks;
                         $obtain_marks = $mid[0]->marks;
                         $student_mid_obtain_marks += $mid_total_marks;
@@ -667,7 +669,7 @@ class Reports extends MY_Controller
                         $final_total_marks += FINAL_TOTAL_MARKS;
 
                         // Calculate Total Sessional Marks
-                        $total_quize_marks = $sessional_marks[0]->total_quize*QUIZ_TOTAL_MARKS;
+                        $total_quize_marks = $total_subject_sessional_marks[0]->total_quize*QUIZ_TOTAL_MARKS;
                         $subject_sessional_marks = ($sessional_marks[0]->total_sessional/$total_quize_marks)*SISSIONAL_MARKS;
                         $session_total_marks += (int)(round($subject_sessional_marks));
                         $final_subject_total_marks = MID_TOTAL_MARKS+FINAL_TOTAL_MARKS+SISSIONAL_MARKS;

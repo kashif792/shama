@@ -2816,10 +2816,10 @@ table.timtbleflter#table-body-phase-tow tfoot th:nth-child(1) select {display: n
 table.timtbleflter#table-body-phase-tow tfoot th:nth-child(4) select {display: none;}
 table.timtbleflter#table-body-phase-tow tfoot th:nth-child(5) select {display: none;}
 table.timtbleflter#table-body-phase-tow tfoot th:nth-child(6) select {display: none;}
-.class-page .report-body{
+/*.class-page .report-body{
     cursor: pointer;
 }
-/*
+
 thead{
     background-color: #1d96b2;
     border: 1px solid #1d96b2;
