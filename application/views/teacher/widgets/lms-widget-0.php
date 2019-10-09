@@ -116,7 +116,7 @@
                                                                                 <a href="javascript:void(0)" class="btn btn-primary" ng-click="addfinaltermresult(p.classid,s.sid,sub.sbid,p.semsterid,p.sessionid)"  style="color: #fff !important">After Mid Term Quiz Marks</a>
                                                                             </div>
                                                                             <div class="col-sm-4 text-center">
-                                                                                <a href="javascript:void(0)"class="btn btn-primary" ng-click="addtermresult(p.classid,s.sid,sub.sbid,1,p.semsterid,p.sessionid)" style="color: #fff !important">Total Marks</a>
+                                                                                <a href="javascript:void(0)"class="btn btn-primary" ng-click="addtermresult(p.classid,s.sid,sub.sbid,1,p.semsterid,p.sessionid)" style="color: #fff !important">Mid and Final Marks</a>
                                                                             </div>
                                                                         </div>
                                                                         <div class="loader2" ng-hide="eprocessfinished"></div>

@@ -45,6 +45,7 @@ class Reports extends MY_Controller
         {
             parent::redirectUrl('signin');
         }
+        $this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/small_nrlogo.png");
         $this->data['schoolname'] = $this->campus;
         $this->data['campuscity'] = $this->usercity;
         $this->load->view("reports/final_report",$this->data);
@@ -433,9 +434,7 @@ class Reports extends MY_Controller
             }
             $subjectlist = parent::GetSubjectsByClass($inputclassid,(int)$inputsemesterid,$inputsessionid);
              //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
-             //echo $inputclassid;
-            //echo $inputsemesterid;
-            //print_r($subjectlist);
+             
         //exit;
              
             if(count($subjectlist))
@@ -513,8 +512,8 @@ class Reports extends MY_Controller
                         
                         $evalution_array[] = array(
                             
-                            'mid'=>(count($mid) ? $mid[0]->marks : " - "),
-                            'grade'=>(count($mid) ? parent::GetGrade((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid) : " - ") ,
+                            'mid'=>(count($mid) ? $mid[0]->marks : 0),
+                            'grade'=>(parent::GetGrade((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid)) ,
                             'obtain_marks'=>$obtain_marks,
                             'total_marks'=>MID_TOTAL_MARKS,
                         );    
@@ -527,7 +526,7 @@ class Reports extends MY_Controller
                     }
                     if($student_obtain_marks==0)
                     {
-                        $total_obtain_mid_marks = " - ";
+                        $total_obtain_mid_marks = 0;
                     }
                     else
                     {
@@ -551,6 +550,7 @@ class Reports extends MY_Controller
                         'semester'=>$semester_name,
                         'session_dates'=>$session_dates,
                         'semester_dates'=>$semester_dates,
+                        'count_attendence'=>$countread,
                         'total_attendence'=>round($total_attendence,2),
                         'total_lesson'=>(int)($total_lesson),
                         'obtain_marks'=> $total_obtain_mid_marks,
@@ -619,12 +619,7 @@ class Reports extends MY_Controller
                 
             }
             $subjectlist = parent::GetSubjectsByClass($inputclassid,(int)$inputsemesterid,$inputsessionid);
-             //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
-             //echo $inputclassid;
-            //echo $inputsemesterid;
-            //print_r($subjectlist);
-            //echo $inputclassid;
-            //echo $inputsemesterid;
+            
         //exit;
              
             if(count($subjectlist))
@@ -702,13 +697,42 @@ class Reports extends MY_Controller
                                 $final_result = "PASS";
                             }
                         }
-                        // End here 
+                        // End here
+                        // Get Attendance made
+                        $studentprogress = $this->operation->GetRowsByQyery('SELECT s.id as semid,s.read_date FROM `semester_lesson_plan` s WHERE subjectid = ' . $value->id . ' AND semsterid = ' . $inputsemesterid . ' AND sectionid = ' . $inputsectionid . ' order by s.read_date asc');
+                        if (count($studentprogress))
+                            {
+                                $sparray = array();
+                                
+                                foreach ($studentprogress as $key => $spvalue)
+                                {
+                                    $ar = $this->GetStudentProgress($spvalue->semid, $studentid);
+                                    $show = false;
+                                    if ($datetime1 != null)
+                                    {
+                                        $datetime2 = new DateTime($spvalue->read_date);
+                                        $show = $datetime1 >= $datetime2;
+                                    }
+                                    $ar['show'] = $show ? 1 : 0;
+                                    //
+                                    if($ar['status']=='read')
+                                    {
+                                        $countread++;
+                                    }
+                                    
+                                    $sparray[] = $ar;
+                                }
+                                $total_lesson += count($sparray);
+                            }
+                            
+                            
+                        // ENd here 
                         $evalution_array[] = array(
                             
-                            'mid'=>(count($mid) ? $mid[0]->marks : "Waiting Result"),
-                            'final'=>(count($final) ? $final[0]->marks : "Waiting Result"),
-                            'sessional_marks'=>(int)(round($subject_sessional_marks)),
-                            'student_obtain_subject_marks'=>(int)($student_obtain_subject_marks),
+                            'mid'=>(count($mid) ? $mid[0]->marks : 0),
+                            'final'=>(count($final) ? $final[0]->marks : 0),
+                            'sessional_marks'=>(int)($subject_sessional_marks),
+                            'student_obtain_subject_marks'=>$student_obtain_subject_marks,
                             
                             'grade'=>parent::GetGrade((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid),
                             'obtain_marks'=>$obtain_marks,
@@ -723,6 +747,18 @@ class Reports extends MY_Controller
                         );
                     }
                     
+                    // Get Session Date and Semester Dates
+                    
+                    $session_date_q = $this->operation->GetRowsByQyery("SELECT * FROM sessions  where id = ".$inputsessionid);
+                    $session_dates =date("Y",strtotime($session_date_q[0]->datefrom)).' - '.date("Y",strtotime($session_date_q[0]->dateto));
+                    $semester_date_q = $this->operation->GetRowsByQyery("SELECT * FROM semester_dates  where semester_id = ".$inputsemesterid. " AND session_id =".$inputsessionid);
+                    $semester_dates =date("M d, Y",strtotime($semester_date_q[0]->start_date)).' - '.date("M d, Y",strtotime($semester_date_q[0]->end_date));
+                    // Calculation Attendence 
+                    $total_attendence = ($countread/$total_lesson)*100;
+                    
+
+                    
+                    // ENd Here
                     $studentresult[] = array(
                         'result'=>$result,
                         'semester'=>$semester_name,
@@ -738,6 +774,11 @@ class Reports extends MY_Controller
                         'total_sessional_marks'=>(int)SISSIONAL_MARKS,
                         //'grade'=>parent::GetGrade((float)(($student_total_obtain_subject_marks/$final_count_subject_total_marks)*100),$inputsessionid),
                         'grade'=>$final_result,
+                        'session_dates'=>$session_dates,
+                        'semester_dates'=>$semester_dates,
+                        'total_attendence'=>round($total_attendence,2),
+                        'total_lesson'=>(int)($total_lesson),
+                        'count_attendence'=>$countread,
                     ); 
                 }
             }
@@ -1320,148 +1361,5 @@ class Reports extends MY_Controller
         catch(Exception $e){}
     }
 
-    function MidStudentPdfReport()
-    {
-        $inputclassid = 85;
-        $inputsectionid = 78;
-        $inputsemesterid = 1;
-        //$inputsemesterid = 1;
-        $inputsessionid = 42;
-        $studentid = 407;
-        $error_array = array();
-        if (!is_int((int) $inputclassid) || !is_int((int) $inputsectionid)  || !is_int((int) $inputsessionid) || !is_int((int) $studentid) ) {
-            array_push($error_array,"Invalid data");
-        }
-             
-        if(count($error_array))
-        {
-            echo json_encode($error_array);
-            exit();
-        }
-
-        $studentresult = array();
-        if(count($error_array) == false)
-        {
-            $iteration = 0;
-            if($inputsemesterid == 'b')
-            {
-                $iteration = 1;
-            }
-            else{
-              
-                
-                $this->operation->table_name = 'semester';
-                $is_semester_dates_found = $this->operation->GetByWhere(array('id'=>$inputsemesterid));
-                
-            }
-            $subjectlist = parent::GetSubjectsByClass($inputclassid,(int)$inputsemesterid,$inputsessionid);
-             //$subjectlist = parent::GetSubjectsByClass($inputclassid,$inputsemesterid);
-            
-             
-            if(count($subjectlist))
-            {   
-                $semesterlist = array('Fall','Spring');
-                $student_obtain_marks = 0;
-                $semester_name = "Fall";
-                for ($i=0; $i <= $iteration ; $i++) { 
-                    
-                   $result = array();
-                   if($inputsemesterid == 'b')
-                    {
-                        $inputsemesterid = parent::GetSemesterByName($semesterlist[$i]);
-                        $inputsemesterid = $inputsemesterid[0]->id;
-                        $semester_name =  $inputsemesterid[0]->semester_name;
-                    }
-                    else{
-                        if($is_semester_dates_found[0]->semester_name == 'Fall')
-                        {
-                            $semester_name = "Fall";
-                        }
-                        else{
-                            $semester_name = "Spring";
-                        }
-                    }
-            
-                    foreach ($subjectlist as $key => $value) {
-                        $sum_subject = array();
-                        $student_quiz = array();
-                        
-                        
-
-                        $student_quiz[0] = (array_sum($sum_subject)/count($subjectlist));
-                        $student_quiz[1] = (array_sum($sum_subject)); 
-
-                      
-                        $evalution_array = array();
     
-                        
-                        $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 1");
-                        //$final = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 2");
-
-                        $total_marks = $mid[0]->marks;
-                        $obtain_marks = $mid[0]->marks;
-                        $student_obtain_marks += $total_marks;
-                        $all_total_marks += MID_TOTAL_MARKS;
-                        
-                        $evalution_array[] = array(
-                            
-                            'mid'=>(count($mid) ? $mid[0]->marks : " - "),
-                            'grade'=>(count($mid) ? parent::GetGrade((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid) : " - ") ,
-                            'obtain_marks'=>$obtain_marks,
-                            'total_marks'=>MID_TOTAL_MARKS,
-                        );    
-                        $result[] = array(
-                            'serail'=>$value->id,
-                            'subject'=>$value->subject_name,
-                            'evalution'=>$evalution_array,
-                          
-                        );
-                    }
-                    if($student_obtain_marks==0)
-                    {
-                        $total_obtain_mid_marks = " - ";
-                    }
-                    else
-                    {
-                        $total_obtain_mid_marks = round($student_obtain_marks,2);
-                    }
-
-                    $studentresult[] = array(
-                        'result'=>$result,
-                        'semester'=>$semester_name,
-                        'obtain_marks'=> $total_obtain_mid_marks,
-                        'total_marks'=>round($all_total_marks,2),
-                        'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
-                        'grade'=>parent::GetGrade((float)(($student_obtain_marks/$all_total_marks)*100),$inputsessionid),
-                    ); 
-                }
-            }
-        }
-        $data['studentresult'] = $studentresult;
-         $this->load->view('reports/mid_report_pdf',$data);
-        //print_r($_POST);
-        //exit;
-        // Get output html
-        $html = $this->output->get_output();
-        
-        // Load pdf library
-        $this->load->library('pdf');
-        
-        // Load HTML content
-        $this->dompdf->loadHtml($html);
-        
-        // (Optional) Setup the paper size and orientation
-        $this->dompdf->setPaper('A4', 'landscape');
-        
-        // Render the HTML as PDF
-        $this->dompdf->render();
-        
-        // Output the generated PDF (1 = download and 0 = preview)
-        $this->dompdf->stream("welcome.pdf", array("Attachment"=>0));
-
-        //exit;
-        // $result = array("message"=>"Success");
-        // echo json_encode($result); 
-        
-    }
 }

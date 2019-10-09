@@ -744,7 +744,7 @@ class Ips extends MY_Controller
                 }
             }
         }
-        echo json_encode($lessondetailarray);
+       // echo json_encode($lessondetailarray);
     }
     function GetStudentName($studentid)
     {
@@ -964,7 +964,8 @@ class Ips extends MY_Controller
                 {
                     $sem_status = 'r';
                 }
-                $studentlist = $this->operation->GetRowsByQyery('SELECT * FROM `student_semesters` where classid = ' . $this->input->get('inputclassid') . " AND sectionid = " . $this->input->get('inputsectionid') . " AND semesterid = " . $this->input->get('inputsemester') . " AND  sessionid = " . $this->input->get('inputsession') . " AND status = '" . $sem_status . "'");
+                //$studentlist = $this->operation->GetRowsByQyery('SELECT * FROM `student_semesters` where classid = ' . $this->input->get('inputclassid') . " AND sectionid = " . $this->input->get('inputsectionid') . " AND semesterid = " . $this->input->get('inputsemester') . " AND  sessionid = " . $this->input->get('inputsession') . " AND status = '" . $sem_status . "'");
+                $studentlist = $this->operation->GetRowsByQyery('SELECT s.* FROM `student_semesters` as s INNER JOIN  invantageuser AS i ON s.studentid = i.id where s.classid = ' . $this->input->get('inputclassid') . " AND s.sectionid = " . $this->input->get('inputsectionid') . " AND s.semesterid = " . $this->input->get('inputsemester') . " AND s.sessionid = " . $this->input->get('inputsession') . " AND s.status = '" . $sem_status . "' ORDER BY i.screenname ASC ");
             }
             if (count($studentlist))
             {
@@ -1413,7 +1414,7 @@ class Ips extends MY_Controller
         $resultarray = array();
         if (!is_null($this->input->get('subject_id')) && !is_null($this->input->get('class_id')) && !is_null($this->input->get('section_id')) && !is_null($this->input->get('semesterid')) && !is_null($this->input->get('sessionid')))
         {
-            $resultlist = $this->operation->GetRowsByQyery('SELECT * FROM `student_semesters` where classid = ' . $this->input->get('class_id') . " AND sectionid = " . $this->input->get('section_id') . " AND semesterid = " . $this->input->get('semesterid') . " AND sessionid = " . $this->input->get('sessionid') . " AND status = 'r'");
+            $resultlist = $this->operation->GetRowsByQyery('SELECT s.* FROM `student_semesters` as s INNER JOIN  invantageuser AS i ON s.studentid = i.id where s.classid = ' . $this->input->get('class_id') . " AND s.sectionid = " . $this->input->get('section_id') . " AND s.semesterid = " . $this->input->get('semesterid') . " AND s.sessionid = " . $this->input->get('sessionid') . " ORDER BY i.screenname ASC ");
             if (count($resultlist))
             {
                 foreach ($resultlist as $key => $value)
@@ -1477,7 +1478,8 @@ class Ips extends MY_Controller
         $resultarray = array();
         if (!is_null($this->input->get('subject_id')) && !is_null($this->input->get('class_id')) && !is_null($this->input->get('section_id')) && !is_null($this->input->get('semesterid')) && !is_null($this->input->get('sessionid')))
         {
-            $resultlist = $this->operation->GetRowsByQyery('SELECT * FROM `student_semesters` where classid = ' . $this->input->get('class_id') . " AND sectionid = " . $this->input->get('section_id') . " AND semesterid = " . $this->input->get('semesterid') . " AND sessionid = " . $this->input->get('sessionid') . " AND status = 'r' ");
+            //$resultlist = $this->operation->GetRowsByQyery('SELECT * FROM `student_semesters` where classid = ' . $this->input->get('class_id') . " AND sectionid = " . $this->input->get('section_id') . " AND semesterid = " . $this->input->get('semesterid') . " AND sessionid = " . $this->input->get('sessionid') . " AND status = 'r' ");
+            $resultlist = $this->operation->GetRowsByQyery('SELECT s.* FROM `student_semesters` as s INNER JOIN  invantageuser AS i ON s.studentid = i.id where s.classid = ' . $this->input->get('class_id') . " AND s.sectionid = " . $this->input->get('section_id') . " AND s.semesterid = " . $this->input->get('semesterid') . " AND s.sessionid = " . $this->input->get('sessionid') . " ORDER BY i.screenname ASC ");
             if (count($resultlist))
             {
                 foreach ($resultlist as $key => $value)
@@ -1570,7 +1572,8 @@ class Ips extends MY_Controller
         $resultarray = array();
         if (!is_null($this->input->get('subject_id')) && !is_null($this->input->get('class_id')) && !is_null($this->input->get('section_id')) && !is_null($this->input->get('term_id')) && !is_null($this->input->get('semesterid')) && !is_null($this->input->get('sessionid')))
         {
-            $resultlist = $this->operation->GetRowsByQyery('SELECT * FROM `student_semesters` where classid = ' . $this->input->get('class_id') . " AND sectionid = " . $this->input->get('section_id') . " AND semesterid = " . $this->input->get('semesterid') . " AND sessionid = " . $this->input->get('sessionid') . " AND status = 'r'");
+            //$resultlist = $this->operation->GetRowsByQyery('SELECT * FROM `student_semesters` where classid = ' . $this->input->get('class_id') . " AND sectionid = " . $this->input->get('section_id') . " AND semesterid = " . $this->input->get('semesterid') . " AND sessionid = " . $this->input->get('sessionid') . " AND status = 'r'");
+            $resultlist = $this->operation->GetRowsByQyery('SELECT s.* FROM `student_semesters` as s INNER JOIN  invantageuser AS i ON s.studentid = i.id where s.classid = ' . $this->input->get('class_id') . " AND s.sectionid = " . $this->input->get('section_id') . " AND s.semesterid = " . $this->input->get('semesterid') . " AND s.sessionid = " . $this->input->get('sessionid') . " ORDER BY i.screenname ASC ");
             if (count($resultlist))
             {
                 foreach ($resultlist as $key => $value)

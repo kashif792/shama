@@ -343,13 +343,13 @@
 			</li>
 				<li>
 					<a  href="<?php echo base_url(); ?>midreport">
-					<i class="fa fa-list" aria-hidden="true"></i>
+					<i class="fa fa-snowflake-o" aria-hidden="true"></i>
 					<span class="link_text"> Mid Term Result</span>
 					</a>
 				</li>
 				<li>
 					<a  href="<?php echo base_url(); ?>finalreport">
-					<i class="fa fa-plus" aria-hidden="true"></i>
+					<i class="fa fa-wpforms" aria-hidden="true"></i>
 					<span class="link_text"> Final Result</span>
 					</a>
 				</li>

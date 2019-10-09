@@ -334,53 +334,267 @@ require APPPATH.'views/__layout/footer.php';
         }
 
 
+        // Generate PDF
+        function buildTableBody(data,total_mid_marks,count_attendence,final_total_marks,total_sessional_marks,student_total_obtain_subject_marks,final_count_subject_total_marks,grade,columnsheader,columns) {
+            //console.log(data);
+            try{
+                var body = [];
+                if(columnsheader.length > 0)
+                {
+                    body.push(columnsheader);
+                }
+                else{
+                    var temp = [];
+
+                    temp.push("Subject");
+                    temp.push("Mid Term Marks");
+                    temp.push("Final Term Marks");
+                    temp.push("Sessional Marks");
+                    temp.push("Obtained Marks");
+                    temp.push("Total Marks");
+                    temp.push("Grade");
+                    temp.push("Comments");
+                    body.push(temp)
+                }
+                    var temp = [];
+
+                    temp.push("Total Marks");
+                    temp.push('<?php echo MID_TOTAL_MARKS ?>');
+                    temp.push('<?php echo FINAL_TOTAL_MARKS ?>');
+                    temp.push('<?php echo SISSIONAL_MARKS ?>');
+                    temp.push("");
+                    temp.push("");
+                    temp.push("");
+                    temp.push("");
+                    body.push(temp);
+                data.forEach(function(row) {
+                    var dataRow = [];
+                    
+                    columns.forEach(function(column) {
+                        var columnvalue = null;
+                        console.log(column);
+                        if(column == 'subject')
+                        {
+                            columnvalue = row[column].toString();
+                            
+                            dataRow.push(columnvalue);
+                        }
+                        if(column == 'evalution')
+                        {
+                            columnvalue = row[column][0].mid;
+                            dataRow.push(columnvalue);
+                            columnvalue = row[column][0].final;
+                            dataRow.push(columnvalue);
+                            columnvalue = row[column][0].sessional_marks;
+                            dataRow.push(columnvalue);
+                            columnvalue = row[column][0].student_obtain_subject_marks;
+                            dataRow.push(columnvalue);
+                            columnvalue = row[column][0].final_subject_total_marks;
+                            dataRow.push(columnvalue);
+                            columnvalue = row[column][0].grade;
+                            dataRow.push(columnvalue);
+                            columnvalue = "";
+                            dataRow.push(columnvalue);
+                        }
+
+                    });
+
+                    if(dataRow.length > 0)
+                    {
+                        body.push(dataRow);
+                    }
+                    
+                });
+                
+                    var temp = [];
+
+                    temp.push("Total Obtained Marks");
+                    temp.push(total_mid_marks);
+                    temp.push(final_total_marks);
+                    temp.push(total_sessional_marks);
+                    temp.push(student_total_obtain_subject_marks);
+                    temp.push(final_count_subject_total_marks);
+                    temp.push(grade);
+                    temp.push("");
+                    body.push(temp);
+               
+                return body;
+            }
+            catch(e){
+                console.log(e)
+            }
+        }
+        function table(data,total_mid_marks,count_attendence,final_total_marks,total_sessional_marks,student_total_obtain_subject_marks,final_count_subject_total_marks,grade,columnsheader, columns ) {
+            try{
+                return {
+                    table: {
+                        headerRows: 1,
+                        //widths: ['*', '*', '*', '*', '*'],
+                        body: buildTableBody(data,total_mid_marks,count_attendence,final_total_marks,total_sessional_marks,student_total_obtain_subject_marks,final_count_subject_total_marks,grade,columnsheader,columns)
+                    },
+                    layout: {
+                    fillColor: function (rowIndex, node, columnIndex) {
+
+                            return (rowIndex % 2 === 0) ? '#f1f1f1' : null;
+                        
+                        
+                    }
+                }
+                };
+            }
+            catch(e){
+                console.log(e)
+            }
+            
+        } 
+        // End here 
+
         $scope.renderprintdata = function()
         {
             try{
 
                 var docDefinition = {
-                    pageOrientation: 'landscape',
+                    pageOrientation: 'portrait',
                     content: [
-                        {text:'Class Report',style:'report_header'},
+                        {image:'<?php echo $logo ?>',style:'report_logo'},
+                        {text:'Final Result Card',style:'report_header'},
                         {
-                            margin: [0, 10, 0, 5],
+                            margin: [0, 5, 0, 15],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Grade: '+$scope.filterobj.class.name+"-"+$scope.filterobj.section.name+'-'+$scope.filterobj.semester.name,
+                                    text: 'From: '+$scope.semester_dates,
+                                    alignment: 'left',
+
+                                },
+                                 {
+                                    width: '*',
+                                    text: 'Term: '+$scope.filterobj.semester.name,
+                                    alignment: 'right',
+                                    margin: [0, 0, 70, 0],
+                                },
+                            ]
+                        },
+                        {
+                            margin: [0, 5, 0, 15],
+                            columns: [
+                                 {
+                                    width: '*',
+                                    text: 'Session: '+$scope.session_date,
+                                    alignment: 'left',
+                                },
+                                {
+                                    width: '*',
+                                    text: 'Date: <?php echo date('M d, Y') ?>',
+                                    alignment: 'right',
+                                    margin: [0, 0, 22, 0],
+                                },
+                            ]
+                        },
+                        {
+                            margin: [0, 5, 0, 30],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Student Name: '+$scope.filterobj.studentid.name,
                                     alignment: 'left',
                                 },
                                  {
                                     width: '*',
-                                    text: 'Session: '+$scope.filterobj.session.name,
+                                    text: 'Grade: '+$scope.filterobj.class.name+" ("+$scope.filterobj.section.name+')',
+                                    alignment: 'right',
+
+                                },
+                            ]
+                        },
+                        
+                        table($scope.subjectlist,$scope.obtain_marks,$scope.count_attendence,$scope.final_total_marks,$scope.session_total_marks,$scope.student_total_obtain_subject_marks,$scope.final_count_subject_total_marks,$scope.grade,["Subject","Mid Term Marks","Final Term Marks","Sessional Marks","Obtained Marks","Total Marks","Grade","Comments"],["subject","evalution"]),  
+                        //table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Grade"],["subject","evalution",]),
+                        {
+                            margin: [0, 30, 0, 15],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Attendance made: '+$scope.count_attendence+' ('+$scope.total_attendence+' %)',
+                                    alignment: 'left',
+                                },
+                                 {
+                                    width: '*',
+                                    text: 'Out of a total: '+$scope.total_lesson,
                                     alignment: 'right',
                                 },
                             ]
                         },
                         {
-                            margin: [0, 5, 0, 5],
+                            margin: [0, 12, 0, 20],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Campus: <?php echo $schoolname."-".$campuscity; ?>',
+                                    text: 'Conduct: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
                                     alignment: 'left',
                                 },
-                               {
-                                    width: '*',
-                                    text: 'Subject: '+$scope.filterobj.subjectid.name,
-                                    alignment: 'right',
-                                },
+                                 
                             ]
                         },
-                        table($scope.evulationlist,$scope.evalution_header,["screenname","score","term_result"]),
+                        
+                         {
+                            margin: [0, 12, 0, 20],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Attitudes: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },
+                        {
+                            margin: [0, 12, 0, 20],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Interest: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },
+                        {
+                            margin: [0, 12, 0, 20],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Director Remarks: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },
+                        {
+                            margin: [0, 12, 0, 20],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Principal Remarks: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _',
+                                    alignment: 'left',
+                                },
+                                 
+                            ]
+                        },                      
+
                    ],
 
                     styles: {
                         report_header: {
-                            fontSize: 24,
-                            bold: true,
+                            fontSize: 14,
+                            bold: false,
+                            alignment: 'center',
+                            margin: [0, 10, 0, 30]
+                        },
+                        report_logo: {
                             alignment: 'center'
-                        }
+                        },
+                        
                     }
                 };
                 return docDefinition;
@@ -525,6 +739,12 @@ require APPPATH.'views/__layout/footer.php';
                      $scope.total_mid_marks = response[0].total_mid_marks;
                      $scope.total_final_marks = response[0].total_final_marks;
                      $scope.total_sessional_marks = response[0].total_sessional_marks;
+                     $scope.total_marks = response[0].total_marks;
+                     $scope.total_attendence = response[0].total_attendence;
+                     $scope.total_lesson = response[0].total_lesson;
+                     $scope.count_attendence = response[0].count_attendence;
+                     $scope.session_date = response[0].session_dates;
+                     $scope.semester_dates = response[0].semester_dates;
                 }
                 else{
                     $scope.resultlist = [];

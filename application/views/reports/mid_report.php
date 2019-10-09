@@ -318,7 +318,7 @@ require APPPATH.'views/__layout/footer.php';
             $scope.eprocessfinished = true;
         }
         // Generate PDF
-        function buildTableBody(data,obtain_marks,total_marks, columnsheader,columns) {
+        function buildTableBody(data,obtain_marks,count_attendence,total_marks, columnsheader,columns) {
             //console.log(data);
             try{
                 var body = [];
@@ -383,13 +383,13 @@ require APPPATH.'views/__layout/footer.php';
                 console.log(e)
             }
         }
-        function table(data,obtain_marks,total_marks, columnsheader, columns ) {
+        function table(data,obtain_marks,count_attendence,total_marks, columnsheader, columns ) {
             try{
                 return {
                     table: {
                         headerRows: 1,
                         widths: ['*', '*', '*', '*', '*'],
-                        body: buildTableBody(data,obtain_marks,total_marks,columnsheader,columns)
+                        body: buildTableBody(data,obtain_marks,count_attendence,total_marks,columnsheader,columns)
                     },
                     layout: {
                     fillColor: function (rowIndex, node, columnIndex) {
@@ -467,14 +467,14 @@ require APPPATH.'views/__layout/footer.php';
                             ]
                         },
                         
-                        table($scope.subjectlist,$scope.obtain_marks,$scope.total_marks,["Subject","Obtained Marks","Total Marks","Grade","Comments"],["subject","evalution"]),  
+                        table($scope.subjectlist,$scope.obtain_marks,$scope.count_attendence,$scope.total_marks,["Subject","Obtained Marks","Total Marks","Grade","Comments"],["subject","evalution"]),  
                         //table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Grade"],["subject","evalution",]),
                         {
                             margin: [0, 40, 0, 15],
                             columns: [
                                {
                                     width: '*',
-                                    text: 'Attendance made: '+$scope.total_attendence+' %',
+                                    text: 'Attendance made: '+$scope.count_attendence+' ('+$scope.total_attendence+' %)',
                                     alignment: 'left',
                                 },
                                  {
@@ -700,6 +700,9 @@ require APPPATH.'views/__layout/footer.php';
                      $scope.total_marks = response[0].total_marks;
                      $scope.total_attendence = response[0].total_attendence;
                      $scope.total_lesson = response[0].total_lesson;
+                     $scope.total_marks = response[0].total_marks;
+                     $scope.count_attendence = response[0].count_attendence;
+                     
                 }
                 else{
                     $scope.resultlist = [];
