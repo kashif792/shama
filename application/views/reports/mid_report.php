@@ -431,7 +431,7 @@ require APPPATH.'views/__layout/footer.php';
                                     width: '*',
                                     text: 'Term: '+$scope.filterobj.semester.name,
                                     alignment: 'right',
-                                    margin: [0, 0, 70, 0],
+                                    
                                 },
                             ]
                         },
@@ -447,7 +447,7 @@ require APPPATH.'views/__layout/footer.php';
                                     width: '*',
                                     text: 'Date: <?php echo date('M d, Y') ?>',
                                     alignment: 'right',
-                                    margin: [0, 0, 22, 0],
+                                    
                                 },
                             ]
                         },
@@ -576,7 +576,7 @@ require APPPATH.'views/__layout/footer.php';
                 var filename = decodeURIComponent($scope.filterobj.class.name)+"-"+decodeURIComponent($scope.filterobj.section.name)+"-final";
             }
             else{
-                var filename = decodeURIComponent($scope.filterobj.class.name)+"-"+decodeURIComponent($scope.filterobj.section.name)+"-"+decodeURIComponent($scope.filterobj.semester.name);
+                var filename = decodeURIComponent($scope.filterobj.class.name)+"-"+decodeURIComponent($scope.filterobj.section.name)+"-"+decodeURIComponent($scope.filterobj.semester.name)+"-"+decodeURIComponent($scope.filterobj.studentid.name);
             }
             
              pdfMake.createPdf(reportobj).download(filename);
