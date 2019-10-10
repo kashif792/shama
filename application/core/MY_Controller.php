@@ -408,6 +408,25 @@ class MY_Controller extends CI_Controller {
 
             $this->operation->table_name = 'semester_dates';
             $this->operation->primary_key ='session_id';
+            $is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid,'status'=>'a'));
+            
+        }
+      
+        return (int) $is_semester_dates_found[0]->id;
+    }
+
+    function GetSemesterByUserLocation($sessionid = null)
+    {
+        if(is_null($sessionid))
+        {
+            $location_id = $this->GetLogedinUserLocation();
+            $this->operation->table_name = 'semester_dates';
+            $is_semester_dates_found = $this->operation->GetByWhere(array('school_id'=>$location_id));
+        }
+        else{
+
+            $this->operation->table_name = 'semester_dates';
+            $this->operation->primary_key ='session_id';
             //$is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid,'status'=>'a'));
             $is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid));
         }
@@ -479,6 +498,38 @@ class MY_Controller extends CI_Controller {
         }
         return $obtain_grade;
     }
+    // Get Grade by semester date
+    function GetGradeBySessionalDates($number,$session_date = null)
+    {   
+        $obtain_grade = 'F';
+        
+        if(is_null($session_date))
+        {
+            $current_semester_date = $this->GetSemesterByUserLocation();
+           
+        }
+        else{
+           $current_semester_date = $this->GetSemesterByUserLocation($session_date);
+        }
+
+        $this->operation->table_name = 'grades';
+        $grades = $this->operation->GetByWhere(array('semester_date_id'=>$current_semester_date));
+
+        if(count($grades) && $number > 0)
+        {
+            $grades = unserialize($grades[0]->option_value);
+        
+            foreach ($grades as $key => $value) {
+         
+                if($number >= (double) $value['lower_limit']   && $number <= (double) $value['upper_limit'])
+               {
+                    $obtain_grade = $value['title'];
+               }
+            }
+        }
+        return $obtain_grade;
+    }
+    
 
     function GetEvaluationByType($type,$session_date = null)
     {

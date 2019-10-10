@@ -430,8 +430,8 @@ require APPPATH.'views/__layout/footer.php';
                                  {
                                     width: '*',
                                     text: 'Term: '+$scope.filterobj.semester.name,
-                                    alignment: 'right',
-                                    
+                                    alignment: 'left',
+                                    margin: [100, 0, 0, 0],
                                 },
                             ]
                         },
@@ -446,8 +446,8 @@ require APPPATH.'views/__layout/footer.php';
                                 {
                                     width: '*',
                                     text: 'Date: <?php echo date('M d, Y') ?>',
-                                    alignment: 'right',
-                                    
+                                    alignment: 'left',
+                                    margin: [100, 0, 0, 0],
                                 },
                             ]
                         },
@@ -462,8 +462,8 @@ require APPPATH.'views/__layout/footer.php';
                                  {
                                     width: '*',
                                     text: 'Grade: '+$scope.filterobj.class.name+" ("+$scope.filterobj.section.name+')',
-                                    alignment: 'right',
-
+                                    alignment: 'left',
+                                    margin: [100, 0, 0, 0],
                                 },
                             ]
                         },
