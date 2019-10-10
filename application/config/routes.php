@@ -391,6 +391,10 @@ $route['finalstudentreportdata'] = 'Reports/FinalStudentReportBySubjectwize';
 // pdf file generate
 $route['midreportpdf'] = 'Reports/MidStudentPdfReport';
 // End here
+// Exams
+$route['exams'] = 'exams/datesheet';
+$route['add_mid_datesheet'] = 'exams/AddMidDatesheet';
+// End here
 $route['studentreport/(:any)/(:any)/(:any)/(:any)/(:any)'] = 'Reports/StudentReport/$1/$2/$3/$4/$5';
 $route['savegrade'] = 'Reports/SaveGrades';
 $route['removegrade'] = 'Reports/RemoveGrade';

@@ -8,9 +8,6 @@ require APPPATH.'views/__layout/topbar.php';
 // require_left_navigation
 require APPPATH.'views/__layout/leftnavigation.php';
 ?>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.3/jspdf.min.js"></script>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.js"></script>
 <div class="col-sm-10 col-md-10 col-lg-10 class-page "  ng-controller="class_report_ctrl" ng-init="processfinished=false">
     <?php
         // require_footer
@@ -179,6 +176,7 @@ require APPPATH.'views/__layout/footer.php';
                      var find_active_session = $filter('filter')(response,{status:'a'},true);
                     if(find_active_session.length > 0)
                     {
+                        
                         $scope.filterobj.session = find_active_session[0]
                     }
                 }

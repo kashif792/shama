@@ -355,6 +355,16 @@
 				</li>
 			</ul>
 		</li>
+		<li class="<?php 
+					if($this->uri->segment(1) == 'exams' || $this->uri->segment(1) == 'exams'){
+						echo 'active';
+					}
+				?>">
+			<a  href="<?php echo base_url(); ?>exams">
+				<i class="fa fa-film" aria-hidden="true"></i>
+				<span class="link_text"> Exams</span>
+			</a>
+		</li>
 		<!-- <li class="<?php 
 					if($this->uri->segment(1) == 'classreport' || $this->uri->segment(1) == 'studentreport'){
 						echo 'active';
