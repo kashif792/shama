@@ -513,7 +513,7 @@ class Reports extends MY_Controller
                         $evalution_array[] = array(
                             
                             'mid'=>(count($mid) ? $mid[0]->marks : 0),
-                            'grade'=>(parent::GetGradeBySessionalDates((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid)) ,
+                            'grade'=>(parent::GetGradeBySemesterDates((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid,$inputsemesterid)) ,
                             'obtain_marks'=>$obtain_marks,
                             'total_marks'=>MID_TOTAL_MARKS,
                         );    
@@ -554,7 +554,7 @@ class Reports extends MY_Controller
                         'obtain_marks'=> $total_obtain_mid_marks,
                         'total_marks'=>round($all_total_marks,2),
                         'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
-                        'grade'=>parent::GetGradeBySessionalDates((float)(($student_obtain_marks/$all_total_marks)*100),$inputsessionid),
+                        'grade'=>parent::GetGradeBySemesterDates((float)(($student_obtain_marks/$all_total_marks)*100),$inputsessionid,$inputsemesterid),
                     ); 
                 }
             }
@@ -680,21 +680,21 @@ class Reports extends MY_Controller
                         // Pass AND Fail Condition
                         if($value->subject_name=='English')
                         {
-                            if(parent::GetGradeBySessionalDates((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid)!="F")
+                            if(parent::GetGradeBySemesterDates((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid,$inputsemesterid)!="F")
                             {
                                 $final_result = "PASS";
                             }
                         }
                         if($value->subject_name=='Math')
                         {
-                            if(parent::GetGradeBySessionalDates((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid)!="F")
+                            if(parent::GetGradeBySemesterDates((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid,$inputsemesterid)!="F")
                             {
                                 $final_result = "PASS";
                             }
                         }
                         if($value->subject_name=='Science')
                         {
-                            if(parent::GetGradeBySessionalDates((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid)!="F")
+                            if(parent::GetGradeBySemesterDates((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid,$inputsemesterid)!="F")
                             {
                                 $final_result = "PASS";
                             }
@@ -736,7 +736,7 @@ class Reports extends MY_Controller
                             'sessional_marks'=>(int)($subject_sessional_marks),
                             'student_obtain_subject_marks'=>$student_obtain_subject_marks,
                             
-                            'grade'=>parent::GetGradeBySessionalDates((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid),
+                            'grade'=>parent::GetGradeBySemesterDates((double)(($student_obtain_subject_marks/$final_subject_total_marks)*100),$inputsessionid,$inputsemesterid),
                             'obtain_marks'=>$obtain_marks,
                             'total_marks'=>MID_TOTAL_MARKS,
                             'final_subject_total_marks' => (int)($final_subject_total_marks),

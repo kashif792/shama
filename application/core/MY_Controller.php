@@ -415,24 +415,7 @@ class MY_Controller extends CI_Controller {
         return (int) $is_semester_dates_found[0]->id;
     }
 
-    function GetSemesterByUserLocation($sessionid = null)
-    {
-        if(is_null($sessionid))
-        {
-            $location_id = $this->GetLogedinUserLocation();
-            $this->operation->table_name = 'semester_dates';
-            $is_semester_dates_found = $this->operation->GetByWhere(array('school_id'=>$location_id));
-        }
-        else{
-
-            $this->operation->table_name = 'semester_dates';
-            $this->operation->primary_key ='session_id';
-            //$is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid,'status'=>'a'));
-            $is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid));
-        }
-      
-        return (int) $is_semester_dates_found[0]->id;
-    }
+    
     
      function GetCurrentSemesterData($sessionid = null)
     {
@@ -499,21 +482,16 @@ class MY_Controller extends CI_Controller {
         return $obtain_grade;
     }
     // Get Grade by semester date
-    function GetGradeBySessionalDates($number,$session_date = null)
+    function GetGradeBySemesterDates($number,$sessionid,$semesterid)
     {   
         $obtain_grade = 'F';
         
-        if(is_null($session_date))
-        {
-            $current_semester_date = $this->GetSemesterByUserLocation();
-           
-        }
-        else{
-           $current_semester_date = $this->GetSemesterByUserLocation($session_date);
-        }
-
+       
+        $this->operation->table_name = 'semester_dates';
+        $this->operation->primary_key ='session_id';
+        $is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid,'semester_id'=>$semesterid));
         $this->operation->table_name = 'grades';
-        $grades = $this->operation->GetByWhere(array('semester_date_id'=>$current_semester_date));
+        $grades = $this->operation->GetByWhere(array('semester_date_id'=>$is_semester_dates_found[0]->id));
 
         if(count($grades) && $number > 0)
         {

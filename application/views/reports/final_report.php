@@ -726,6 +726,7 @@ require APPPATH.'views/__layout/footer.php';
                 //console.log(response);
                 if(response.length > 0)
                 {
+                    
                     //$scope.subjectlist = response;
                     $scope.subjectlist = response[0].result;
                     
