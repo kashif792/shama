@@ -355,16 +355,22 @@
 				</li>
 			</ul>
 		</li>
-		<li class="<?php 
-					if($this->uri->segment(1) == 'exams' || $this->uri->segment(1) == 'exams'){
-						echo 'active';
-					}
-				?>">
-			<a  href="<?php echo base_url(); ?>exams">
+		<li class="">
+			<a  href="javascript:void(0)" id="exams">
 				<i class="fa fa-film" aria-hidden="true"></i>
 				<span class="link_text"> Exams</span>
+				<i class="fa fa-chevron-down exams-icon pull-right"></i>
 			</a>
+			<ul class="nav nav-pills nav-stacked" id="datasheet" style="display: none">
+				<li><a  href="<?php echo base_url(); ?>exams">
+				<i class="fa fa-cog" aria-hidden="true"></i>
+				<span class="link_text"> Datesheet</span>
+				</a>
+			</li>
+				
+			</ul>
 		</li>
+		
 		<!-- <li class="<?php 
 					if($this->uri->segment(1) == 'classreport' || $this->uri->segment(1) == 'studentreport'){
 						echo 'active';

@@ -3,8 +3,6 @@ require APPPATH.'views/__layout/header.php';
 require APPPATH.'views/__layout/topbar.php';
 require APPPATH.'views/__layout/leftnavigation.php';
 ?>
-<link href="<?php echo $path_url; ?>css/easy-responsive-tabs.css" rel="stylesheet">
-<link rel="stylesheet" href="<?php echo $path_url; ?>css/intlTelInput.css">
 <div id="myUserModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -31,7 +29,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 
 
-                <p>Are you sure you want to delete this schedule?</p>
+                <p>Are you sure you want to delete this datesheet?</p>
 
 
 
@@ -67,208 +65,6 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 
 
-<div id="myModal" class="modal fade">
-
-
-
-    <div class="modal-dialog">
-
-
-
-        <div class="modal-content">
-
-
-
-            <div class="modal-body">
-
-
-
-                <h3 style="padding-left: 40px;">Schedule Information</h3>
-
-
-
-                <table class="table table-striped table-hover">
-
-
-
-                    <tbody>
-
-
-
-                        <tr>
-
-
-
-                            <td>
-
-
-
-                                <th>Subject Name</th>
-
-
-
-                            </td>
-
-
-
-                            <td id="user_name"></td>
-
-
-
-                        </tr>
-
-
-
-                        <tr>
-
-
-
-                            <td>
-
-
-
-                                <th>Grade Name</th>
-
-
-
-                            </td>
-
-
-
-                            <td id="user_email"></td>
-
-
-
-                        </tr>
-
-
-
-                        <tr>
-
-
-
-                            <td>
-
-
-
-                                <th>Section Name</th>
-
-
-
-                            </td>
-
-
-
-                            <td id="user_acct_date"></td>
-
-
-
-                        </tr>
-
-
-
-                        <tr>
-
-
-
-                            <td>
-
-
-
-                                <th>Teacher Name</th>
-
-
-
-                            </td>
-
-
-
-                            <td id="user_acct_status"></td>
-
-
-
-                        </tr>
-
-
-
-                        <tr>
-
-
-
-                            <td>
-
-
-
-                                <th>Start Time</th>
-
-
-
-                            </td>
-
-
-
-                            <td id="user_role"></td>
-
-
-
-                        </tr>
-
-                          <tr>
-
-
-
-                            <td>
-
-
-
-                                <th>End Time</th>
-
-
-
-                            </td>
-
-
-
-                            <td id="user_role"></td>
-
-
-
-                        </tr>
-
-                    </tbody>
-
-
-
-                </table>
-
-
-
-             </div>
-
-
-
-            <div class="modal-footer">
-
-
-
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-
-
-            </div>
-
-
-
-        </div>
-
-
-
-    </div>
-
-
-
-</div>
-
 
 
 <div class="col-sm-10">
@@ -292,10 +88,13 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	<div class="panel-heading">
 		<label>Datesheet List
 			   &nbsp;&nbsp;&nbsp;<a href="<?php echo $path_url; ?>add_mid_datesheet" class="btn btn-primary" style="color: #fff !important;">Mid Term Datesheet</a>
-			   &nbsp;&nbsp;&nbsp;<a href="<?php echo $path_url; ?>add_timtble" class="btn btn-primary" style="color: #fff !important;">Final Term Datesheet</a>
+			   &nbsp;&nbsp;&nbsp;<a href="<?php echo $path_url; ?>add_final_datesheet" class="btn btn-primary" style="color: #fff !important;">Final Term Datesheet</a>
      
 		</label>
 	</div>
+    <?php
+    
+?>
 	<div class="panel-body">
 		<table class="table-body timtbleflter" id="table-body-phase-tow" >
 
@@ -306,8 +105,11 @@ require APPPATH.'views/__layout/leftnavigation.php';
 				                            <th>Grade</th>
 				                            <th>Semester</th>
 		                                    <th>Subject</th>
+                                            <th>Date</th>
+                                            <th>Day</th>
 		                                    <th>Start Time</th>
 		                                    <th>End Time</th>
+                                            <th>Duration</th>
 		                                    <th>Options</th>
 				                        </tr>
 				                    </thead>
@@ -318,15 +120,63 @@ require APPPATH.'views/__layout/leftnavigation.php';
 				                            <th>Grade</th>
 				                            <th>Semester</th>
 		                                    <th>Subject</th>
+                                            <th>Date</th>
+                                            <th>Day</th>
 		                                    <th>Start Time</th>
 		                                    <th>End Time</th>
+                                            <th>Duration</th>
 		                                    <th>Options</th>
 				                        </tr>
 
 				                    </tfoot>
 
 			                        <tbody id="reporttablebody-phase-two" class="report-body">
+                                        <?php //print_r($datasheet_list); ?>
+                                        <?php $i = 1 ; if(isset($datasheet_list)){ ?>
 
+                                            <?php foreach ($datasheet_list as $key => $value) {?>
+
+                                            <tr <?php if($i%2 == 0){echo "class='green-bar row-update'";} else{echo "class='yellow-bar row-update'";} ?> id="tr_<?php echo $value->id ;?>" data-view="<?php echo $this->encrypt->encode($value->id) ;?>">
+
+                                            
+
+                                                <td class="row-bar-user" data-view=""><?php echo date('M d,Y',strtotime($value->datefrom)).' - '.date('M d,Y',strtotime($value->dateto))?></td>
+
+                                                <td class="row-bar-user" data-view=""><?php echo  $value->type; ?></td>
+
+                                                <td class="row-bar-user" data-view=""><?php echo $value->grade; ?></td>
+
+                                                <td class="row-bar-user" data-view=""><?php echo $value->semester_name; ?></td>
+                                                <td class="row-bar-user" data-view=""><?php echo $value->subject_name; ?></td>
+                                                <td class="row-bar-user" data-view=""><?php echo date("M d,Y",strtotime($value->exam_date)) ?></td>
+                                                <td class="row-bar-user" data-view=""><?php echo date("l",strtotime($value->exam_date)) ?></td>
+
+                                                <td class="row-bar-user" data-view=""><?php echo date('H:i',strtotime($value->start_time)); ?></td>
+
+                                                <td class="row-bar-user" data-view=""><?php echo date('H:i',strtotime($value->end_time)); ?></td>
+                                                <td class="row-bar-user" data-view=""><?php echo getDuration($value->start_time,$value->end_time); ?></td>
+
+
+                                                <td>
+
+                                                    <a href="<?php echo $path_url; ?>edit_datesheet/<?php echo $value->id ;?>" id="<?php echo $value->id ;?>" class='edit' title="Edit">
+
+                                                         <i class="fa fa-edit" aria-hidden="true"></i>
+
+                                                    </a>
+
+                                                    <a href="#" title="Delete" id="<?php echo  $value->id ;?>" class="del">
+                                                    <i class="fa fa-remove" aria-hidden="true"></i>
+
+                                                    </a>
+
+                                                </td>
+
+                                            </tr>
+
+                                            <?php $i++;} ?>
+
+                                            <?php }  ?>
 			                        	
 
 					                </tbody>
@@ -664,7 +514,7 @@ require APPPATH.'views/__layout/footer.php';
 
 
 
-            urlpath = "<?php echo $path_url; ?>Teacher/removeSchedule";
+            urlpath = "<?php echo $path_url; ?>Principal_controller/removeDatesheet";
 
 
 
@@ -696,7 +546,7 @@ require APPPATH.'views/__layout/footer.php';
 
 
 
-	    	$(".message-text").text("Schedule has been not deleted").fadeOut(10000);
+	    	$(".message-text").text("Datesheet has been not deleted").fadeOut(10000);
 
 
 
@@ -728,7 +578,7 @@ require APPPATH.'views/__layout/footer.php';
 
 
 
-		    	$(".message-text").text("schedule has been deleted").fadeOut(10000);
+		    	$(".message-text").text("Datesheet has been deleted").fadeOut(10000);
 
 
 

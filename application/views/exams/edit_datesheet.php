@@ -16,14 +16,13 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	?>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<label>Add Mid Term Datesheet </label>
+			<label>Update Datesheet </label>
 		</div>
+
 		<div class="panel-body">
           		<?php $attributes = array('name' => 'schedule_timetable', 'id' => 'schedule_timetable','class'=>'form-horizontal'); echo form_open('', $attributes);?>
 	               	<input type="hidden" value="<?php if($this->uri->segment(2)){ echo $this->uri->segment(2);} ?>" name="serial" id="serial" ng-model="serial">
-                	<input type="hidden" value="Mid" name="type" id="type" ng-model="type">
-                	<fieldset>
-                		<div class="form-group">
+                	<div class="form-group">
                 			<div class="col-sm-12">
                             <label for="inputRSession">Session <span class="required">*</span></label>
                         	</div>
@@ -41,6 +40,19 @@ require APPPATH.'views/__layout/leftnavigation.php';
                              <select class="form-control" ng-options="item.name for item in semesterlist track by item.id"  name="inputSemester" id="inputSemester"  ng-model="filterobj.semester"></select>
                         	</div>
                         </div>
+                        <div class="form-group">
+                			<div class="col-sm-12">
+                            <label for="inputRSession">Term <span class="required">*</span></label>
+                        	</div>
+                            <div class="col-sm-6">
+
+                             <select class="form-control" id="select_type" name="select_type">
+                             	<option value="Mid" <?php if($result['type']=="Mid") {echo 'selected="selected"';} ?>>Mid</option>
+                             	<option value="Final" <?php if($result['type']=="Final") {echo 'selected="selected"';} ?>>Final</option>
+                             </select>
+                        	</div>
+                        </div>
+                	<fieldset>
 	                	<div class="form-group">
 	                		<div class="col-sm-12">
 	                			<label><span class="icon-user"></span> Grade <span class="required">*</span></label>
@@ -67,7 +79,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
 			                							
 	                		</div>
 	                     </div>
-	                     	
+	                
+	                	
 	                		<div class="form-group ">
 	                		<div class="col-sm-12">
 	                			<label><span class="icon-clock"></span> From <span class="required">*</span></label>
@@ -114,9 +127,9 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	app.controller('timetable_controller', function($scope, $http, $interval,$filter) {
 		$scope.filterobj = {};
 		$scope.fallsemester = [];
+		$scope.select_type = [];
 		var urlist = {
             getclasslist:'<?php echo base_url(); ?>getclasslist',
-            
         }
 
         $scope.serial = "<?php echo $this->uri->segment('2'); ?>";
@@ -143,72 +156,49 @@ require APPPATH.'views/__layout/leftnavigation.php';
 				//document.getElementById("save").disabled = false;
 			}
 		});
-		function getSessionList()
-        {
-            httprequest('getsessiondetail',({})).then(function(response){
-                if(response != null && response.length > 0)
-                {
-                    $scope.rsessionlist = response
-                    
-                     var find_active_session = $filter('filter')(response,{status:'a'},true);
-                    if(find_active_session.length > 0)
-                    {
-                    	
-                        $scope.filterobj.session = find_active_session[0];
-                    }
-                }
-                else{
-                    $scope.finished();
-                }
-            });
-        }
-        
-        getSessionList();
-        getSemesterData();
-        function getSemesterData(){
-            try{
-                $scope.semesterlist = []
-                httprequest('<?php echo $path_url; ?>getsemesterdata',({})).then(function(response){
-                    if(response.length > 0 && response != null)
-                    {
-                        $scope.semesterlist = response;
-                        var find_active_semester = $filter('filter')(response,{active_semster:'a'},true);
-                        
-                        if(find_active_semester.length > 0)
-                        {
-                            
-                            $scope.filterobj.semester = find_active_semester[0]  ;
-                            
-                        }
 
-                    }
-                    else{
-                        $scope.semesterlist = [];
-                    }
-                });
-             }
-            catch(ex){}
-        }
 		function initmodules()
 		{
 			loadclass()
-			
-
+			loadteacherlist();
 			if($scope.serial == ''){
-				$scope.inputStartitme = '<?php if(isset($result)){echo date('H:i',strtotime($result['start_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds); } ?>'
-				$scope.InputEndTime = '<?php if(isset($result)){echo date('H:i',strtotime($result['end_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds + 900); } ?>'
-				$scope.exam_date = '<?php echo date('Y-m-d') ?>'
-				$scope.type = '<?php echo "Mid" ?>'
+				$scope.inputStartitme = '<?php echo date('H:i',strtotime($result['start_time']))?>'
+				$scope.InputEndTime = '<?php echo date('H:i',strtotime($result['end_time'])); ?>'
 			}
 		}
-
 		
+		function getScheduleDetail() {
+			try{
+			 	
+			   var data = ({datesheetinfo:$scope.serial})
+			   httprequest('<?php echo base_url(); ?>getdatesheet',data).then(function(response){
+				   if(response != null)
+				   {
+				   		console.log(response);
+			   		 	$scope.editresponse = response;
+			   		 	
+					  	
+					  	$scope.inputStartitme = response.start_time;
+					  	$scope.InputEndTime = response.end_time;
+					  	$scope.filterobj.semester = response.semester_id;
+					  	$scope.filterobj.session = response.session_id;
+					  	loadclass()
+					  	getSemesterData();
+					  	getSessionList();
+				   }
+				   else{
+
+				   }
+			   })
+		   }
+		   catch(ex){}
+		}
+
 		function loadclass()
         {
         	if($scope.classlist != null && $scope.classlist.length > 0 && $scope.firsttimeload == false)
         	{
         		 $scope.select_class = $scope.classlist[0];
-
         		 loadSections();
         	}
 
@@ -232,14 +222,6 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	                }
 	            });
         	}
-
-        		httprequest(urlist.rsessionlist,({})).then(function(response){
-	                if(response != null && response.length > 0)
-	                {
-	                    $scope.rsessionlist = response;
-	                }
-	            });
-        	
         }
 
         $scope.changeclass = function()
@@ -250,7 +232,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
         $scope.savetimetable = function()
         {
-        	var session_id = $("#inputRSession").val();
+
+    	 	var session_id = $("#inputRSession").val();
         	var semester_id = $("#inputSemester").val();
     	 	var subj_name = $("#select_subject").val();
            
@@ -258,7 +241,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
             var starttime = $("#inputStartitme").val();
             var endtime = $("#InputEndTime").val();
             var exam_date = $("#exam_date").val();
-            var type = "Mid";
+            var select_type = $("#select_type").val();
             message("",'hide')
             $("#time_error").hide()
 
@@ -268,21 +251,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 message("Please select grade",'show')
                 return false;
             }
-            else{
-                jQuery("#inputSection").css("border", "1px solid #C9C9C9");
-            }
+            
 
-             
-             if(!$scope.inputSubject){
-                jQuery("#select_subject").css("border", "1px solid red");
-                message("Please select subject",'show')
-                return false;
-            }
-            else{
-                jQuery("#select_subject").css("border", "1px solid #C9C9C9");
-            }
-
- 				
             var reg = /(\d|2[0-3]):([0-5]\d)/;
 
             if(reg.test(starttime) == false){
@@ -300,6 +270,10 @@ require APPPATH.'views/__layout/leftnavigation.php';
             else{
                 jQuery("#InputEndTime").css("border", "1px solid #C9C9C9");
             }
+
+
+
+
 
            	var t = new Date();
 			d = t.getDate();
@@ -329,39 +303,39 @@ require APPPATH.'views/__layout/leftnavigation.php';
 			formdata.append('inputTo',$scope.InputEndTime);
 			formdata.append('serial',$scope.serial);
 			formdata.append('exam_date',$scope.exam_date);
-			formdata.append('type',$scope.type);
+			formdata.append('select_type',select_type);
+			
 			var request = {
                 method: 'POST',
-                url: "<?php echo $path_url; ?>Principal_controller/saveDatesheet",
+                url: "<?php echo $path_url; ?>Principal_controller/updateDatesheet",
                 data: formdata,
                 headers: {'Content-Type': undefined}
             };
 
             $http(request)
                 .success(function (response) {
-                	
                     var $this = $(".btn-primary");
                     $this.button('reset');
                     if(response.message == true){
-           				message('Mid Datesheet added','show');
+           				message('Schedule added','show');
 						window.location.href = "<?php echo $path_url;?>exams";
            	    	}
 
            	    	if(response.message == false){
 						initmodules();
-           				message('Mid Datesheet not saved','show')
+           				message('Schedule data not saved','show')
            	    	}
                 })
                 .error(function(){
                     var $this = $(".btn-primary");
                     $this.button('reset');
 					initmodules();
-                    message('Mid Datesheet not saved','show')
+                    message('Schedule data not saved','show')
                 });
         }
 
 $(document).ready(function(){
-		initdatepickter('input[name="exam_date"]',new Date('<?php echo date('Y-m-d') ?>'))
+		initdatepickter('input[name="exam_date"]',new Date('<?php echo date('Y-m-d',strtotime($result['exam_date'])); ?>'))
 		
 	 	function initdatepickter(dateinput,inputdate)
 
@@ -385,7 +359,8 @@ $(document).ready(function(){
 
 	 	}
 
-	});
+	}); 
+
 			$(document).ready(function() {
 		   $('#inputStartitme').timepicker({
 		       showLeadingZero: false,
@@ -543,7 +518,54 @@ $(document).ready(function(){
 		}
 		catch(ex){}
       }
+      
+        function getSessionList()
+        {
 
+            //httprequest('getsessiondetail',({})).then(function(response){
+            httprequest('<?php echo $path_url; ?>getsessiondetail',({})).then(function(response){
+                if(response != null && response.length > 0)
+                {
+                    $scope.rsessionlist = response
+                    
+                     var find_active_session = $filter('filter')($scope.rsessionlist, {id: $scope.editresponse.session_id},true);
+                    if(find_active_session.length > 0)
+                    {
+                    	
+                        $scope.filterobj.session = find_active_session[0];
+                    }
+                }
+                else{
+                    $scope.finished();
+                }
+            });
+        }
+        
+        
+        function getSemesterData(){
+            try{
+                $scope.semesterlist = []
+                httprequest('<?php echo $path_url; ?>getsemesterdata',({})).then(function(response){
+                    if(response.length > 0 && response != null)
+                    {
+                        $scope.semesterlist = response;
+                        
+                        //var find_active_semester = $filter('filter')(response,{active_semster:'a'},true);
+                        var find_active_semester = $filter('filter')($scope.semesterlist, {id: $scope.editresponse.semester_id},true);
+                        if(find_active_semester.length)
+                    	{
+                    		$scope.filterobj.semester = find_active_semester[0];
+                    	}
+                        
+
+                    }
+                    else{
+                        $scope.semesterlist = [];
+                    }
+                });
+             }
+            catch(ex){}
+        }
 		function loadSections()
 		{
 
@@ -611,8 +633,81 @@ $(document).ready(function(){
 		}
 
 
-		
-		
+		function loadteacherlist()
+		{
+			try{
+				if($scope.teacherlist != null && $scope.teacherlist.length > 0)
+				{
+					$scope.select_teacher = $scope.teacherlist[0];
+				}
+
+				if($scope.teacherlist == null)
+				{
+					var data = ({})
+
+					httprequest('<?php echo base_url(); ?>teacherlist',data).then(function(response){
+						if(response != null)
+						{
+							$scope.teacherlist = response;
+							$scope.select_teacher = response[0];
+							if($scope.firsttimeload == true)
+		                    {
+				   		 		var found = $filter('filter')($scope.teacherlist, {id: $scope.editresponse.teacher}, true);
+		                    	if(found.length)
+		                    	{
+		                    		$scope.select_teacher = found[0];
+		                    	}
+		                    	
+		                	}
+						
+						}else{
+							$scope.teacherlist = [];
+						}
+
+					});
+				}
+			}
+			catch(ex){}
+		}
+
+		function checkClass()
+		{
+			try{
+				
+				if($scope.altersection == false && $scope.serial != '')
+				{
+					return false;
+				}
+
+				var data = ({
+							schclassid:$scope.select_class.id,
+							sectionid:$scope.inputSection.id,
+							subjectid:$scope.inputSubject.id
+						})
+
+				httprequest('<?php echo base_url(); ?>checkschedule',data).then(function(response){
+					if(response != null && response.message == true)
+					{
+						$scope.is_valid_class = false
+						message("Already subject allocated",'show')
+					}else{
+						$scope.is_valid_class = true
+						message("",'hide')
+						checkTeacherSchedule();
+					}
+
+					if($scope.is_valid_class == true && $scope.is_valid_schedule == true)
+					{
+					//	document.getElementById("save").disabled = false;
+					}
+					else
+					{
+						//document.getElementById("save").disabled = true;
+					}
+				})
+			}
+			catch(ex){}
+		}
 
 		$scope.isteacheraltered = false
 		$scope.chkteachersch = function()

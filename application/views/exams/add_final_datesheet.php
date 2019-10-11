@@ -21,7 +21,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 		<div class="panel-body">
           		<?php $attributes = array('name' => 'schedule_timetable', 'id' => 'schedule_timetable','class'=>'form-horizontal'); echo form_open('', $attributes);?>
 	               	<input type="hidden" value="<?php if($this->uri->segment(2)){ echo $this->uri->segment(2);} ?>" name="serial" id="serial" ng-model="serial">
-                	<input type="hidden" value="Mid" name="type" id="type" ng-model="type">
+                	<input type="hidden" value="Final" name="type" id="type" ng-model="type">
                 	<fieldset>
                 		<div class="form-group">
                 			<div class="col-sm-12">
@@ -192,13 +192,12 @@ require APPPATH.'views/__layout/leftnavigation.php';
 		function initmodules()
 		{
 			loadclass()
-			
-
+			loadteacherlist();
 			if($scope.serial == ''){
 				$scope.inputStartitme = '<?php if(isset($result)){echo date('H:i',strtotime($result['start_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds); } ?>'
 				$scope.InputEndTime = '<?php if(isset($result)){echo date('H:i',strtotime($result['end_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds + 900); } ?>'
 				$scope.exam_date = '<?php echo date('Y-m-d') ?>'
-				$scope.type = '<?php echo "Mid" ?>'
+				$scope.type = '<?php echo "Final" ?>'
 			}
 		}
 
@@ -611,8 +610,81 @@ $(document).ready(function(){
 		}
 
 
-		
-		
+		function loadteacherlist()
+		{
+			try{
+				if($scope.teacherlist != null && $scope.teacherlist.length > 0)
+				{
+					$scope.select_teacher = $scope.teacherlist[0];
+				}
+
+				if($scope.teacherlist == null)
+				{
+					var data = ({})
+
+					httprequest('<?php echo base_url(); ?>teacherlist',data).then(function(response){
+						if(response != null)
+						{
+							$scope.teacherlist = response;
+							$scope.select_teacher = response[0];
+							if($scope.firsttimeload == true)
+		                    {
+				   		 		var found = $filter('filter')($scope.teacherlist, {id: $scope.editresponse.teacher}, true);
+		                    	if(found.length)
+		                    	{
+		                    		$scope.select_teacher = found[0];
+		                    	}
+		                    	
+		                	}
+						
+						}else{
+							$scope.teacherlist = [];
+						}
+
+					});
+				}
+			}
+			catch(ex){}
+		}
+
+		function checkClass()
+		{
+			try{
+				
+				if($scope.altersection == false && $scope.serial != '')
+				{
+					return false;
+				}
+
+				var data = ({
+							schclassid:$scope.select_class.id,
+							sectionid:$scope.inputSection.id,
+							subjectid:$scope.inputSubject.id
+						})
+
+				httprequest('<?php echo base_url(); ?>checkschedule',data).then(function(response){
+					if(response != null && response.message == true)
+					{
+						$scope.is_valid_class = false
+						message("Already subject allocated",'show')
+					}else{
+						$scope.is_valid_class = true
+						message("",'hide')
+						checkTeacherSchedule();
+					}
+
+					if($scope.is_valid_class == true && $scope.is_valid_schedule == true)
+					{
+					//	document.getElementById("save").disabled = false;
+					}
+					else
+					{
+						//document.getElementById("save").disabled = true;
+					}
+				})
+			}
+			catch(ex){}
+		}
 
 		$scope.isteacheraltered = false
 		$scope.chkteachersch = function()

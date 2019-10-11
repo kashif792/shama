@@ -5306,5 +5306,334 @@ if(!$this->session->userdata('id'))
 
 		echo json_encode($breakdata);
 	}
-}
+	function datesheet()
+    {
+        if(!($this->session->userdata('id')))
+        {
+            parent::redirectUrl('signin');
+        }
+        $this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/small_nrlogo.png");
+        $this->data['schoolname'] = $this->campus;
+        $this->data['campuscity'] = $this->usercity;
+        $locations = $this->session->userdata('locations');
+
+        $this->data['datasheet_list'] = $this->operation->GetRowsByQyery("SELECT
+					d.id
+					,d.start_time
+					,d.end_time
+				    ,classes.grade
+					,d.type
+					,d.exam_date
+				    , semester.semester_name
+				    , subjects.subject_name
+				    , sessions.datefrom
+				    , sessions.dateto
+			FROM
+			   datesheet as d
+			    INNER JOIN classes 
+			        ON (d.class_id = classes.id)
+			    INNER JOIN semester 
+			        ON (semester.id = d.semester_id)
+			    INNER JOIN subjects 
+			        ON (subjects.id = d.subject_id)
+			    INNER JOIN sessions 
+			        ON (d.session_id = sessions.id) WHERE d.school_id =".$locations[0]['school_id']);
+        
+        $this->load->view("exams/datesheet",$this->data);
+    }
+    function AddMidDatesheet()
+    {
+        
+            if(!($this->session->userdata('id'))){
+
+                parent::redirectUrl('signin');
+
+            }
+            
+        $this->load->view('exams/add_mid_datesheet',$this->data);
+    }
+    function AddFinalDatesheet()
+    {
+        
+            if(!($this->session->userdata('id'))){
+
+                parent::redirectUrl('signin');
+
+            }
+            
+        $this->load->view('exams/add_final_datesheet',$this->data);
+    }
+    function removeDatesheet(){
+		$result['message'] = false;
+		$removerecorde = $this->db->query("Delete from datesheet where id =".trim($_GET['id']));
+		if($removerecorde == TRUE):
+			$result['message'] = true;
+		endif;
+		echo json_encode($result);
+
+
+
+	}
+	function saveDatesheet()
+	{
+    
+    
+	 	if(!($this->session->userdata('id'))){
+			parent::redirectUrl('signin');
+
+		}
+
+		$result['message'] = false;
+		$locations = $this->session->userdata('locations');
+        
+		  
+        $this->form_validation->set_rules('semester_id', 'Semester Required', 'trim|required');
+        $this->form_validation->set_rules('session_id', 'Session Required', 'trim|required');
+        
+		$this->form_validation->set_rules('select_subject', 'Subject Required', 'trim|required');
 		
+
+		if ($this->form_validation->run() == FALSE){
+			$result['message'] = false;
+		}
+		else{
+			if($this->input->post('serial')){
+				$get_schedule_row = $this->operation->GetRowsByQyery(array('id'=>$this->input->post('serial')));
+				$subject_schedual_check = true;
+				
+
+				$schedule =  array(
+									'last_update'=> date('Y-m-d'),
+									'subject_id'=>$this->input->post('select_subject'),
+								 	'class_id'=>$this->input->post('select_class'),
+								 	'section_id'=>$this->input->post('inputSection'),
+								 	'teacher_uid'=>$this->input->post('select_teacher'),
+								 	'start_time'=>strtotime($this->input->post('inputFrom')),
+								 	'end_time'=>strtotime($this->input->post('inputTo')),
+							 	 	'semsterid'=>$active_semester[0]->semester_id,
+								 	'sessionid'=>$active_session[0]->id,
+								);
+
+				$this->operation->table_name = 'schedule';
+				if($subject_schedual_check == true)
+				{
+					$id = $this->operation->Create($schedule,$this->input->post('serial'));
+					if(count($id))
+					{
+						$result['message'] = true;
+					}
+				}	
+				
+			}
+
+			else{
+				$subject_schedual_check = true;
+
+				$data =  array(
+									
+									'subject_id'=>$this->input->post('select_subject'),
+								 	'class_id'=>$this->input->post('select_class'),
+								 	'session_id'=>$this->input->post('session_id'),
+								 	'school_id'=>$locations[0]['school_id'],
+								 	'type'=>$this->input->post('type'),
+								 	'semester_id'=>$this->input->post('semester_id'),
+								 	'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
+								 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
+									'exam_date'=>date('Y-m-d',strtotime($this->input->post('exam_date'))),
+								 	'created_at'=> date('Y-m-d H:i'),
+								);
+               
+				$this->operation->table_name = 'datesheet';
+				//if($subject_schedual_check == true)
+				//{
+					$id = $this->operation->Create($data);
+				//}
+				
+				if(count($id))
+				{
+					
+
+					$result['message'] = true;
+				}
+			}
+		}
+
+
+
+		echo json_encode($result);
+	}
+	public function edit_exam_datesheet()
+	{
+        
+			if(!($this->session->userdata('id'))){
+
+				parent::redirectUrl('signin');
+
+			}
+
+		$locations = $this->session->userdata('locations');
+
+			$roles = $this->session->userdata('roles');
+
+			$result = array();
+
+			if($this->uri->segment(2) AND $this->uri->segment(2) != "page" ){
+
+				$schedule_single = $this->operation->GetRowsByQyery("Select * from datesheet where id= ".$this->uri->segment(2));
+				if(Count($schedule_single))
+				{
+					$this->data['schedule_single'] = $schedule_single;
+
+					$result['class_id'] = $schedule_single[0]->class_id;
+
+					$result['semester_id'] = $schedule_single[0]->semester_id;
+
+					$result['subject_id'] = $schedule_single[0]->subject_id;
+					$result['exam_date'] = $schedule_single[0]->exam_date;
+					$result['type'] = $schedule_single[0]->type;
+					$result['start_time'] = date('H:i',strtotime($schedule_single[0]->start_time));
+
+					$result['end_time'] = date('H:i',strtotime($schedule_single[0]->end_time));
+
+				}
+
+				$this->data['result'] = $result;
+
+		}
+
+
+
+		
+		//$this->data['sectionlist'] = $this->operation->GetRowsByQyery("SELECT username, nic FROM `invantageuser` WHERE type ='t'");
+
+		$this->operation->table_name = "subjects";
+
+		$subjectslist = $this->operation->GetRows();
+
+		$subjects = array();
+
+		// foreach ($subjectslist as $key => $value) {
+		// 	$subject_code=$this->operation-.GetRowsByQyery("select * from subjects where id= ".$value->id);
+
+		// 	$value->subject_name=$value->subject_name." (".$subject_code[0]->subject_code." )";
+		// }
+
+		// print_r($subjectlist);
+
+		if(count($subjectslist))
+
+		{
+
+			foreach ($subjectslist as $key => $value) {
+
+
+
+				$subjects[] = array(
+
+					'subid'=>$value->id,
+
+					'name'=> $value->subject_name." (".$value->subject_code." )",
+
+					'class'=>parent::getClass($value->class_id),
+
+				);
+
+			}
+
+		}
+
+
+		
+
+
+
+
+		$classlist = $this->operation->GetRowsByQyery("SELECT  * FROM classes c where school_id=".$locations[0]['school_id']);
+		
+		$this->data['classlist'] = $classlist;
+
+
+
+		$this->data['subjects'] = $subjects;
+
+
+
+		$this->load->view('exams/edit_datesheet',$this->data);
+	
+	}
+	function DatesheetDetail()
+	{
+		if (!is_null($this->input->get('datesheetinfo')))
+        {
+            $this->operation->table_name = 'datesheet';
+            $schedulalist = $this->operation->GetByWhere(array('id' => $this->input->get('datesheetinfo'),));
+            $schedulararray = array();
+            if (count($schedulalist))
+            {
+                foreach ($schedulalist as $key => $value)
+                {
+                    $schedulararray = array('class' => $value->class_id,  'subject' => $value->subject_id, 'session_id' => $value->session_id, 'semester_id' => $value->semester_id, 'subject_id' => $value->subject_id, 'exam_date' => date('Y-m-d',strtotime($value->exam_date)),'start_time' => date('H:i', strtotime($value->start_time)), 'end_time' => date('H:i', strtotime($value->end_time)),);
+                }
+            }
+        }
+        echo json_encode($schedulararray);
+	}
+	function updateDatesheet()
+	{
+		if(!($this->session->userdata('id'))){
+			parent::redirectUrl('signin');
+
+		}
+
+		$result['message'] = false;
+		$locations = $this->session->userdata('locations');
+        
+		  
+        $this->form_validation->set_rules('semester_id', 'Semester Required', 'trim|required');
+        $this->form_validation->set_rules('session_id', 'Session Required', 'trim|required');
+        
+		$this->form_validation->set_rules('select_subject', 'Subject Required', 'trim|required');
+		
+
+		if ($this->form_validation->run() == FALSE){
+			$result['message'] = false;
+		}
+		else{
+			if($this->input->post('serial')){
+				$get_schedule_row = $this->operation->GetRowsByQyery(array('id'=>$this->input->post('serial')));
+				$subject_schedual_check = true;
+				
+
+				$data =  array(
+									
+									'subject_id'=>$this->input->post('select_subject'),
+								 	'class_id'=>$this->input->post('select_class'),
+								 	'session_id'=>$this->input->post('session_id'),
+								 	'school_id'=>$locations[0]['school_id'],
+								 	'semester_id'=>$this->input->post('semester_id'),
+								 	'type'=>$this->input->post('select_type'),
+								 	'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
+								 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
+									'exam_date'=>date('Y-m-d',strtotime($this->input->post('exam_date'))),
+								 	'updated_at'=> date('Y-m-d H:i'),
+								);
+
+				$this->operation->table_name = 'datesheet';
+				
+					$id = $this->operation->Create($data,$this->input->post('serial'));
+					if(count($id))
+					{
+						$result['message'] = true;
+					}
+					
+				
+			}
+
+			
+		}
+
+
+
+		echo json_encode($result);
+	}
+}	

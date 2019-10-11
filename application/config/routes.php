@@ -392,8 +392,11 @@ $route['finalstudentreportdata'] = 'Reports/FinalStudentReportBySubjectwize';
 $route['midreportpdf'] = 'Reports/MidStudentPdfReport';
 // End here
 // Exams
-$route['exams'] = 'exams/datesheet';
-$route['add_mid_datesheet'] = 'exams/AddMidDatesheet';
+$route['exams'] = 'Principal_controller/datesheet';
+$route['add_mid_datesheet'] = 'Principal_controller/AddMidDatesheet';
+$route['add_final_datesheet'] = 'Principal_controller/AddFinalDatesheet';
+$route['edit_datesheet/(:any)'] = "Principal_controller/edit_exam_datesheet/$1";
+$route['getdatesheet'] = 'Principal_controller/DatesheetDetail';
 // End here
 $route['studentreport/(:any)/(:any)/(:any)/(:any)/(:any)'] = 'Reports/StudentReport/$1/$2/$3/$4/$5';
 $route['savegrade'] = 'Reports/SaveGrades';

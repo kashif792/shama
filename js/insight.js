@@ -65,6 +65,17 @@ $(document).ready(function(){
         }
         $("#midresult").slideToggle('slow')
      })
+     $("#exams").click(function(){
+       
+        if($("#datasheet").css('display') == 'block')
+        {
+            $(".exams-icon").removeClass('lsubmenu-icon-rotate')
+        }
+        if($("#datasheet").css('display') == 'none'){
+            $(".exams-icon").addClass('lsubmenu-icon-rotate')
+        }
+        $("#datasheet").slideToggle('slow')
+     })
     
 
     /**
