@@ -5341,6 +5341,56 @@ if(!$this->session->userdata('id'))
         
         $this->load->view("exams/datesheet",$this->data);
     }
+    function getDatesheet()
+    {
+    	$listarray = array();
+    	$locations = $this->session->userdata('locations');
+		$request = json_decode(file_get_contents('php://input'));
+
+        $inputclassid = $this->security->xss_clean(trim($request->inputclassid));
+        $inputsessionid = $this->security->xss_clean(trim($request->inputsessionid));
+
+    	if (!is_null($inputclassid)  && !is_null($inputsessionid))
+    	{
+    		$datesheelist = $this->operation->GetRowsByQyery("SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+					FROM
+					   datesheet as d
+					    INNER JOIN classes 
+					        ON (d.class_id = classes.id)
+					    INNER JOIN semester 
+					        ON (semester.id = d.semester_id)
+					    INNER JOIN subjects 
+					        ON (subjects.id = d.subject_id)
+					    INNER JOIN sessions 
+					        ON (d.session_id = sessions.id) WHERE
+					        d.class_id  = ".$inputclassid." AND
+					        d.session_id  = ".$inputsessionid." AND
+					        d.school_id =".$locations[0]['school_id']);
+	    	if (count($datesheelist))
+	    	{	
+
+	    		foreach ($datesheelist as $key => $value)
+	    		{
+
+	    			//$listarray[] =array('id' => $value->id,'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d,Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'<a href="'.$path_url.'/edit_datesheet'.$value->id.'"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="javascript:void(0)"><i class="fa fa-remove" aria-hidden="true"></i></a>');
+	    			$listarray[] =array('id' => $value->id,'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d,Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'');
+	    		}
+
+	    	}
+	    	echo json_encode($listarray);
+    	}
+    	
+    }
     function AddMidDatesheet()
     {
         
