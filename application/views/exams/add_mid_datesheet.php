@@ -84,7 +84,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	                	<div class="form-group">
 	                		<div class="col-sm-12">
 	                			<button type="button" tabindex="8" class="btn btn-primary"  id="save" ng-click="savetimetable()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
-	                			<a tabindex="9" href="<?php echo $path_url; ?>show_timtbl_list" tabindex="6" title="cancel">Cancel</a>
+	                			<a tabindex="9" href="<?php echo $path_url; ?>exams" tabindex="6" title="cancel">Cancel</a>
 	                		</div>
 	                	</div>
 	                </fieldset>

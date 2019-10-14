@@ -16,7 +16,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	?>
 	<div class="panel panel-default">
 		<div class="panel-heading">
-			<label>Add Mid Term Datesheet </label>
+			<label>Add Final Term Datesheet </label>
 		</div>
 		<div class="panel-body">
           		<?php $attributes = array('name' => 'schedule_timetable', 'id' => 'schedule_timetable','class'=>'form-horizontal'); echo form_open('', $attributes);?>
@@ -123,7 +123,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
         $scope.select_class="";
         $scope.inputSection="";
         $scope.inputSubject="";
-        $scope.select_teacher="";
+       
         $scope.editresponse = [];
         $scope.firsttimeload = false;
 		angular.element(function(){

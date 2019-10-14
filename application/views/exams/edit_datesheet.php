@@ -97,7 +97,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	                	<div class="form-group">
 	                		<div class="col-sm-12">
 	                			<button type="button" tabindex="8" class="btn btn-primary"  id="save" ng-click="savetimetable()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
-	                			<a tabindex="9" href="<?php echo $path_url; ?>show_timtbl_list" tabindex="6" title="cancel">Cancel</a>
+	                			<a tabindex="9" href="<?php echo $path_url; ?>exams" tabindex="6" title="cancel">Cancel</a>
 	                		</div>
 	                	</div>
 	                </fieldset>
@@ -174,7 +174,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 			   httprequest('<?php echo base_url(); ?>getdatesheet',data).then(function(response){
 				   if(response != null)
 				   {
-				   		console.log(response);
+				   		//console.log(response);
 			   		 	$scope.editresponse = response;
 			   		 	
 					  	
@@ -600,114 +600,13 @@ $(document).ready(function(){
 			catch(ex){}
 		}
 
-		function changesection()
-		{
-			try{
-				var data = ({inputsectionid:parseInt('<?php if(count($result)){ echo $result["section_id"];} ?>')})
-				httprequest('<?php echo $path_url; ?>getschedulesection',data).then(function(response){
-					if(response.length > 0 && response != null)
-					{
-						$scope.inputSection = response[0];
+		
 
-					}
-				})
-
-			}
-			catch(ex){}
-		}
-
-		function changesubject()
-		{
-			try{
-				var data = ({inputsubjectid:parseInt('<?php if(count($result)){ echo $result["subject_id"];} ?>')})
-				httprequest('<?php echo $path_url; ?>getschedulesubject',data).then(function(response){
-					if(response.length > 0 && response != null)
-					{
-						$scope.inputSubject = response[0];
-
-					}
-				})
-
-			}
-			catch(ex){}
-		}
+		
 
 
-		function loadteacherlist()
-		{
-			try{
-				if($scope.teacherlist != null && $scope.teacherlist.length > 0)
-				{
-					$scope.select_teacher = $scope.teacherlist[0];
-				}
-
-				if($scope.teacherlist == null)
-				{
-					var data = ({})
-
-					httprequest('<?php echo base_url(); ?>teacherlist',data).then(function(response){
-						if(response != null)
-						{
-							$scope.teacherlist = response;
-							$scope.select_teacher = response[0];
-							if($scope.firsttimeload == true)
-		                    {
-				   		 		var found = $filter('filter')($scope.teacherlist, {id: $scope.editresponse.teacher}, true);
-		                    	if(found.length)
-		                    	{
-		                    		$scope.select_teacher = found[0];
-		                    	}
-		                    	
-		                	}
-						
-						}else{
-							$scope.teacherlist = [];
-						}
-
-					});
-				}
-			}
-			catch(ex){}
-		}
-
-		function checkClass()
-		{
-			try{
-				
-				if($scope.altersection == false && $scope.serial != '')
-				{
-					return false;
-				}
-
-				var data = ({
-							schclassid:$scope.select_class.id,
-							sectionid:$scope.inputSection.id,
-							subjectid:$scope.inputSubject.id
-						})
-
-				httprequest('<?php echo base_url(); ?>checkschedule',data).then(function(response){
-					if(response != null && response.message == true)
-					{
-						$scope.is_valid_class = false
-						message("Already subject allocated",'show')
-					}else{
-						$scope.is_valid_class = true
-						message("",'hide')
-						checkTeacherSchedule();
-					}
-
-					if($scope.is_valid_class == true && $scope.is_valid_schedule == true)
-					{
-					//	document.getElementById("save").disabled = false;
-					}
-					else
-					{
-						//document.getElementById("save").disabled = true;
-					}
-				})
-			}
-			catch(ex){}
-		}
+		
+		
 
 		$scope.isteacheraltered = false
 		$scope.chkteachersch = function()
@@ -720,49 +619,6 @@ $(document).ready(function(){
 
 
 
-		function checkTeacherSchedule()
-		{
-			try{
-				//document.getElementById("save").disabled = true;
-
-				if($scope.isteacheraltered == false && $scope.serial == '')
-				{
-					return false
-				}
-
-				if($("#InputEndTime").val().length > 0 && $("#inputStartitme").val().length > 0 ){
-					var data = ({
-						teacherid:$("#select_teacher").val(),
-						starttime:$("#inputStartitme").val(),
-						endtime:$("#InputEndTime").val(),
-						serial:$("#serial").val(),
-						subject:$("#select_subject").val(),
-					})
-
-					httprequest('<?php echo $path_url; ?>checkteacherschedule',data).then(function(response){
-						if(response != null && response.message == true)
-						{
-							$scope.is_valid_schedule = false
-							message("Schedule already allocated to this teacher",'show')
-						}
-						else{
-							$scope.is_valid_schedule = true
-							message("",'hide')
-						}
-
-						if($scope.is_valid_class == true && $scope.is_valid_schedule == true)
-						{
-							//document.getElementById("save").disabled = false;
-						}
-						else
-						{
-							//document.getElementById("save").disabled = true;
-						}
-					})
-				}
-			}
-			catch(ex){}
-		}
 
 		$scope.altersection = false
 		$scope.checksch = function()

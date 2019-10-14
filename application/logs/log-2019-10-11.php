@@ -44,3 +44,4 @@ ERROR - 2019-10-11 11:22:28 --> Query error: Unknown column 'getsessiondetail' i
 ERROR - 2019-10-11 11:23:59 --> Query error: Unknown column 'getsessiondetail' in 'where clause' - Invalid query: Select * from datesheet where id= getsessiondetail
 ERROR - 2019-10-11 12:12:48 --> Query error: Unknown column 'update_at' in 'field list' - Invalid query: UPDATE `datesheet` SET `subject_id` = '979', `class_id` = '82', `session_id` = '17', `school_id` = '1', `semester_id` = '11', `start_time` = '10:45', `end_time` = '11:00', `exam_date` = '2019-10-09', `update_at` = '2019-10-11'
 WHERE `id` = '22'
+ERROR - 2019-10-11 13:01:12 --> Unable to connect to the database
