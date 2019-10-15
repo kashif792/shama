@@ -5317,33 +5317,14 @@ if(!$this->session->userdata('id'))
         $this->data['campuscity'] = $this->usercity;
         $locations = $this->session->userdata('locations');
 
-        $this->data['datasheet_list'] = $this->operation->GetRowsByQyery("SELECT
-					d.id
-					,d.start_time
-					,d.end_time
-				    ,classes.grade
-					,d.type
-					,d.exam_date
-				    , semester.semester_name
-				    , subjects.subject_name
-				    , sessions.datefrom
-				    , sessions.dateto
-			FROM
-			   datesheet as d
-			    INNER JOIN classes 
-			        ON (d.class_id = classes.id)
-			    INNER JOIN semester 
-			        ON (semester.id = d.semester_id)
-			    INNER JOIN subjects 
-			        ON (subjects.id = d.subject_id)
-			    INNER JOIN sessions 
-			        ON (d.session_id = sessions.id) WHERE d.school_id =".$locations[0]['school_id']);
         
+        //$this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/logo_nr.png");
         $this->load->view("exams/datesheet",$this->data);
     }
     function getDatesheet()
     {
     	$listarray = array();
+    	$data_array = array();
     	$locations = $this->session->userdata('locations');
 		$request = json_decode(file_get_contents('php://input'));
 
@@ -5365,36 +5346,70 @@ if(!$this->session->userdata('id'))
 						    , subjects.subject_name
 						    , sessions.datefrom
 						    , sessions.dateto
-					FROM
-					   datesheet as d
-					    INNER JOIN classes 
-					        ON (d.class_id = classes.id)
-					    INNER JOIN semester 
-					        ON (semester.id = d.semester_id)
-					    INNER JOIN subjects 
-					        ON (subjects.id = d.subject_id)
-					    INNER JOIN sessions 
-					        ON (d.session_id = sessions.id)
-					    INNER JOIN semester as sem 
-					        ON (d.semester_id = sem.id)
-					    WHERE
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
 					        d.class_id  = ".$inputclassid." AND
 					        d.session_id  = ".$inputsessionid." AND
 					        d.semester_id  = ".$inputsemesterid." AND
 					        d.type= '".$inputtype."' AND
-					        d.school_id =".$locations[0]['school_id']);
+					        d.school_id =".$locations[0]['school_id']." ORDER BY d.exam_date");
 	    	if (count($datesheelist))
 	    	{	
 
 	    		foreach ($datesheelist as $key => $value)
 	    		{
 
-	    			//$listarray[] =array('id' => $value->id,'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d,Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'<a href="'.$path_url.'/edit_datesheet'.$value->id.'"><i class="fa fa-edit" aria-hidden="true"></i></a><a href="javascript:void(0)"><i class="fa fa-remove" aria-hidden="true"></i></a>');
-	    			$listarray[] =array('id' => $value->id,'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d,Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'');
+	    			$listarray[] =array('id' => $value->id,'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d, Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'');
 	    		}
 
 	    	}
-	    	echo json_encode($listarray);
+	    	// Get class Name
+	    	$this->operation->table_name = 'classes';
+
+            $is_class = $this->operation->GetByWhere(array('id'=>$inputclassid));
+	    	
+	    	
+	    	// get session date
+	    	$this->operation->table_name = 'sessions';
+
+            $is_session = $this->operation->GetByWhere(array('id'=>$inputsessionid));
+	    	$session_dates =date("Y",strtotime($is_session[0]->datefrom)).' - '.date("Y",strtotime($is_session[0]->dateto));
+	    	
+	    	// get semester dates
+	    	$this->operation->table_name = 'semester_dates';
+
+            $semester_date_q = $this->operation->GetByWhere(array('semester_id'=>$inputsemesterid,'session_id'=>$inputsessionid));
+	    	
+	    	$semester_dates =date("M d, Y",strtotime($semester_date_q[0]->start_date)).' - '.date("M d, Y",strtotime($semester_date_q[0]->end_date));
+	    	// get semester name
+	    	$this->operation->table_name = 'semester';
+
+            $semester_name_q = $this->operation->GetByWhere(array('id'=>$inputsemesterid));
+	    	//get school name
+	    	$this->operation->table_name = 'schools';
+
+            $school_name_q = $this->operation->GetByWhere(array('id'=>$locations[0]['school_id']));
+	    	
+	    	$data_array = array('type'=>$inputtype,'grade'=>$is_class[0]->grade,'session_dates'=>$session_dates,'semester_dates'=>$semester_dates,'semester_name' =>$semester_name_q[0]->semester_name,'school_name'=>$school_name_q[0]->name);
+	    	
+	    	 $result[] = array(
+                        'listarray'=>$listarray,
+                        
+                        'data_array'=>$data_array
+                    );
+
+	    	echo json_encode($result);
     	}
     	
     }

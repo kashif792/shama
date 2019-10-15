@@ -278,13 +278,19 @@ require APPPATH.'views/__layout/footer.php';
                         inputsemesterid:$scope.filterobj.semester.id,
                         inputtype:$scope.filterobj.type,
                     }
-                    console.log(data);
+                    //console.log(data);
                     httppostrequest('getdateseet',data).then(function(response){
                         console.log(response)
                         if(response.length > 0 && response != null)
                         {
-                            $scope.datesheetlist = response;
-                             
+                            $scope.datesheetlist = response[0]['listarray'];
+                            $scope.datesheet_type = response[0]['data_array']['type'];
+                            $scope.grade = response[0]['data_array']['grade'];
+                            $scope.session_dates = response[0]['data_array']['session_dates'];
+                            $scope.semester_dates = response[0]['data_array']['semester_dates'];
+                            $scope.semester_name = response[0]['data_array']['semester_name'];
+                            $scope.school_name = response[0]['data_array']['school_name'];
+                            //console.log($scope.datesheet_type);
                            // $scope.filterobj.subjectid = response[0];
                            // $scope.GetEvulationHeader();
                            
@@ -356,6 +362,193 @@ require APPPATH.'views/__layout/footer.php';
         {
            $scope.getGradedata();
            
+        }
+        $scope.renderprintdata = function()
+        {
+            try{
+
+                var docDefinition = {
+                    pageOrientation: 'portrait',
+                    content: [
+
+                        {image:'<?php echo $logo ?>',style:'report_logo'},
+                        
+                        {
+                            margin: [0, 25, 0, 10],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Date Sheet '+$scope.datesheet_type+' Term Examination Session '+$scope.session_dates,
+                                    alignment: 'center',
+                                    fontSize: '16',
+                                    bold: true,
+                                },
+                                 
+                            ]
+                        },
+                        {
+                            margin: [20, 5, 0, 30],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Class '+$scope.grade,
+                                    alignment: 'center',
+                                    fontSize: '12',
+                                    bold: true,
+                                },
+                                 
+                            ]
+                        },
+                        {
+                        columns: [
+                            //{ width: '*', text: '' },
+                            
+                                table($scope.datesheetlist,["exam_date","exam_day","subject_name"]),
+
+                              
+                            //{ width: '*', text: '' },  
+
+                                    
+                            
+                            
+                        ]
+                        },
+                        //table($scope.datesheetlist,["exam_date","exam_day","subject_name"]),                        
+                        // Start Footer
+                        {
+                            margin: [0, 40, 0, 15],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: 'Notes: ',
+                                    alignment: 'left',
+                                    fontSize:"14",
+                                    bold: true,
+
+                                },
+                            
+                                 
+                            ]
+                        },
+                        {
+                      // to treat a paragraph as a bulleted list, set an array of items under the ul key
+                      ul: [
+                        
+                        { text: 'School timings during 2nd Term Examination will be from 7:55 am to 11:15 am. Parents are requested to pick & drop their children accordingly', fontSize:"12" },
+                        { text: 'No Re – examination will be held.',fontSize:"12" },
+                        { text: 'Students should bring their own stationery ( pencil, rubber, ruler etc).',fontSize:"12"}
+                      ]
+                    },
+                    // {
+                    //         margin: [0, 50, 0, 25],
+                    //         columns: [
+                    //            {
+                    //                 width: '*',
+                    //                 text: 'Principal: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
+                    //                 alignment: 'right',
+                    //                 fontSize:'14',
+                    //                 bold:true
+                    //             },
+                                 
+                    //         ]
+                    //     }, 
+                        
+                       // ENd footer                      
+
+                   ],
+                   footer: {
+                    margin: [0, 0, 30, 0],
+                    columns: [
+
+                      { text: 'Principal: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ', alignment: 'right',fontSize:'14',bold:true }
+                    ]
+                  },
+                    styles: {
+                        // report_header: {
+                        //     fontSize: 14,
+                        //     bold: false,
+                        //     alignment: 'center',
+                        //     margin: [0, 10, 0, 30]
+                        // },
+                        report_logo: {
+                            alignment: 'center'
+                        },
+                        tableExample: {
+                            alignment: 'center'
+                        },
+                        
+                    }
+                };
+                return docDefinition;
+            }
+            catch(e){}
+        }
+        // Generate PDF
+        function buildTableBody(data, columns) {
+            var body = [];
+
+            var temp = [];
+
+                    temp.push({ text: 'Date', bold: true });
+                    temp.push({ text: 'Day', bold: true });
+                    temp.push({ text: 'Subject', bold: true });
+                    
+                    body.push(temp)
+
+            data.forEach(function(row) {
+                var dataRow = [];
+
+                columns.forEach(function(column) {
+                    dataRow.push({text : row[column].toString(), alignment : 'left', color : '#000',width:'*'});
+                })
+
+                body.push(dataRow);
+            });
+
+            return body;
+        }
+        function table(data, columns ) {
+            try{
+                return {
+                    fontSize: 14,
+                    //margin :[130,0,0,0],
+                    alignment: "left",
+                    style: 'tableExample',
+                    width: '*',
+                    table: {
+                        headerRows: 1,
+                        widths: [ '*', '*', '*'],
+                        body: buildTableBody(data,columns),
+
+                        alignment: "center",
+                    },
+
+                    layout: {
+                    fillColor: function (rowIndex, node, columnIndex) {
+
+                            return (rowIndex % 2 === 0) ? '#f1f1f1' : null;
+                        
+                        
+                        }
+                    }
+                };
+            }
+            catch(e){
+                console.log(e)
+            }
+            
+        } 
+        $scope.printreport = function()
+        {
+            var reportobj = $scope.renderprintdata();
+         
+            pdfMake.createPdf(reportobj).print();
+        }
+        $scope.download = function()
+        {
+            var reportobj = $scope.renderprintdata();
+            
+             pdfMake.createPdf(reportobj).download("Datesheet");
         }
 
          $scope.loading = false;

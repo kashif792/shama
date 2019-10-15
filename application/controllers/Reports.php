@@ -999,7 +999,7 @@ class Reports extends MY_Controller
     {
         $request = json_decode( file_get_contents('php://input'));
         
-        var_dump($request);
+        //var_dump($request);
         
         $serail = $this->security->xss_clean(trim($request->id));
         $title = $this->security->xss_clean(trim($request->title));
