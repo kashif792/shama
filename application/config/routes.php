@@ -393,6 +393,7 @@ $route['midreportpdf'] = 'Reports/MidStudentPdfReport';
 // End here
 // Exams
 $route['exams'] = 'Principal_controller/datesheet';
+$route['gettypelist'] = 'Principal_controller/getTypeList';
 $route['getdateseet'] = 'Principal_controller/getDatesheet';
 $route['add_mid_datesheet'] = 'Principal_controller/AddMidDatesheet';
 $route['add_final_datesheet'] = 'Principal_controller/AddFinalDatesheet';

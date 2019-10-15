@@ -25,6 +25,12 @@ require APPPATH.'views/__layout/leftnavigation.php';
                            &nbsp;&nbsp;&nbsp;<a href="<?php echo $path_url; ?>add_final_datesheet" class="btn btn-primary" style="color: #fff !important;">Final Term Datesheet</a>
                  
                     </label>
+                    <label class="right-controllers">
+                            <a href="javascript:void(0)" class="link-student" ng-click="printreport()" title="Print"><i class="fa fa-print" aria-hidden="true"></i></a>
+                        </label>
+                        <label class="right-controllers">
+                            <a href="javascript:void(0)" class="link-student" ng-click="download()" title="Download"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+                        </label>
                 </div>
                     <div class="panel-body whide" id="class_report" >
                         
@@ -40,7 +46,18 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                         <label for="select_class">Grade:</label>
                                         <select class="form-control" ng-options="item.name for item in classlist track by item.id"  name="select_class" id="select_class"  ng-model="filterobj.class" ng-change="changeclass()"></select>
                                     </div>
-                                    
+
+                                    <div class="form-group">
+                                        <label for="inputSemester">Semester:</label>
+                                        <select class="form-control"    ng-options="item.name for item in semesterlist track by item.id"  name="inputSemester" id="inputSemester"  ng-model="filterobj.semester" ng-change="changeclass()"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="select_class">Type:</label>
+                                        <select class="form-control" name="inputType" id="inputType" ng-model="filterobj.type" ng-change="changeclass()">
+                                            <option>Mid</option>
+                                            <option>Final</option>
+                                        </select>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -129,8 +146,10 @@ require APPPATH.'views/__layout/footer.php';
     app.controller('class_report_ctrl', function($scope, $window, $http, $document, $timeout,$interval,$compile,$filter){
         $scope.filterobj = {};
         defaultdate();
+
        $scope.active = 1;
         $scope.fallsemester = [];
+        $scope.type = [];
 
         $("#class_report").show();
          // Initialize default date
@@ -164,6 +183,7 @@ require APPPATH.'views/__layout/footer.php';
 
         function getSessionList()
         {
+
             httprequest('getsessiondetail',({})).then(function(response){
                 if(response != null && response.length > 0)
                 {
@@ -174,6 +194,7 @@ require APPPATH.'views/__layout/footer.php';
                     {
                         
                         $scope.filterobj.session = find_active_session[0]
+                        $scope.getDatesheetData();
                     }
                 }
                 else{
@@ -191,7 +212,7 @@ require APPPATH.'views/__layout/footer.php';
                 {
                     $scope.classlist = response
                     $scope.filterobj.class = response[0]
-                    loadSections();
+                    
                     $scope.getDatesheetData();
                 }
             });
@@ -199,39 +220,63 @@ require APPPATH.'views/__layout/footer.php';
 
         getClassList();
 
-        function loadSections()
+        function getTypeList()
         {
-            try{
-                var data = ({inputclassid:$scope.filterobj.class.id})
-                httprequest('getsectionbyclass',data).then(function(response){
-                    if(response.length > 0 && response != null)
-                    {
-                        $scope.sectionslist = response;
-                        $scope.filterobj.section = response[0];
-                        
-                    }
-                    else{
-                        $scope.sectionslist = [];
-                    }
-                })
-            }
-            catch(ex){}
+            httprequest('gettypelist',({})).then(function(response){
+                //console.log(response.length);
+                if(response != null && response.length > 0)
+                {
+                    console.log(response[0]['Mid']);
+                    $scope.type = response
+                    $scope.filterobj.type = response[0]['Mid'];
+                    
+                    $scope.getDatesheetData();
+                }
+            });
         }
-
+        getTypeList();
       
         $scope.toogleform = function()
         {
             $scope.is_form_toggle = !$scope.is_form_toggle;
         }
+        
+        function getSemesterData(){
+            try{
+                $scope.semesterlist = []
+                httprequest('<?php echo $path_url; ?>getsemesterdata',({})).then(function(response){
+                    if(response.length > 0 && response != null)
+                    {
+                        $scope.semesterlist = response;
+                        var find_active_semester = $filter('filter')(response,{active_semster:'a'},true);
+                        
+                        if(find_active_semester.length > 0)
+                        {
+                            
 
+                            $scope.filterobj.semester = find_active_semester[0]  ;
+                            $scope.getDatesheetData();
+                        }
+
+                    }
+                    else{
+                        $scope.semesterlist = [];
+                    }
+                });
+             }
+            catch(ex){}
+        }
+        getSemesterData();
         $scope.getDatesheetData = function()
         {
             try{
-                if($scope.filterobj.class && $scope.filterobj.session.id)
+                if($scope.filterobj.class && $scope.filterobj.session.id && $scope.filterobj.semester)
                 {
                      var data ={
                         inputclassid:$scope.filterobj.class.id,
                         inputsessionid:$scope.filterobj.session.id,
+                        inputsemesterid:$scope.filterobj.semester.id,
+                        inputtype:$scope.filterobj.type,
                     }
                     console.log(data);
                     httppostrequest('getdateseet',data).then(function(response){
@@ -253,8 +298,6 @@ require APPPATH.'views/__layout/footer.php';
             }
             catch(e){}
         }
-        
-
         
 
         $scope.changeclass = function()

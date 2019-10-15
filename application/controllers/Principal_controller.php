@@ -5349,8 +5349,10 @@ if(!$this->session->userdata('id'))
 
         $inputclassid = $this->security->xss_clean(trim($request->inputclassid));
         $inputsessionid = $this->security->xss_clean(trim($request->inputsessionid));
+        $inputsemesterid = $this->security->xss_clean(trim($request->inputsemesterid));
+        $inputtype = $this->security->xss_clean(trim($request->inputtype));
 
-    	if (!is_null($inputclassid)  && !is_null($inputsessionid))
+    	if (!is_null($inputclassid)  && !is_null($inputsessionid) && !is_null($inputsemesterid))
     	{
     		$datesheelist = $this->operation->GetRowsByQyery("SELECT
 							d.id
@@ -5372,9 +5374,14 @@ if(!$this->session->userdata('id'))
 					    INNER JOIN subjects 
 					        ON (subjects.id = d.subject_id)
 					    INNER JOIN sessions 
-					        ON (d.session_id = sessions.id) WHERE
+					        ON (d.session_id = sessions.id)
+					    INNER JOIN semester as sem 
+					        ON (d.semester_id = sem.id)
+					    WHERE
 					        d.class_id  = ".$inputclassid." AND
 					        d.session_id  = ".$inputsessionid." AND
+					        d.semester_id  = ".$inputsemesterid." AND
+					        d.type= '".$inputtype."' AND
 					        d.school_id =".$locations[0]['school_id']);
 	    	if (count($datesheelist))
 	    	{	
@@ -5389,6 +5396,15 @@ if(!$this->session->userdata('id'))
 	    	}
 	    	echo json_encode($listarray);
     	}
+    	
+    }
+    function getTypeList()
+    {
+    	$listarray = array();
+    	$listarray[] = array("Mid"=>"Mid", "Final"=>"Final");
+ 
+		echo json_encode($listarray);
+    	
     	
     }
     function AddMidDatesheet()
