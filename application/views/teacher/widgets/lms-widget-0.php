@@ -109,11 +109,11 @@
                                                                     <div id="evulation_{{sub.sbid}}{{s.sid}}" class="panel-collapse collapse" >
                                                                         <div class="row" style="margin: 10px 0px;">
                                                                             <div class="col-sm-4 text-center">
-                                                                                <a href="javascript:void(0)" ng-click="addmidtermresult(p.classid,s.sid,sub.sbid,p.semsterid,p.sessionid)" class="btn btn-primary beforemid" style="color: #fff !important">Before Mid term Quiz Marks</a>
+                                                                                <a href="javascript:void(0)" ng-click="addmidtermresult(p.classid,s.sid,sub.sbid,p.semsterid,p.sessionid,'bt')" data-type="bt" class="btn btn-primary beforemid" style="color: #fff !important">Before Mid term Quiz Marks</a>
                                                                             </div>
                                                                             
                                                                             <div class="col-sm-4 text-center">
-                                                                                <a href="javascript:void(0)" class="btn btn-primary" ng-click="addfinaltermresult(p.classid,s.sid,sub.sbid,p.semsterid,p.sessionid)"  style="color: #fff !important">After Mid Term Quiz Marks</a>
+                                                                                <a href="javascript:void(0)" class="btn btn-primary" ng-click="addmidtermresult(p.classid,s.sid,sub.sbid,p.semsterid,p.sessionid,'at')" data-type="at"  style="color: #fff !important">After Mid Term Quiz Marks</a>
                                                                             </div>
                                                                             <div class="col-sm-4 text-center">
                                                                                 <a href="javascript:void(0)"class="btn btn-primary" ng-click="addtermresult(p.classid,s.sid,sub.sbid,1,p.semsterid,p.sessionid)" style="color: #fff !important">Mid and Final Marks</a>
@@ -892,19 +892,20 @@ $scope.doneProgressReport = function(){
         var studentData = [];
          var container = document.getElementById('result_container');
          $scope.subjid = 0
-        $scope.addmidtermresult = function(classid,sectionid,subjectid,semesterid,sessionid)
+        $scope.addmidtermresult = function(classid,sectionid,subjectid,semesterid,sessionid,type)
         {
             try{
                  $scope.subjid = subjectid;
                  var cont_str = '';
                 studentData = [];
-
+                
                 httprequest(urlist.getmidtermsubjectresult,({
                                 class_id:classid,
                                 section_id:sectionid,
                                 subject_id:subjectid,
                                 semesterid:semesterid,
                                 sessionid:sessionid,
+                                quiz_type:type,
                                 })).then(function(response){
                     //getQuizDetail(subjectid,classid,sectionid,semsterid,sessionid)
                     GetEvulationHeader(subjectid,classid,sectionid,semesterid,sessionid);
@@ -923,10 +924,24 @@ $scope.doneProgressReport = function(){
                             }
                            cont_str += '</tr>'
                         }
-                        $("#resultmidbody").html(cont_str)
+                        if(type=='bt')
+                        {
+                            $("#resultmidbody").html(cont_str)
+                        }
+                        else
+                        {
+                            $("#resultfinalbody").html(cont_str)
+                        }
                     }
                     else{
-                        $("#resultmidbody").html("<tr><td colspan='3' class='text-center'>No Quizzes found</td></tr>")
+                        if(type=='bt')
+                        {
+                            $("#resultmidbody").html("<tr><td colspan='3' class='text-center'>No Quizzes found</td></tr>")
+                        }
+                        else
+                        {
+                            $("#resultfinalbody").html("<tr><td colspan='3' class='text-center'>No Quizzes found</td></tr>")
+                        }
                     }
                 });
 
@@ -936,7 +951,14 @@ $scope.doneProgressReport = function(){
                  $scope.semesterid = semesterid;
                  $scope.sessionid = sessionid;
                 $("#result_message").html('Marks will be saved automatically')
-                $("#midtermmodal").modal('show');
+                if(type=='bt')
+                {
+                    $("#midtermmodal").modal('show');
+                }
+                else
+                {
+                    $("#finaltermmodal").modal('show');
+                }
                 $scope.isExamTabActive = false;
             }
             catch(ex){}

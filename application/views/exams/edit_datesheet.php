@@ -365,7 +365,7 @@ $(document).ready(function(){
 		   $('#inputStartitme').timepicker({
 		       showLeadingZero: false,
 		       onSelect: tpStartSelect,
-		       onClose:checkTeacherSchedule,
+		       
 		        showNowButton: false,
 		        nowButtonText: 'Now',
 
@@ -383,7 +383,7 @@ $(document).ready(function(){
 		   $('#InputEndTime').timepicker({
 		       showLeadingZero: false,
 		       onSelect: tpEndSelect,
-		       onClose:checkTeacherSchedule,
+		       
 		        showNowButton: false,
 		        nowButtonText: 'Now',
 

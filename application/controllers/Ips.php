@@ -778,11 +778,11 @@ class Ips extends MY_Controller
 
             if ($roles[0]['role_id'] == 4)
             {
-                $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subjectlist') . " AND q.classid = " . $this->input->get('inputclassid') . " AND q.sectionid = " . $this->input->get('inputsectionid') . " AND s.status = 'a' AND se.status = 'a' AND q.tacher_uid = " . $this->session->userdata('id') . " AND q.semsterid = " . $this->input->get('inputsemester') . " AND q.sessionid = " . $this->input->get('inputsession') . "  order by q.quiz_term asc");
+                $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subjectlist') . " AND q.classid = " . $this->input->get('inputclassid') . " AND q.sectionid = " . $this->input->get('inputsectionid') . " AND q.tacher_uid = " . $this->session->userdata('id') . " AND q.semsterid = " . $this->input->get('inputsemester') . " AND q.sessionid = " . $this->input->get('inputsession') . "  order by q.quiz_term asc");
             }
             else
             {
-                $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subjectlist') . " AND q.classid = " . $this->input->get('inputclassid') . " AND q.sectionid = " . $this->input->get('inputsectionid') . " AND s.status = 'a' AND se.status = 'a'  AND q.semsterid = " . $this->input->get('inputsemester') . " AND q.sessionid = " . $this->input->get('inputsession') . "  order by q.quiz_term asc");
+                $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subjectlist') . " AND q.classid = " . $this->input->get('inputclassid') . " AND q.sectionid = " . $this->input->get('inputsectionid') . " AND q.semsterid = " . $this->input->get('inputsemester') . " AND q.sessionid = " . $this->input->get('inputsession') . "  order by q.quiz_term asc");
             }
             if (count($query))
             {
@@ -948,6 +948,7 @@ class Ips extends MY_Controller
     function GetQuizDetail()
     {
         $quizarray = array();
+
         if (!is_null($this->input->get('subjectlist')) && !is_null($this->input->get('inputsemester')) && !is_null($this->input->get('inputsession')) && !is_null($this->input->get('inputclassid')) && !is_null($this->input->get('inputsectionid')))
         {
             $quizlist = $this->GetQuizeListBySubject($this->input->get('subjectlist'), $this->input->get('inputsession'), $this->input->get('inputsemester'), $this->input->get('inputclassid'), $this->input->get('inputsectionid'));
@@ -1424,11 +1425,11 @@ class Ips extends MY_Controller
                     $roles = $this->session->userdata('roles');
                     if ($roles[0]['role_id'] == 4)
                     {
-                        $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND s.status = 'a' AND se.status = 'a' AND q.tacher_uid = " . $this->session->userdata('id') . " AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . "  AND q.quiz_term = 'bt'  order by q.quiz_term asc");
+                        $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND q.tacher_uid = " . $this->session->userdata('id') . " AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . "  AND q.quiz_term = '".$this->input->get('quiz_type')."'  order by q.quiz_date asc");
                     }
                     else
                     {
-                        $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND s.status = 'a' AND se.status = 'a'  AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . " AND q.quiz_term = 'bt' order by q.quiz_term asc");
+                        $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . " AND q.quiz_term = '".$this->input->get('quiz_type')."' order by q.quiz_date asc");
                     }
                     
                     if(count($query)==0)
@@ -1472,6 +1473,7 @@ class Ips extends MY_Controller
 
         echo json_encode($resultarray);
     }
+    /*
     function getfinaltermsubjectresult()
     {
         
@@ -1488,11 +1490,11 @@ class Ips extends MY_Controller
                     $roles = $this->session->userdata('roles');
                     if ($roles[0]['role_id'] == 4)
                     {
-                        $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND s.status = 'a' AND se.status = 'a' AND q.tacher_uid = " . $this->session->userdata('id') . " AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . "  AND q.quiz_term = 'at'  order by q.quiz_term asc");
+                        $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND q.tacher_uid = " . $this->session->userdata('id') . " AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . "  AND q.quiz_term = 'at'  order by q.quiz_term asc");
                     }
                     else
                     {
-                        $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND s.status = 'a' AND se.status = 'a'  AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . " AND q.quiz_term = 'at' order by q.quiz_term asc");
+                        $query = $this->operation->GetRowsByQyery("SELECT q.* FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid Where q.subjectid = " . $this->input->get('subject_id') . " AND q.classid = " . $this->input->get('class_id') . " AND q.sectionid = " . $this->input->get('section_id') . " AND q.semsterid = " . $this->input->get('semesterid') . " AND q.sessionid = " . $this->input->get('sessionid') . " AND q.quiz_term = 'at' order by q.quiz_term asc");
                     }
                     if(count($query)==0)
                     {
@@ -1531,7 +1533,7 @@ class Ips extends MY_Controller
         }
 
         echo json_encode($resultarray);
-    }
+    }*/
     function savestudentmidquizmarks()
     {
         $request = json_decode(file_get_contents('php://input'));
@@ -1771,6 +1773,7 @@ class Ips extends MY_Controller
         $newsessionid = $this->security->xss_clean(trim($request->newsessionid));
         $oldsession = $this->security->xss_clean(trim($request->oldsession));
         $sresult['message'] = false;
+
         //if (!is_null($oldclass) && !is_null($oldsection) && !is_null($oldsemester) && !is_null($newclass) && !is_null($newsection) && !is_null($newsemester) && !is_null($newsessionid))
         if (!is_null($oldclass) && !is_null($oldsection) && !is_null($oldsemester) && !is_null($newclass) && !is_null($newsection) && !is_null($newsemester) && !is_null($newsessionid))
         {
@@ -1791,13 +1794,16 @@ class Ips extends MY_Controller
 					'sessionid'=>$oldsession
 				));
 
+//echo $this->db->last_query();
    				if(count($datalist))
    				{
 
    					$this->operation->table_name = 'semester_dates';
    					$active_semester = $this->operation->GetByWhere(array('session_id' => $newsessionid, 'semester_id' => $newsemester));
-   					if(count($active_semester)!=0)
+
+                    if(count($active_semester)!=0)
    					{
+
 						$this->operation->table_name = 'student_semesters';
 	                	$resultlist = $this->operation->GetByWhere(array('classid' => $newclass, 'sectionid' => $newsection, 'semesterid' => $active_semester[0]->semester_id, 'studentid' => $value->id, 'sessionid' => $newsessionid));
 	                	if (count($resultlist) == 0)
