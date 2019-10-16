@@ -656,7 +656,7 @@ class Reports extends MY_Controller
                         $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 1");
                         $final = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid." AND termid = 2");
                         // Get Total Sessional Marks
-                        $sessional_marks = $this->operation->GetRowsByQyery('SELECT sum(marks) as total_sessional FROM quizzes_marks  where subject_id = '.$value->id.' AND student_id= '.$studentid." ");
+                        $sessional_marks = $this->operation->GetRowsByQyery('SELECT sum(q.marks) as total_sessional FROM quizzes_marks as q INNER JOIN quize as qi ON qi.id = q.quiz_id WHERE q.subject_id = '.$value->id.' AND q.student_id= '.$studentid.' AND q.section_id = '.$inputsectionid.' AND q.semester_id = '.$inputsemesterid.' AND q.session_id = '.$inputsessionid);
                         // Get Total Quizes of subject
                         $total_subject_sessional_marks = $this->operation->GetRowsByQyery('SELECT count(*) AS total_quize  FROM quize q INNER JOIN semester s ON s.id = q.semsterid INNER JOIN sessions se ON se.id = q.sessionid WHERE q.subjectid = '.$value->id.'  AND q.classid = '.$inputclassid.' AND q.sectionid = '.$inputsectionid.' AND q.semsterid = '.$inputsemesterid.' AND q.sessionid = '.$inputsessionid);
                         

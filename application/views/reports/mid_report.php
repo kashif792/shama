@@ -90,7 +90,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                                 <td class="blue_back">Total Obtained Marks</td>
                                                 <td class="blue_back">{{obtain_marks}}</td>
                                                 <td class="blue_back">{{total_marks}}</td>
-                                                <td class="blue_back"></td>
+                                                <td class="blue_back">{{grade}}</td>
                                                 
                                             </tr>
                                              <tr ng-hide="subjectlist.length > 0">
@@ -317,8 +317,8 @@ require APPPATH.'views/__layout/footer.php';
             $scope.eprocessfinished = true;
         }
         // Generate PDF
-        function buildTableBody(data,obtain_marks,count_attendence,total_marks, columnsheader,columns) {
-            //console.log(data);
+        function buildTableBody(data,grade,obtain_marks,count_attendence,total_marks, columnsheader,columns) {
+            
             try{
                 var body = [];
                 if(columnsheader.length > 0)
@@ -372,7 +372,7 @@ require APPPATH.'views/__layout/footer.php';
                     temp.push("Total Obtained Marks");
                     temp.push(obtain_marks);
                     temp.push(total_marks);
-                    temp.push("");
+                    temp.push(grade);
                     temp.push("");
                     body.push(temp)
                
@@ -382,13 +382,13 @@ require APPPATH.'views/__layout/footer.php';
                 console.log(e)
             }
         }
-        function table(data,obtain_marks,count_attendence,total_marks, columnsheader, columns ) {
+        function table(data,grade,obtain_marks,count_attendence,total_marks, columnsheader, columns ) {
             try{
                 return {
                     table: {
                         headerRows: 1,
                         widths: ['*', '*', '*', '*', '*'],
-                        body: buildTableBody(data,obtain_marks,count_attendence,total_marks,columnsheader,columns)
+                        body: buildTableBody(data,grade,obtain_marks,count_attendence,total_marks,columnsheader,columns)
                     },
                     layout: {
                     fillColor: function (rowIndex, node, columnIndex) {
@@ -466,7 +466,7 @@ require APPPATH.'views/__layout/footer.php';
                             ]
                         },
                         
-                        table($scope.subjectlist,$scope.obtain_marks,$scope.count_attendence,$scope.total_marks,["Subject","Obtained Marks","Total Marks","Grade","Comments"],["subject","evalution"]),  
+                        table($scope.subjectlist,$scope.grade,$scope.obtain_marks,$scope.count_attendence,$scope.total_marks,["Subject","Obtained Marks","Total Marks","Grade","Comments"],["subject","evalution"]),  
                         //table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Grade"],["subject","evalution",]),
                         {
                             margin: [0, 40, 0, 15],
