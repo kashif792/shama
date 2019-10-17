@@ -394,11 +394,17 @@ $route['midreportpdf'] = 'Reports/MidStudentPdfReport';
 // Exams
 $route['exams'] = 'Principal_controller/datesheet';
 $route['gettypelist'] = 'Principal_controller/getTypeList';
-$route['getdateseet'] = 'Principal_controller/getDatesheet';
+$route['getdatesheet'] = 'Principal_controller/getDatesheet';
 $route['add_mid_datesheet'] = 'Principal_controller/AddMidDatesheet';
 $route['add_final_datesheet'] = 'Principal_controller/AddFinalDatesheet';
 $route['edit_datesheet/(:any)'] = "Principal_controller/edit_exam_datesheet/$1";
-$route['getdatesheet'] = 'Principal_controller/DatesheetDetail';
+//$route['getdatesheet'] = 'Principal_controller/DatesheetDetail';
+// End here
+// Details Datesheet
+$route['datesheetlist'] = 'Principal_controller/getDatesheetList';
+$route['add_datesheet'] = 'Principal_controller/AddDatesheet';
+$route['getdatesheetdata'] = 'Principal_controller/getDatesheetData';
+
 // End here
 $route['studentreport/(:any)/(:any)/(:any)/(:any)/(:any)'] = 'Reports/StudentReport/$1/$2/$3/$4/$5';
 $route['savegrade'] = 'Reports/SaveGrades';

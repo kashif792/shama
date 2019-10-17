@@ -20,17 +20,11 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 <div class="panel panel-default">
                     <!-- widget title -->
                    <div class="panel-heading">
-                    <label>Datesheet List
-                           &nbsp;&nbsp;&nbsp;<a href="<?php echo $path_url; ?>add_mid_datesheet" class="btn btn-primary" style="color: #fff !important;">Mid Term Datesheet</a>
-                           &nbsp;&nbsp;&nbsp;<a href="<?php echo $path_url; ?>add_final_datesheet" class="btn btn-primary" style="color: #fff !important;">Final Term Datesheet</a>
-                 
-                    </label>
-                    <label class="right-controllers">
-                            <a href="javascript:void(0)" class="link-student" ng-click="printreport()" title="Print"><i class="fa fa-print" aria-hidden="true"></i></a>
-                        </label>
-                        <label class="right-controllers">
-                            <a href="javascript:void(0)" class="link-student" ng-click="download()" title="Download"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
-                        </label>
+                    <div class="panel-heading plheading" id="widget-header">
+                        <h4>Datesheet list
+                        <a href="<?php echo $path_url; ?>add_datesheet" class="btn btn-primary" id="add-action">Add New Datesheet</a>
+                        </h4>
+          
                 </div>
                     <div class="panel-body whide" id="class_report" >
                         
@@ -70,29 +64,22 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                             <table  class="table table-striped table-bordered row-border hover">
                                         <thead>
                                         <tr>
-                                            <th>Type</th>
                                             <th>Grade</th>
                                             <th>Semester</th>
-                                            <th>Subject</th>
-                                            <th>Date</th>
-                                            <th>Day</th>
+                                            <th>Type</th>
                                             <th>Start Time</th>
                                             <th>End Time</th>
-                                            <th>Duration (min)</th>
+                                            
                                             <th>Options</th>
                                         </tr>
                                     </thead>
                                         <tbody class="report-body">
                                            <tr ng-repeat="d in datesheetlist"  ng-init="$last && finished()" >
-                                                <td>{{d.type}}</td>
                                                 <td>{{d.grade}}</td>
                                                 <td>{{d.semester_name}}</td>
-                                                <td>{{d.subject_name}}</td>
-                                                <td>{{d.exam_date}}</td>
-                                                <td>{{d.exam_day}}</td>
+                                                <td>{{d.type}}</td>
                                                 <td>{{d.start_time}}</td>
                                                 <td>{{d.end_time}}</td>
-                                                <td>{{d.duration}}</td>
                                                 <td><a href="<?php echo $path_url; ?>edit_datesheet/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
 
                                                      <i class="fa fa-edit" aria-hidden="true"></i>
@@ -279,7 +266,7 @@ require APPPATH.'views/__layout/footer.php';
                         inputtype:$scope.filterobj.type,
                     }
                     //console.log(data);
-                    httppostrequest('getdatesheet',data).then(function(response){
+                    httppostrequest('getdatesheetdata',data).then(function(response){
                         console.log(response)
                         if(response.length > 0 && response != null)
                         {
