@@ -49,6 +49,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                 <select class="form-control" ng-options="item.name for item in classlist track by item.id"  id="select_class" name="select_class" ng-model="select_class" ng-change="changeclass()"></select>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <label><span class="icon-user"></span> Type <span class="required">*</span></label>
@@ -90,12 +91,73 @@ require APPPATH.'views/__layout/leftnavigation.php';
                             </div>
                         </div>
                     </fieldset>
+
                 <?php echo form_close();?>
+
             </div>
+
+    </div>
+
+
+
+<div class="col-sm-10">
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add Datesheet Detail</h3>
+                
+            </div>
+            <div class="alert alert-success success_datesheet" style="display: none;">
+              <strong>Success!</strong> Indicates a successful or positive action.
+            </div>
+                <div class="modal-body">
+                <?php $attributes = array('role'=>'form','name' => 'addquestionform', 'id' => 'addquestionform','class'=>'form-container-input');
+                        echo form_open_multipart('', $attributes);?>
+                    <input type="hidden" ng-model="inputQestionSerail" value="<?php if($this->uri->segment(2)){ echo $this->uri->segment(2);} ?>" name="inputQestionSerail" id="inputQestionSerail">
+                    <div class="form-group">
+                            <div class="col-sm-12">
+                                <label><span class="icon-phone"></span> Subject<span class="required">*</span></label>
+                            </div>
+                            <div class="col-sm-6">
+                                <select class="form-control" ng-options="item.name for item in subjectlist track by item.id" name="select_subject" id="select_subject" ng-change="checksche()" ng-model="inputSubject"></select>
+                            </div>
+                         </div>
+                     <div class="form-group">
+                        <div class="col-sm-12">
+                            <label><span class="icon-mail-alt"></span> Date<span class="required">*</span></label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input class="form-control" type="text"  placeholder="" ng-model="exam_date" id="exam_date" name="exam_date"  value="">
+                                                    
+                        </div>
+                     </div>
+                        
+                        <div class="form-group ">
+                        <div class="col-sm-12">
+                            <label><span class="icon-clock"></span> From <span class="required">*</span></label>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="inputStartitme1" name="inputFrom1" ng-model="inputStartitme1"  placeholder="Start Time"  tabindex="1" value="" required>
+                        </div>  
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="InputEndTime1" name="inputTo1" ng-model="InputEndTime1"  placeholder="End Time"  tabindex="1" value="" required>
+                        </div>  
+                            <div id="time_error" class="required row endtimeerror">End time must be greater then start time</div>
+                        </div>
+                    <div class="clearfix"></div>
+                    
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default"  data-dismiss="modal">Close</button>
+                    <button type="button" tabindex="8" ng-click="savedatesheetdatail()" class="btn btn-default save-button" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
+                </div>
+            <?php echo form_close();?>
+        </div>
     </div>
 </div>
-
-
+</div>
 
     <script src="<?php echo base_url(); ?>js/jquery-ui.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.ui.timepicker.js?v=0.3.3"></script>
@@ -199,6 +261,9 @@ require APPPATH.'views/__layout/leftnavigation.php';
             if($scope.serial == ''){
                 $scope.inputStartitme = '<?php if(isset($result)){echo date('H:i',strtotime($result['start_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds); } ?>'
                 $scope.InputEndTime = '<?php if(isset($result)){echo date('H:i',strtotime($result['end_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds + 900); } ?>'
+                $scope.inputStartitme1 = '<?php if(isset($result)){echo date('H:i',strtotime($result['start_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds); } ?>'
+                $scope.InputEndTime1 = '<?php if(isset($result)){echo date('H:i',strtotime($result['end_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds + 900); } ?>'
+                
                 $scope.exam_date = '<?php echo date('Y-m-d') ?>'
                 $scope.type = '<?php echo "Mid" ?>'
             }
@@ -336,6 +401,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
                     $this.button('reset');
                     if(response.message == true){
                         message('Datesheet added','show');
+                        $scope.lastid =response.lastid;
+                        $('#myModal').modal('show');
                         //window.location.href = "<?php echo $path_url;?>datesheetlist";
                     }
 
@@ -351,7 +418,120 @@ require APPPATH.'views/__layout/leftnavigation.php';
                     message('Mid Datesheet not saved','show')
                 });
         }
+// Save Datesheet Details
+$scope.savedatesheetdatail = function()
+        {
+            
+            var subj_name = $("#select_subject").val();
+            var exam_date = $("#exam_date").val();
+            var starttime = $("#inputStartitme1").val();
+            var endtime = $("#InputEndTime1").val();
+            
+            message("",'hide')
+            $("#time_error").hide()
 
+
+            var reg = /(\d|2[0-3]):([0-5]\d)/;
+
+            if(reg.test(starttime) == false){
+                jQuery("#inputStartitme1").css("border", "1px solid red");
+                return false;
+            }
+            else{
+                jQuery("#inputStartitme1").css("border", "1px solid #C9C9C9");
+            }
+
+            if(reg.test(endtime) == false){
+                jQuery("#InputEndTime1").css("border", "1px solid red");
+                return false;
+            }
+            else{
+                jQuery("#InputEndTime1").css("border", "1px solid #C9C9C9");
+            }
+
+            var t = new Date();
+            d = t.getDate();
+            m = t.getMonth() + 1;
+            y = t.getFullYear();
+
+            var d1 = new Date(m + "/" + d + "/" + y + " " + starttime);
+            var d2 = new Date(m + "/" + d + "/" + y + " " + endtime);
+            var t1 = d1.getTime();
+            var t2 = d2.getTime();
+
+            if(t2 <= t1)
+            {
+                $("#time_error").show()
+                return false;
+            }
+
+             var $this = $(".btn-primary");
+             $this.button('loading');
+
+            var formdata = new FormData();
+            formdata.append('select_subject',$scope.inputSubject.id);
+            formdata.append('exam_date',$scope.exam_date);
+            formdata.append('inputFrom',$scope.inputStartitme1);
+            formdata.append('inputTo',$scope.InputEndTime1);
+            formdata.append('datesheet_id',$scope.lastid);
+            var request = {
+                method: 'POST',
+                url: "<?php echo $path_url; ?>Principal_controller/saveDatesheetDetail",
+                data: formdata,
+                headers: {'Content-Type': undefined}
+            };
+
+            $http(request)
+                .success(function (response) {
+                    
+                    var $this = $(".btn-primary");
+                    $this.button('reset');
+                    if(response.message == true){
+                        $('.success_datesheet').show();
+                        $(".success_datesheet").fadeTo(2000, 500).slideUp(500, function(){
+                            $(".success_datesheet").slideUp(500);
+                        });
+                        
+                    }
+
+                    if(response.message == false){
+                        initmodules();
+                        message('Mid Datesheet not saved','show')
+                    }
+                })
+                .error(function(){
+                    var $this = $(".btn-primary");
+                    $this.button('reset');
+                    initmodules();
+                    message('Mid Datesheet not saved','show')
+                });
+        }
+$(document).ready(function(){
+        initdatepickter('input[name="exam_date"]',new Date('<?php echo date('Y-m-d') ?>'))
+        
+        function initdatepickter(dateinput,inputdate)
+
+        {
+            
+            $(dateinput).daterangepicker({
+
+                singleDatePicker: true,
+
+                showDropdowns: true,
+
+                startDate:inputdate,
+
+                locale: {
+
+                    format: 'D MMMM, YYYY'
+
+                }
+
+            });
+
+        }
+
+    });
 
             $(document).ready(function() {
            $('#inputStartitme').timepicker({
@@ -392,6 +572,44 @@ require APPPATH.'views/__layout/leftnavigation.php';
            });
         });
 
+            $(document).ready(function() {
+           $('#inputStartitme1').timepicker({
+               showLeadingZero: false,
+               onSelect: tpStartSelect,
+               onClose:checkTeacherSchedule,
+                showNowButton: false,
+                nowButtonText: 'Now',
+
+                minutes: {
+                    starts: 0,                // First displayed minute
+                    ends: 59,                 // Last displayed minute
+                    interval: 5,              // Interval of displayed minutes
+                    manual: []                // Optional extra entries for minutes
+                },
+                onMinuteShow: OnMinuteSShowCallback,
+                 onHourShow: OnHourShowCallback,
+                defaultTime:'<?php if(isset($result)){echo date('H:i',strtotime($result['start_time']));} ?>'
+
+           });
+           $('#InputEndTime1').timepicker({
+               showLeadingZero: false,
+               onSelect: tpEndSelect,
+               onClose:checkTeacherSchedule,
+                showNowButton: false,
+                nowButtonText: 'Now',
+
+                minutes: {
+                    starts: 0,                // First displayed minute
+                    ends: 59,                 // Last displayed minute
+                    interval: 5,              // Interval of displayed minutes
+                    manual: []                // Optional extra entries for minutes
+                },
+                onMinuteShow: OnMinuteShowCallback,
+                onHourShow: OnHourEShowCallback,
+                defaultTime:'<?php if(isset($result)){echo date('H:i',strtotime($result['end_time']));} ?>'
+
+           });
+        });
         // when start time change, update minimum for end timepicker
         function tpStartSelect( time, endTimePickerInst ) {
 

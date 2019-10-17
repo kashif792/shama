@@ -5850,6 +5850,7 @@ if(!$this->session->userdata('id'))
 				if(count($id))
 				{
 					$result['message'] = true;
+					$result['lastid'] = $id;
 				}
 		}
 		echo json_encode($result);
@@ -5941,5 +5942,38 @@ if(!$this->session->userdata('id'))
 	    	echo json_encode($result);
     	}
     	
+    }
+    function saveDatesheetDetail()
+    {
+    	if(!($this->session->userdata('id'))){
+			parent::redirectUrl('signin');
+
+		}
+
+		$result['message'] = false;
+		
+        $this->form_validation->set_rules('datesheet_id', 'Datesheet Required', 'trim|required');
+        
+        if ($this->form_validation->run() == FALSE){
+			$result['message'] = false;
+		}
+		else{
+				
+				$data =  array(
+							'datesheet_id'=>$this->input->post('datesheet_id'),
+						 	'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
+						 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
+							'exam_date'=>date('Y-m-d',strtotime($this->input->post('exam_date'))),
+							'subject_id'=>$this->input->post('select_subject'),
+						 	'created_at'=> date('Y-m-d H:i'),
+						);
+				$this->operation->table_name = 'datesheet_details';
+				$id = $this->operation->Create($data);
+				if(count($id))
+				{
+					$result['message'] = true;
+				}
+		}
+		echo json_encode($result);
     }
 }	
