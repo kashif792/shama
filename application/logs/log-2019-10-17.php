@@ -281,3 +281,415 @@ ERROR - 2019-10-17 08:15:20 --> Query error: You have an error in your SQL synta
 					        d.semester_id  =  AND
 					        d.type= '' AND
 					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:21:12 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:21:19 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:27:08 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:28:02 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:29:29 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:30:03 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:30:13 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:30:51 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:36:42 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 23 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							
+						    , semester.semester_name
+						    
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheets as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						   
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:37:16 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 23 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							
+						    , semester.semester_name
+						    
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheets as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						   
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1
+ERROR - 2019-10-17 09:39:15 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 23 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							
+						    , semester.semester_name
+						    
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheets as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						   
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1
+ERROR - 2019-10-17 09:40:24 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 09:40:31 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-17 10:29:33 --> Query error: Unknown column 'update_at' in 'field list' - Invalid query: UPDATE `datesheets` SET `class_id` = '85', `session_id` = '42', `school_id` = '1', `semester_id` = '11', `start_time` = '08:00', `end_time` = '08:15', `notes` = 'qwqeqweqweqqweqwe', `exam_type` = 'undefined', `update_at` = '2019-10-17 10:29'
+WHERE `id` = '2'

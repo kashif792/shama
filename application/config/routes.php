@@ -405,6 +405,10 @@ $route['datesheetlist'] = 'Principal_controller/getDatesheetList';
 $route['add_datesheet'] = 'Principal_controller/AddDatesheet';
 $route['getdatesheetdata'] = 'Principal_controller/getDatesheetData';
 
+$route['update_datesheet/(:any)'] = "Principal_controller/getDatesheetUpdate/$1";
+$route['getdatesheetedit'] = "Principal_controller/DatesheetUpdate/";
+$route['getdatesheetdetailedit'] = "Principal_controller/getDatesheetDetailInfo/";
+
 // End here
 $route['studentreport/(:any)/(:any)/(:any)/(:any)/(:any)'] = 'Reports/StudentReport/$1/$2/$3/$4/$5';
 $route['savegrade'] = 'Reports/SaveGrades';

@@ -5833,6 +5833,31 @@ if(!$this->session->userdata('id'))
 			$result['message'] = false;
 		}
 		else{
+			if($this->input->post('serial'))
+			{
+				$subject_schedual_check = true;
+				$data =  array(
+							'class_id'=>$this->input->post('select_class'),
+						 	'session_id'=>$this->input->post('session_id'),
+						 	'school_id'=>$locations[0]['school_id'],
+						 	'semester_id'=>$this->input->post('semester_id'),
+						 	'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
+						 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
+							'notes'=>$this->input->post('notes'),
+							'exam_type'=>$this->input->post('exam_type'),
+						 	'updated_at'=> date('Y-m-d H:i'),
+						);
+				$this->operation->table_name = 'datesheets';
+				//$id = $this->operation->Create($data);
+				$id = $this->operation->Create($data,$this->input->post('serial'));
+				if(count($id))
+				{
+					$result['message'] = true;
+					$result['lastid'] = $id;
+				}
+			}
+			else
+			{
 				$subject_schedual_check = true;
 				$data =  array(
 							'class_id'=>$this->input->post('select_class'),
@@ -5852,6 +5877,8 @@ if(!$this->session->userdata('id'))
 					$result['message'] = true;
 					$result['lastid'] = $id;
 				}
+			}
+				
 		}
 		echo json_encode($result);
 	}
@@ -5975,5 +6002,158 @@ if(!$this->session->userdata('id'))
 				}
 		}
 		echo json_encode($result);
+    }
+    function getDatesheetUpdate()
+    {
+
+    	if(!($this->session->userdata('id'))){
+
+				parent::redirectUrl('signin');
+
+			}
+
+		$locations = $this->session->userdata('locations');
+
+			$roles = $this->session->userdata('roles');
+
+			$result = array();
+
+			if($this->uri->segment(2) AND $this->uri->segment(2) != "page" ){
+
+				$schedule_single = $this->operation->GetRowsByQyery("Select * from datesheets where id= ".$this->uri->segment(2));
+				if(Count($schedule_single))
+				{
+					$this->data['schedule_single'] = $schedule_single;
+
+					$result['class_id'] = $schedule_single[0]->class_id;
+
+					$result['semester_id'] = $schedule_single[0]->semester_id;
+
+					$result['type'] = $schedule_single[0]->exam_type;
+					$result['start_time'] = date('H:i',strtotime($schedule_single[0]->start_time));
+
+					$result['end_time'] = date('H:i',strtotime($schedule_single[0]->end_time));
+
+				}
+
+				$this->data['result'] = $result;
+
+		}
+
+		$this->operation->table_name = "subjects";
+
+		$subjectslist = $this->operation->GetRows();
+
+		$subjects = array();
+
+		if(count($subjectslist))
+
+		{
+
+			foreach ($subjectslist as $key => $value) {
+
+
+
+				$subjects[] = array(
+
+					'subid'=>$value->id,
+
+					'name'=> $value->subject_name." (".$value->subject_code." )",
+
+					'class'=>parent::getClass($value->class_id),
+
+				);
+
+			}
+
+		}
+
+		// get Detail sheet data
+		          
+		$this->operation->table_name = "datesheet_details";
+		$datesheet_list = $this->operation->GetByWhere(array('datesheet_id'=>$this->uri->segment(2)));
+		
+
+		$details = array();
+
+		if(count($datesheet_list))
+
+		{
+
+			foreach ($datesheet_list as $key => $value) {
+
+
+
+				$details[] = array(
+
+					'detail_id'=>$value->id,
+					'datesheet_id'=>$value->datesheet_id,
+					'exam_date'=>date('M d, Y',strtotime($value->exam_date)),
+					'exam_day'=>date('l',strtotime($value->exam_date)),
+					'start_time'=>date('H:i',strtotime($value->start_time)),
+					'end_time'=>date('H:i',strtotime($value->end_time)),
+					'subject_name'=>getName('subjects','subject_name',$value->subject_id),
+				);
+
+			}
+
+		}
+
+//print_r($details);
+
+		$classlist = $this->operation->GetRowsByQyery("SELECT  * FROM classes c where school_id=".$locations[0]['school_id']);
+		
+		$this->data['classlist'] = $classlist;
+
+
+
+		$this->data['subjects'] = $subjects;
+
+		$this->data['details'] = $details;
+
+		$this->load->view('principal/datesheet/edit_datesheet', $this->data);
+		
+    }
+    function DatesheetUpdate ()
+    {
+    	
+    	
+    	$locations = $this->session->userdata('locations');
+		$request = json_decode(file_get_contents('php://input'));
+
+        $serial = $this->input->get('datesheetinfo');
+        $listarray = array();
+    	$data_array = array();
+        $datesheelist = $this->operation->GetRowsByQyery("Select * from datesheets where id= ".$serial);
+        if (count($datesheelist))
+	    	{	
+
+	    		foreach ($datesheelist as $key => $value)
+	    		{
+
+	    			$listarray[] =array('id' => $value->id,'notes' => $value->notes,'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'class_id'=>$value->class_id,'type'=>$value->exam_type,'semester_id'=>$value->semester_id,'session_id'=>$value->session_id);
+	    		}
+
+	    	}
+        
+		echo json_encode($listarray);
+    }
+    function getDatesheetDetailInfo()
+    {
+    	$serial = $this->input->get('detail_id');
+    	$listarray = array();
+    	$datesheelist = $this->operation->GetRowsByQyery("Select * from datesheet_details where id= ".$serial);
+        if (count($datesheelist))
+	    	{	
+
+	    		foreach ($datesheelist as $key => $value)
+	    		{
+
+	    			$listarray[] =array('id' => $value->id,'subject_id' => $value->subject_id,'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'exam_date'=>date('d F, Y',strtotime($value->exam_date)));
+	    		}
+
+	    	}
+        
+		echo json_encode($listarray);
     }
 }	

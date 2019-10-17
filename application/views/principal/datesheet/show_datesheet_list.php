@@ -80,7 +80,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                                 <td>{{d.type}}</td>
                                                 <td>{{d.start_time}}</td>
                                                 <td>{{d.end_time}}</td>
-                                                <td><a href="<?php echo $path_url; ?>edit_datesheet/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
+                                                <td><a href="<?php echo $path_url; ?>update_datesheet/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
 
                                                      <i class="fa fa-edit" aria-hidden="true"></i>
 
