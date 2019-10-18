@@ -156,7 +156,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 <div class="modal-body">
                 <?php $attributes = array('role'=>'form','name' => 'addquestionform', 'id' => 'addquestionform','class'=>'form-container-input');
                         echo form_open_multipart('', $attributes);?>
-                    <input type="hidden" ng-model="inputQestionSerail" value="<?php if($this->uri->segment(2)){ echo $this->uri->segment(2);} ?>" name="inputQestionSerail" id="inputQestionSerail">
+                    <input type="hidden" ng-model="detail_id"  name="detail_id" id="detail_id">
                     <div class="form-group">
                             <div class="col-sm-12">
                                 <label><span class="icon-phone"></span> Subject<span class="required">*</span></label>
@@ -599,7 +599,7 @@ $(document).ready(function(){
                 },
                 onMinuteShow: OnMinuteSShowCallback,
                  onHourShow: OnHourShowCallback,
-                defaultTime:'<?php if(isset($result)){echo date('H:i',strtotime($result['start_time']));} ?>'
+                defaultTime:''
 
            });
            $('#InputEndTime1').timepicker({
@@ -617,11 +617,10 @@ $(document).ready(function(){
                 },
                 onMinuteShow: OnMinuteShowCallback,
                 onHourShow: OnHourEShowCallback,
-                defaultTime:'<?php if(isset($result)){echo date('H:i',strtotime($result['end_time']));} ?>'
+                defaultTime:''
 
            });
         });
-
 		// when start time change, update minimum for end timepicker
 		function tpStartSelect( time, endTimePickerInst ) {
 
@@ -805,31 +804,10 @@ $(document).ready(function(){
 				   		console.log(response);
 			   		  	$scope.editresponse = response;
 			   		  	$scope.editresponse.subject_id = response[0].subject_id;
+                        $("#detail_id").val(response[0].id);
 			   		  	initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date));
 		
-					 	
-			   		  	$("#exam_date").val(response[0].exam_date);
-			   			//initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date))
-			   		//  	$scope.inputStartitme = response[0].start_time;
-					  	// $scope.InputEndTime = response[0].end_time;
-					  	// $scope.editresponse.class =response[0].class_id;
-					  	// $scope.editresponse.semester_id = response[0].semester_id;
-					  	// $scope.editresponse.session_id = response[0].session_id;
-					  	// $("#notes").val(response[0].notes);
-					  	//loadclass()
-					  	//getSemesterData();
-					  	//console.log($scope.editresponse.subject_id);
-					  	getSubjectList();
-					  	$("#myModal").modal('show');
-				   }
-				   else{
-
-				   }
-			   })
-		   }
-		   catch(ex){}
-		}
-	function initdatepickter(dateinput,inputdate)
+					 	function initdatepickter(dateinput,inputdate)
 
 					 	{
 					 		
@@ -849,7 +827,117 @@ $(document).ready(function(){
 
 					    	});
 
-					 	}	
+					 	}
+			   		  	$("#exam_date").val(response[0].exam_date);
+			   			//initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date))
+			   		  	$scope.inputStartitme1 = response[0].start_time;
+					  	 $scope.InputEndTime1 = response[0].end_time;
+					  	// $scope.editresponse.class =response[0].class_id;
+					  	// $scope.editresponse.semester_id = response[0].semester_id;
+					  	// $scope.editresponse.session_id = response[0].session_id;
+					  	// $("#notes").val(response[0].notes);
+					  	//loadclass()
+					  	//getSemesterData();
+					  	//console.log($scope.editresponse.subject_id);
+					  	getSubjectList();
+					  	$("#myModal").modal('show');
+				   }
+				   else{
+
+				   }
+			   })
+		   }
+		   catch(ex){}
+		}
+	// Save Datesheet Details
+$scope.savedatesheetdatail = function()
+        {
+            
+            var subj_name = $("#select_subject").val();
+            var exam_date = $("#exam_date").val();
+            var starttime = $("#inputStartitme1").val();
+            var endtime = $("#InputEndTime1").val();
+            var detail_id = $("#detail_id").val();
+            
+            message("",'hide')
+            $("#time_error").hide()
+
+
+            var reg = /(\d|2[0-3]):([0-5]\d)/;
+
+            if(reg.test(starttime) == false){
+                jQuery("#inputStartitme1").css("border", "1px solid red");
+                return false;
+            }
+            else{
+                jQuery("#inputStartitme1").css("border", "1px solid #C9C9C9");
+            }
+
+            if(reg.test(endtime) == false){
+                jQuery("#InputEndTime1").css("border", "1px solid red");
+                return false;
+            }
+            else{
+                jQuery("#InputEndTime1").css("border", "1px solid #C9C9C9");
+            }
+
+            var t = new Date();
+            d = t.getDate();
+            m = t.getMonth() + 1;
+            y = t.getFullYear();
+
+            var d1 = new Date(m + "/" + d + "/" + y + " " + starttime);
+            var d2 = new Date(m + "/" + d + "/" + y + " " + endtime);
+            var t1 = d1.getTime();
+            var t2 = d2.getTime();
+
+            if(t2 <= t1)
+            {
+                $("#time_error").show()
+                return false;
+            }
+
+             var $this = $(".btn-primary");
+             $this.button('loading');
+
+            var formdata = new FormData();
+            formdata.append('select_subject',$scope.inputSubject.id);
+            formdata.append('exam_date',$scope.exam_date);
+            formdata.append('inputFrom',$scope.inputStartitme1);
+            formdata.append('inputTo',$scope.InputEndTime1);
+            formdata.append('detail_id',detail_id);
+            var request = {
+                method: 'POST',
+                url: "<?php echo $path_url; ?>Principal_controller/saveDatesheetDetail",
+                data: formdata,
+                headers: {'Content-Type': undefined}
+            };
+
+            $http(request)
+                .success(function (response) {
+                    
+                    var $this = $(".btn-primary");
+                    $this.button('reset');
+                    if(response.message == true){
+                        $('.success_datesheet').show();
+                        $(".success_datesheet").fadeTo(2000, 500).slideUp(500, function(){
+                            $(".success_datesheet").slideUp(500);
+                        });
+                        
+                    }
+
+                    if(response.message == false){
+                        initmodules();
+                        message('Mid Datesheet not saved','show')
+                    }
+                })
+                .error(function(){
+                    var $this = $(".btn-primary");
+                    $this.button('reset');
+                    initmodules();
+                    message('Mid Datesheet not saved','show')
+                });
+        }	
 		function getSubjectList()
       {
       	try{

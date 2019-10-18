@@ -5979,13 +5979,28 @@ if(!$this->session->userdata('id'))
 
 		$result['message'] = false;
 		
-        $this->form_validation->set_rules('datesheet_id', 'Datesheet Required', 'trim|required');
+        $this->form_validation->set_rules('detail_id', 'Datesheet Required', 'trim|required');
         
         if ($this->form_validation->run() == FALSE){
 			$result['message'] = false;
 		}
+
 		else{
-				
+			
+			if($this->input->post('detail_id'))
+			{
+				$data =  array(
+							'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
+						 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
+							'exam_date'=>date('Y-m-d',strtotime($this->input->post('exam_date'))),
+							'subject_id'=>$this->input->post('select_subject'),
+						 	'updated_at'=> date('Y-m-d H:i'),
+						);
+				$this->operation->table_name = 'datesheet_details';
+				$id = $this->operation->Create($data,$this->input->post('detail_id'));
+			}
+			else
+			{
 				$data =  array(
 							'datesheet_id'=>$this->input->post('datesheet_id'),
 						 	'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
@@ -5996,6 +6011,8 @@ if(!$this->session->userdata('id'))
 						);
 				$this->operation->table_name = 'datesheet_details';
 				$id = $this->operation->Create($data);
+			}
+				
 				if(count($id))
 				{
 					$result['message'] = true;

@@ -693,3 +693,4 @@ ERROR - 2019-10-17 09:40:31 --> Query error: You have an error in your SQL synta
 					        d.school_id =1 ORDER BY d.exam_date
 ERROR - 2019-10-17 10:29:33 --> Query error: Unknown column 'update_at' in 'field list' - Invalid query: UPDATE `datesheets` SET `class_id` = '85', `session_id` = '42', `school_id` = '1', `semester_id` = '11', `start_time` = '08:00', `end_time` = '08:15', `notes` = 'qwqeqweqweqqweqwe', `exam_type` = 'undefined', `update_at` = '2019-10-17 10:29'
 WHERE `id` = '2'
+ERROR - 2019-10-17 13:45:16 --> Query error: Cannot add or update a child row: a foreign key constraint fails (`shama2`.`datesheet_details`, CONSTRAINT `FK_Datesheet_table` FOREIGN KEY (`datesheet_id`) REFERENCES `datesheets` (`id`) ON DELETE CASCADE) - Invalid query: INSERT INTO `datesheet_details` (`datesheet_id`, `start_time`, `end_time`, `exam_date`, `subject_id`, `created_at`) VALUES ('undefined', '10:00', '10:50', '2019-10-21', '982', '2019-10-17 13:45')
