@@ -635,8 +635,51 @@ public function add_section_form(){
 
 	}
 
+function removeDetailDatesheet()
+{
+	if(!($this->session->userdata('id'))){
+
+				parent::redirectUrl('signin');
+
+			}
+
+	$result['message'] = false;
+
+	$removeStudent = $this->db->query("Delete from datesheet_details where id = ".$this->input->get('id'));
+	
 
 
+		if($removeStudent == TRUE):
+
+			$result['message'] = true;
+
+		endif;
+
+		echo json_encode($result);
+}
+
+function removeDatesheets()
+{
+	if(!($this->session->userdata('id'))){
+
+				parent::redirectUrl('signin');
+
+			}
+
+	$result['message'] = false;
+
+	$removeStudent = $this->db->query("Delete from datesheets where id = ".$this->input->get('id'));
+	
+
+
+		if($removeStudent == TRUE):
+
+			$result['message'] = true;
+
+		endif;
+
+		echo json_encode($result);
+}
 /**
 
 	 * Load form

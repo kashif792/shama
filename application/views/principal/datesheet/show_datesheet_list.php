@@ -13,7 +13,39 @@ require APPPATH.'views/__layout/leftnavigation.php';
         // require_footer
         require APPPATH.'views/__layout/filterlayout.php';
     ?>
-   
+<div id="delete_modal" class="modal fade">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">Confirmation</h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>Are you sure you want to delete this record?</p>
+
+             </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+                <button type="button" id="UserDelete" class="btn btn-default " value="save">Yes</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>   
     <div class="">
         <div class="row">
             <div class="col-sm-12">
@@ -86,7 +118,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
                                                 </a>
 
-                                                <a href="#" title="Delete" id="{{d.id}}" class="del">
+                                                <a href="javascript:void(0)" title="Delete" id="{{d.id}}" class="del">
                                                 <i class="fa fa-remove" aria-hidden="true"></i>
 
                                                 </a></td>
@@ -302,7 +334,62 @@ require APPPATH.'views/__layout/footer.php';
 
         }
 
+// Delete Datesheet id
+$(document).on('click','.del',function(){
 
+            $("#delete_modal").modal('show');
+
+            dvalue =  $(this).attr('id');
+
+         
+
+            row_slug =   $(this).parent().parent().attr('id');
+
+            
+
+        });
+$(document).on('click','#UserDelete',function(){
+
+            $("#delete_modal").modal('hide');
+
+            ajaxType = "GET";
+
+            urlpath = "<?php echo $path_url; ?>Principal_controller/removeDatesheets";
+
+            var dataString = ({'id':dvalue});
+
+            ajaxfunc(urlpath,dataString,userDeleteFailureHandler,loadUserDeleteResponse);
+
+        });
+
+    function userDeleteFailureHandler()
+
+        {
+
+            $(".user-message").show();
+            message('Datesheet has been not deleted','show');
+           
+
+        }
+
+
+
+        function loadUserDeleteResponse(response)
+
+        {
+
+            if (response.message === true){
+                $scope.getDatesheetData();
+                
+                message('Record has been deleted','show');
+
+                
+
+            } 
+
+        }
+
+// End here
 
         
         $scope.finished = function()

@@ -159,7 +159,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 </div>
 </div>
 
-    <script src="<?php echo base_url(); ?>js/jquery-ui.js"></script>
+<script src="<?php echo base_url(); ?>js/jquery-ui.js"></script>
 <script type="text/javascript" src="<?php echo base_url(); ?>js/jquery.ui.timepicker.js?v=0.3.3"></script>
 
 

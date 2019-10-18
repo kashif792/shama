@@ -8,7 +8,39 @@ require APPPATH.'views/__layout/topbar.php';
 // require_left_navigation
 require APPPATH.'views/__layout/leftnavigation.php';
 ?>
+<div id="detail_modal" class="modal fade">
 
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">Confirmation</h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>Are you sure you want to delete this record?</p>
+
+             </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+                <button type="button" id="UserDelete" class="btn btn-default " value="save">Yes</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 <div class="col-sm-10"  ng-controller="timetable_controller">
 	<?php
 		// require_footer
@@ -87,7 +119,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	                	<div class="form-group">
 	                		<div class="col-sm-12">
 	                			<button type="button" tabindex="8" class="btn btn-primary"  id="save" ng-click="savedatesheettable()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
-	                			<a tabindex="9" href="<?php echo $path_url; ?>exams" tabindex="6" title="cancel">Cancel</a>
+	                			<a tabindex="9" href="<?php echo $path_url; ?>datesheetlist" tabindex="6" title="cancel">Cancel</a>
 	                		</div>
 	                	</div>
 	                </fieldset>
@@ -99,7 +131,9 @@ require APPPATH.'views/__layout/leftnavigation.php';
 ?>
 	
 	<a href="javascript:void(0)" ng-click="getDatesheetDetail(0)" class="btn btn-primary addmore">Add Detail Datesheet</a>	
-		<table  class="table table-striped table-bordered row-border hover">
+		
+
+        <table  class="table table-striped table-bordered row-border hover">
             <thead>
             <tr>
                 <th>Subject</th>
@@ -124,7 +158,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
                 </a>
 
-                <a href="#" title="Delete" id="{{d.detail_id}}" class="del">
+                <a href="javascript:void(0)" title="Delete" id="{{d.detail_id}}" class="del">
                 <i class="fa fa-remove" aria-hidden="true"></i>
 
                 </a></td>
@@ -288,6 +322,59 @@ require APPPATH.'views/__layout/leftnavigation.php';
 		   }
 		   catch(ex){}
 		}
+// Delete Detail id
+$(document).on('click','.del',function(){
+
+            $("#detail_modal").modal('show');
+
+            dvalue =  $(this).attr('id');
+
+         
+
+            row_slug =   $(this).parent().parent().attr('id');
+
+            
+
+        });
+$(document).on('click','#UserDelete',function(){
+
+            $("#detail_modal").modal('hide');
+
+            ajaxType = "GET";
+
+            urlpath = "<?php echo $path_url; ?>Principal_controller/removeDetailDatesheet";
+
+            var dataString = ({'id':dvalue});
+
+            ajaxfunc(urlpath,dataString,userDeleteFailureHandler,loadUserDeleteResponse);
+
+        });
+
+    function userDeleteFailureHandler()
+
+        {
+
+            $(".user-message").show();
+
+            $(".message-text").text("Datesheet has been not deleted").fadeOut(10000);
+
+        }
+
+
+
+        function loadUserDeleteResponse(response)
+
+        {
+
+            if (response.message === true){
+                getDetailDatesheetData();
+                
+                message('Record has been deleted','show');
+            } 
+
+        }
+
+// End here
 // Upadte Datesheet
 		$scope.savedatesheettable = function()
         {
