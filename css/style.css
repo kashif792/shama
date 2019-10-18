@@ -3517,3 +3517,10 @@ div#midbefore_container table td {
 #datasheet li a {
     padding-left: 40px;
 }
+.addmore
+{
+    color:#fff !important;
+    margin-bottom:20px;
+    float: right;
+
+}

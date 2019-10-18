@@ -94,13 +94,11 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	            <?php echo form_close();?>
 			
 	
-	<?php 
+<?php	
 // Details Show of Datesheet
-
-	if(count($details)>0)
-	{
-		//print_r($details);
-		?>
+?>
+	
+	<a href="javascript:void(0)" ng-click="getDatesheetDetail(0)" class="btn btn-primary addmore">Add Detail Datesheet</a>	
 		<table  class="table table-striped table-bordered row-border hover">
             <thead>
             <tr>
@@ -113,50 +111,47 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 <th>Options</th>
             </tr>
         </thead>
-            <tbody class="report-body">
-               <?php foreach ($details as $key => $value) {
-               	?>
-               	<tr>
-               		<td><?php echo $value['subject_name'] ?></td>
-               		<td><?php echo $value['exam_date'] ?></td>
-               		<td><?php echo $value['exam_day'] ?></td>
-               		<td><?php echo $value['start_time'] ?></td>
-               		<td><?php echo $value['end_time'] ?></td>
-               		<td><a href="javascript:void(0)" id="<?php echo $value['detail_id'] ?>" ng-click="getDatesheetDetail(<?php echo $value['detail_id'] ?>)" class='edit' title="Edit">
-
-                         <i class="fa fa-edit" aria-hidden="true"></i>
-
-                    </a>
-
-                    <a href="#" title="Delete" id="<?php echo $value['detail_id'] ?>" class="del">
-                    <i class="fa fa-remove" aria-hidden="true"></i>
-
-                    </a></td>
-               	</tr>
-               <?php } ?>
+            <tr ng-repeat="d in datesheetlistinfo"  ng-init="$last && finished()" >
+                <td>{{d.subject_name}}</td>
+                <td>{{d.exam_date}}</td>
+                <td>{{d.exam_day}}</td>
+                <td>{{d.start_time}}</td>
+                <td>{{d.end_time}}</td>
                 
+               <td><a href="javascript:void(0)" id="{{d.detail_id}}" ng-click="getDatesheetDetail(d.detail_id)" class='edit' title="Edit">
+
+                     <i class="fa fa-edit" aria-hidden="true"></i>
+
+                </a>
+
+                <a href="#" title="Delete" id="{{d.detail_id}}" class="del">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+
+                </a></td>
                 
-            </tbody>
+            </tr>
+            <tr ng-hide="datesheetlistinfo.length > 0">
+                <td colspan="11" class="no-record">No data found</td>
+            </tr>
         </table>
-		<?php
-	}
-?></div>
+	</div>
 
 <div class="col-sm-10">
 <div id="myModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Update Datesheet Detail</h3>
+                <h3>Datesheet Detail</h3>
                 
             </div>
             <div class="alert alert-success success_datesheet" style="display: none;">
-              <strong>Success!</strong> Indicates a successful or positive action.
+              Successfully save.
             </div>
                 <div class="modal-body">
                 <?php $attributes = array('role'=>'form','name' => 'addquestionform', 'id' => 'addquestionform','class'=>'form-container-input');
                         echo form_open_multipart('', $attributes);?>
                     <input type="hidden" ng-model="detail_id"  name="detail_id" id="detail_id">
+                    <input type="hidden" name="datesheet_id" id="datesheet_id" value="<?php if($this->uri->segment(2)){ echo $this->uri->segment(2);} ?>">
                     <div class="form-group">
                             <div class="col-sm-12">
                                 <label><span class="icon-phone"></span> Subject<span class="required">*</span></label>
@@ -759,6 +754,29 @@ $(document).ready(function(){
              }
             catch(ex){}
         }
+        // get Detail datesheet Date
+        function getDetailDatesheetData(){
+            try{
+                //$scope.semesterlist = []
+                var data = ({datesheetinfo:$scope.serial})
+                httprequest('<?php echo base_url(); ?>getdetaildatesheet',data).then(function(response){
+                //httprequest('<?php echo $path_url; ?>getdetaildatesheet',({})).then(function(response){
+                    console.log(response);
+                    if(response.length > 0 && response != null)
+                    {
+
+                        $scope.datesheetlistinfo = response[0]['details'];
+                        
+
+                    }
+                    else{
+                        $scope.semesterlist = [];
+                    }
+                });
+             }
+            catch(ex){}
+        }
+        getDetailDatesheetData();
 		function loadSections()
 		{
 
@@ -792,53 +810,45 @@ $(document).ready(function(){
 			}
 			catch(ex){}
 		}
+        // Add Detail Datesheet
+        // $('.addmore').click(function(){
+        //     $("#myModal").modal('show');
+        // })
 		$scope.getDatesheetDetail = function(detail_id)
 		{
 		
 			try{
-			 	
+			 
 			   var data = ({detail_id:detail_id})
 			   httprequest('<?php echo base_url(); ?>getdatesheetdetailedit',data).then(function(response){
 				   if(response != null)
 				   {
-				   		console.log(response);
+				   		//console.log(response);
 			   		  	$scope.editresponse = response;
-			   		  	$scope.editresponse.subject_id = response[0].subject_id;
-                        $("#detail_id").val(response[0].id);
-			   		  	initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date));
-		
-					 	function initdatepickter(dateinput,inputdate)
-
-					 	{
-					 		
-					 		$(dateinput).daterangepicker({
-
-					         	singleDatePicker: true,
-
-						        showDropdowns: true,
-
-						        startDate:inputdate,
-
-						        locale: {
-
-						            format: 'D MMMM, YYYY'
-
-						        }
-
-					    	});
-
-					 	}
-			   		  	$("#exam_date").val(response[0].exam_date);
-			   			//initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date))
-			   		  	$scope.inputStartitme1 = response[0].start_time;
-					  	 $scope.InputEndTime1 = response[0].end_time;
-					  	// $scope.editresponse.class =response[0].class_id;
-					  	// $scope.editresponse.semester_id = response[0].semester_id;
-					  	// $scope.editresponse.session_id = response[0].session_id;
-					  	// $("#notes").val(response[0].notes);
-					  	//loadclass()
-					  	//getSemesterData();
-					  	//console.log($scope.editresponse.subject_id);
+                        if(detail_id!=0)
+                        {
+                            $scope.editresponse.subject_id = response[0].subject_id;
+                        
+			   		  	
+                            $("#detail_id").val(response[0].id);
+    			   		  	initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date));
+    		
+    					 	
+    			   		  	$("#exam_date").val(response[0].exam_date);
+    			   			//initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date))
+    			   		  	$scope.inputStartitme1 = response[0].start_time;
+    					  	 $scope.InputEndTime1 = response[0].end_time;
+                        }
+                        else
+                        {
+                        $("#detail_id").val("");
+                        $scope.inputStartitme1 = "7:15";
+                        $scope.InputEndTime1 = "8:15";
+                        initdatepickter('input[name="exam_date"]',new Date());
+        
+                         
+                        }
+					  	
 					  	getSubjectList();
 					  	$("#myModal").modal('show');
 				   }
@@ -849,6 +859,27 @@ $(document).ready(function(){
 		   }
 		   catch(ex){}
 		}
+        function initdatepickter(dateinput,inputdate)
+
+        {
+            
+            $(dateinput).daterangepicker({
+
+                singleDatePicker: true,
+
+                showDropdowns: true,
+
+                startDate:inputdate,
+
+                locale: {
+
+                    format: 'D MMMM, YYYY'
+
+                }
+
+            });
+
+            }
 	// Save Datesheet Details
 $scope.savedatesheetdatail = function()
         {
@@ -858,7 +889,7 @@ $scope.savedatesheetdatail = function()
             var starttime = $("#inputStartitme1").val();
             var endtime = $("#InputEndTime1").val();
             var detail_id = $("#detail_id").val();
-            
+            var datesheet_id = $("#datesheet_id").val();
             message("",'hide')
             $("#time_error").hide()
 
@@ -906,6 +937,7 @@ $scope.savedatesheetdatail = function()
             formdata.append('inputFrom',$scope.inputStartitme1);
             formdata.append('inputTo',$scope.InputEndTime1);
             formdata.append('detail_id',detail_id);
+            formdata.append('datesheet_id',datesheet_id);
             var request = {
                 method: 'POST',
                 url: "<?php echo $path_url; ?>Principal_controller/saveDatesheetDetail",
@@ -923,7 +955,7 @@ $scope.savedatesheetdatail = function()
                         $(".success_datesheet").fadeTo(2000, 500).slideUp(500, function(){
                             $(".success_datesheet").slideUp(500);
                         });
-                        
+                        getDetailDatesheetData();
                     }
 
                     if(response.message == false){

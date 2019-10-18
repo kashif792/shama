@@ -408,6 +408,8 @@ $route['getdatesheetdata'] = 'Principal_controller/getDatesheetData';
 $route['update_datesheet/(:any)'] = "Principal_controller/getDatesheetUpdate/$1";
 $route['getdatesheetedit'] = "Principal_controller/DatesheetUpdate/";
 $route['getdatesheetdetailedit'] = "Principal_controller/getDatesheetDetailInfo/";
+$route['getdetaildatesheet'] = "Principal_controller/getDatesheetDetailList/";
+
 
 // End here
 $route['studentreport/(:any)/(:any)/(:any)/(:any)/(:any)'] = 'Reports/StudentReport/$1/$2/$3/$4/$5';

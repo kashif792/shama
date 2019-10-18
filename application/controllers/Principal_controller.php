@@ -5978,15 +5978,15 @@ if(!$this->session->userdata('id'))
 		}
 
 		$result['message'] = false;
-		
-        $this->form_validation->set_rules('detail_id', 'Datesheet Required', 'trim|required');
+		//$this->uri->segment(2)
+        $this->form_validation->set_rules('select_subject', 'Subject', 'trim|required');
         
         if ($this->form_validation->run() == FALSE){
 			$result['message'] = false;
 		}
 
 		else{
-			
+
 			if($this->input->post('detail_id'))
 			{
 				$data =  array(
@@ -6001,6 +6001,8 @@ if(!$this->session->userdata('id'))
 			}
 			else
 			{
+				 
+				
 				$data =  array(
 							'datesheet_id'=>$this->input->post('datesheet_id'),
 						 	'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
@@ -6087,9 +6089,10 @@ if(!$this->session->userdata('id'))
 
 		// get Detail sheet data
 		          
-		$this->operation->table_name = "datesheet_details";
-		$datesheet_list = $this->operation->GetByWhere(array('datesheet_id'=>$this->uri->segment(2)));
+		//$this->operation->table_name = "datesheet_details";
+		//$datesheet_list = $this->operation->GetByWhere(array('datesheet_id'=>$this->uri->segment(2)));
 		
+		$datesheet_list = $this->operation->GetRowsByQyery("Select * from datesheet_details where datesheet_id= ".$this->uri->segment(2)." ORDER BY exam_date");
 
 		$details = array();
 
@@ -6130,6 +6133,48 @@ if(!$this->session->userdata('id'))
 
 		$this->load->view('principal/datesheet/edit_datesheet', $this->data);
 		
+    }
+    function getDatesheetDetailList()
+    {
+    	$serial = $this->input->get('datesheetinfo');
+        $details = array();
+    	
+    	$datesheet_list = $this->operation->GetRowsByQyery("Select * from datesheet_details where datesheet_id= ".$serial." ORDER BY exam_date");
+
+		$details = array();
+		$data_array = array();
+		if(count($datesheet_list))
+
+		{
+
+			foreach ($datesheet_list as $key => $value) {
+
+
+
+				$details[] = array(
+
+					'detail_id'=>$value->id,
+					'datesheet_id'=>$value->datesheet_id,
+					'exam_date'=>date('M d, Y',strtotime($value->exam_date)),
+					'exam_day'=>date('l',strtotime($value->exam_date)),
+					'start_time'=>date('H:i',strtotime($value->start_time)),
+					'end_time'=>date('H:i',strtotime($value->end_time)),
+					'subject_name'=>getName('subjects','subject_name',$value->subject_id),
+				);
+
+			}
+
+		}
+
+		$result[] = array(
+                        'details'=>$details,
+                        
+                        'data_array'=>$data_array
+                    );
+
+	    echo json_encode($result);
+		//echo json_encode($details);
+
     }
     function DatesheetUpdate ()
     {
