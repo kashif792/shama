@@ -109,7 +109,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 
             </div>
             <div class="alert alert-success success_datesheet" style="display: none;">
-              <strong>Success!</strong> Indicates a successful or positive action.
+              <strong>Successfully save!</strong>
             </div>
                 <div class="modal-body">
                 <?php $attributes = array('role'=>'form','name' => 'addquestionform', 'id' => 'addquestionform','class'=>'form-container-input');

@@ -38,3 +38,37 @@ ERROR - 2019-10-18 06:57:53 --> Query error: You have an error in your SQL synta
 					        d.exam_type  = '' AND
 					        d.school_id =1 ORDER BY d.created_at desc
 ERROR - 2019-10-18 07:03:43 --> Unable to connect to the database
+ERROR - 2019-10-18 07:55:51 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY exam_date' at line 1 - Invalid query: Select * from datesheet_details where datesheet_id=  ORDER BY exam_date
+ERROR - 2019-10-18 09:45:53 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+				' at line 25 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+						    ,classes.grade
+							,d.type
+							,d.exam_date
+						    , semester.semester_name
+						    , subjects.subject_name
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheet as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    INNER JOIN subjects 
+						        ON (subjects.id = d.subject_id)
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    INNER JOIN semester as sem 
+						        ON (d.semester_id = sem.id)
+						    WHERE
+					        d.class_id  =  AND
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        d.type= '' AND
+					        d.school_id =1 ORDER BY d.exam_date
+ERROR - 2019-10-18 09:50:18 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from datesheets where id= 

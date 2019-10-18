@@ -494,7 +494,7 @@ require APPPATH.'views/__layout/footer.php';
                     temp.push({ text: 'Subject', bold: true });
                     
                     body.push(temp)
-
+            //console.log(data);
             data.forEach(function(row) {
                 var dataRow = [];
 

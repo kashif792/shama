@@ -112,7 +112,9 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                                 <td>{{d.type}}</td>
                                                 <td>{{d.start_time}}</td>
                                                 <td>{{d.end_time}}</td>
-                                                <td><a href="<?php echo $path_url; ?>update_datesheet/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
+                                                <td>
+                                                    <a href="javascript:void(0)" class="link-student" ng-click="download(d.id)" title="Download"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+                                                    <a href="<?php echo $path_url; ?>update_datesheet/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
 
                                                      <i class="fa fa-edit" aria-hidden="true"></i>
 
@@ -437,6 +439,42 @@ $(document).on('click','#UserDelete',function(){
            $scope.getGradedata();
            
         }
+        // For Print
+        //function getDetailDatesheetData(){
+        $scope.getDetailDatesheetData = function(id)
+        {
+            try{
+                //$scope.semesterlist = []
+                var data = ({datesheetinfo:id})
+                httprequest('<?php echo base_url(); ?>getdetaildatesheet',data).then(function(response){
+                
+                    //console.log(response);
+                    if(response.length > 0 && response != null)
+                    {
+
+                        $scope.datesheetlistinfo = response[0]['details'];
+                        //console.log($scope.datesheetlistinfo);
+                        $scope.datesheet_type = response[0]['data_array']['type'];
+                        $scope.grade = response[0]['data_array']['grade'];
+                        $scope.session_dates = response[0]['data_array']['session_dates'];
+                        $scope.semester_dates = response[0]['data_array']['semester_dates'];
+                        $scope.semester_name = response[0]['data_array']['semester_name'];
+                        $scope.notes = response[0]['data_array']['notes'];
+                        
+                        var reportobj = $scope.renderprintdata();
+            
+                        pdfMake.createPdf(reportobj).download("Datesheet");
+
+                    }
+                    else{
+                        $scope.semesterlist = [];
+                    }
+                });
+             }
+            catch(ex){}
+        }
+        //getDetailDatesheetData();
+        // End here
         $scope.renderprintdata = function()
         {
             try{
@@ -475,22 +513,14 @@ $(document).on('click','#UserDelete',function(){
                         },
                         {
                         columns: [
-                            //{ width: '*', text: '' },
                             
-                                table($scope.datesheetlist,["exam_date","exam_day","subject_name"]),
-
-                              
-                            //{ width: '*', text: '' },  
-
-                                    
-                            
-                            
+                               table($scope.datesheetlistinfo,["exam_date","exam_day","subject_name"]),
                         ]
                         },
-                        //table($scope.datesheetlist,["exam_date","exam_day","subject_name"]),                        
+                        
                         // Start Footer
                         {
-                            margin: [0, 40, 0, 15],
+                            margin: [0, 40, 0, 5],
                             columns: [
                                {
                                     width: '*',
@@ -505,29 +535,21 @@ $(document).on('click','#UserDelete',function(){
                             ]
                         },
                         {
-                      // to treat a paragraph as a bulleted list, set an array of items under the ul key
-                      ul: [
-                        
-                        { text: 'School timings during 2nd Term Examination will be from 7:55 am to 11:15 am. Parents are requested to pick & drop their children accordingly', fontSize:"12" },
-                        { text: 'No Re – examination will be held.',fontSize:"12" },
-                        { text: 'Students should bring their own stationery ( pencil, rubber, ruler etc).',fontSize:"12"}
-                      ]
-                    },
-                    // {
-                    //         margin: [0, 50, 0, 25],
-                    //         columns: [
-                    //            {
-                    //                 width: '*',
-                    //                 text: 'Principal: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ',
-                    //                 alignment: 'right',
-                    //                 fontSize:'14',
-                    //                 bold:true
-                    //             },
+                            margin: [0, 0, 0, 15],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: $scope.notes,
+                                    alignment: 'left',
+                                    fontSize:"10",
+                                    bold: false,
+
+                                },
+                            
                                  
-                    //         ]
-                    //     }, 
-                        
-                       // ENd footer                      
+                            ]
+                        },
+                                        
 
                    ],
                    footer: {
@@ -560,7 +582,7 @@ $(document).on('click','#UserDelete',function(){
         // Generate PDF
         function buildTableBody(data, columns) {
             var body = [];
-
+            //console.log(data);
             var temp = [];
 
                     temp.push({ text: 'Date', bold: true });
@@ -571,7 +593,7 @@ $(document).on('click','#UserDelete',function(){
 
             data.forEach(function(row) {
                 var dataRow = [];
-
+                //console.log(row);
                 columns.forEach(function(column) {
                     dataRow.push({text : row[column].toString(), alignment : 'left', color : '#000',width:'*'});
                 })
@@ -618,11 +640,10 @@ $(document).on('click','#UserDelete',function(){
          
             pdfMake.createPdf(reportobj).print();
         }
-        $scope.download = function()
+        $scope.download = function(id)
         {
-            var reportobj = $scope.renderprintdata();
+            $scope.getDetailDatesheetData(id);
             
-             pdfMake.createPdf(reportobj).download("Datesheet");
         }
 
          $scope.loading = false;

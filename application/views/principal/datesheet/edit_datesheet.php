@@ -848,7 +848,7 @@ $(document).ready(function(){
                 var data = ({datesheetinfo:$scope.serial})
                 httprequest('<?php echo base_url(); ?>getdetaildatesheet',data).then(function(response){
                 //httprequest('<?php echo $path_url; ?>getdetaildatesheet',({})).then(function(response){
-                    console.log(response);
+                    //console.log(response);
                     if(response.length > 0 && response != null)
                     {
 

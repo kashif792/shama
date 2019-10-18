@@ -5789,7 +5789,7 @@ if(!$this->session->userdata('id'))
 
 
 		}
-
+		$this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/small_nrlogo.png");
 		$this->load->view('principal/datesheet/show_datesheet_list',$this->data);
 	}
 
@@ -6208,7 +6208,58 @@ if(!$this->session->userdata('id'))
 			}
 
 		}
+		// Datesheet information
+		$datesheet_single = $this->operation->GetRowsByQyery("Select * from datesheets where id= ".$serial);
+		if(Count($datesheet_single))
+		{
+			
 
+			$class_id= $datesheet_single[0]->class_id;
+
+			$semester_id = $datesheet_single[0]->semester_id;
+
+			$session_id = $datesheet_single[0]->session_id;
+			$notes = $datesheet_single[0]->notes;
+
+			$type = $datesheet_single[0]->exam_type;
+			$start_time = date('H:i',strtotime($datesheet_single[0]->start_time));
+
+			$end_time = date('H:i',strtotime($datesheet_single[0]->end_time));
+
+		}
+
+		// Get class Name
+	    	$this->operation->table_name = 'classes';
+
+            $is_class = $this->operation->GetByWhere(array('id'=>$class_id));
+	    	
+	    	
+	    	// get session date
+	    	$this->operation->table_name = 'sessions';
+
+            $is_session = $this->operation->GetByWhere(array('id'=>$session_id));
+	    	$session_dates =date("Y",strtotime($is_session[0]->datefrom)).' - '.date("Y",strtotime($is_session[0]->dateto));
+	    	
+	    	// get semester dates
+	    	$this->operation->table_name = 'semester_dates';
+
+            $semester_date_q = $this->operation->GetByWhere(array('semester_id'=>$semester_id,'session_id'=>$session_id));
+	    	
+	    	$semester_dates =date("M d, Y",strtotime($semester_date_q[0]->start_date)).' - '.date("M d, Y",strtotime($semester_date_q[0]->end_date));
+	    	// get semester name
+	    	$this->operation->table_name = 'semester';
+
+            $semester_name_q = $this->operation->GetByWhere(array('id'=>$semester_id));
+	    	//get school name
+	    	//$this->operation->table_name = 'schools';
+
+            //$school_name_q = $this->operation->GetByWhere(array('id'=>$locations[0]['school_id']));
+	    	
+	    	$data_array = array('type'=>$type,'notes'=>$notes,'grade'=>$is_class[0]->grade,'session_dates'=>$session_dates,'semester_dates'=>$semester_dates,'semester_name' =>$semester_name_q[0]->semester_name,'school_name'=>$school_name_q[0]->name);
+	    	
+	    	 
+		// End here
+		
 		$result[] = array(
                         'details'=>$details,
                         
