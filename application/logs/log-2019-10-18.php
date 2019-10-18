@@ -72,3 +72,6 @@ ERROR - 2019-10-18 09:45:53 --> Query error: You have an error in your SQL synta
 					        d.type= '' AND
 					        d.school_id =1 ORDER BY d.exam_date
 ERROR - 2019-10-18 09:50:18 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select * from datesheets where id= 
+ERROR - 2019-10-18 10:25:52 --> Unable to connect to the database
+ERROR - 2019-10-18 10:57:11 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ORDER BY exam_date' at line 1 - Invalid query: Select * from datesheet_details where datesheet_id=  ORDER BY exam_date
+ERROR - 2019-10-18 10:57:52 --> Unable to connect to the database

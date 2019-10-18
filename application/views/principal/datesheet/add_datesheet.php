@@ -8,7 +8,39 @@ require APPPATH.'views/__layout/topbar.php';
 // require_left_navigation
 require APPPATH.'views/__layout/leftnavigation.php';
 ?>
+<div id="detail_modal" class="modal fade">
 
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">Confirmation</h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>Are you sure you want to delete this record?</p>
+
+             </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+                <button type="button" id="UserDelete" class="btn btn-default " value="save">Yes</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
 <div class="col-sm-10"  ng-controller="timetable_controller">
     <?php
         // require_footer
@@ -93,7 +125,46 @@ require APPPATH.'views/__layout/leftnavigation.php';
                     </fieldset>
 
                 <?php echo form_close();?>
+        <div class="detail_area" style="display: none;">
+        <a href="javascript:void(0)" ng-click="getDatesheetDetail(0)" class="btn btn-primary addmore">Add Detail Datesheet</a>  
+        
 
+        <table  class="table table-striped table-bordered row-border hover">
+            <thead>
+            <tr>
+                <th>Subject</th>
+                <th>Date</th>
+                <th>Day</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                
+                <th>Options</th>
+            </tr>
+        </thead>
+            <tr ng-repeat="d in datesheetlistinfo"  ng-init="$last && finished()" >
+                <td>{{d.subject_name}}</td>
+                <td>{{d.exam_date}}</td>
+                <td>{{d.exam_day}}</td>
+                <td>{{d.start_time}}</td>
+                <td>{{d.end_time}}</td>
+                
+               <td><a href="javascript:void(0)" id="{{d.detail_id}}" ng-click="getDatesheetDetail(d.detail_id)" class='edit' title="Edit">
+
+                     <i class="fa fa-edit" aria-hidden="true"></i>
+
+                </a>
+
+                <a href="javascript:void(0)" title="Delete" id="{{d.detail_id}}" class="del">
+                <i class="fa fa-remove" aria-hidden="true"></i>
+
+                </a></td>
+                
+            </tr>
+            <tr ng-hide="datesheetlistinfo.length > 0">
+                <td colspan="11" class="no-record">No data found</td>
+            </tr>
+        </table>
+    </div>
             </div>
 
     </div>
@@ -114,6 +185,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 <div class="modal-body">
                 <?php $attributes = array('role'=>'form','name' => 'addquestionform', 'id' => 'addquestionform','class'=>'form-container-input');
                         echo form_open_multipart('', $attributes);?>
+                    <input type="hidden" ng-model="detail_id"  name="detail_id" id="detail_id">
                     <input type="hidden" ng-model="inputQestionSerail" value="<?php if($this->uri->segment(2)){ echo $this->uri->segment(2);} ?>" name="inputQestionSerail" id="inputQestionSerail">
                     <div class="form-group">
                             <div class="col-sm-12">
@@ -253,6 +325,56 @@ require APPPATH.'views/__layout/leftnavigation.php';
              }
             catch(ex){}
         }
+        // Add Detail Datesheet
+        // $('.addmore').click(function(){
+        //     $("#myModal").modal('show');
+        // })
+        $scope.getDatesheetDetail = function(detail_id)
+        {
+        
+            try{
+             
+               var data = ({detail_id:detail_id})
+               httprequest('<?php echo base_url(); ?>getdatesheetdetailedit',data).then(function(response){
+                   if(response != null)
+                   {
+                        //console.log(response);
+                        $scope.editresponse = response;
+                        if(detail_id!=0)
+                        {
+                            $scope.editresponse.subject_id = response[0].subject_id;
+                        
+                        
+                            $("#detail_id").val(response[0].id);
+                            //initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date));
+                            
+                            getSubjectList();
+                            
+                            $("#exam_date").val(response[0].exam_date);
+                            //initdatepickter('input[name="exam_date"]',new Date(response[0].exam_date))
+                            $scope.inputStartitme1 = response[0].start_time;
+                             $scope.InputEndTime1 = response[0].end_time;
+                        }
+                        else
+                        {
+                        $("#detail_id").val("");
+                        $scope.inputStartitme1 = "7:15";
+                        $scope.InputEndTime1 = "8:15";
+                        //initdatepickter('input[name="exam_date"]',new Date());
+        
+                         
+                        }
+                        
+                        
+                        $("#myModal").modal('show');
+                   }
+                   else{
+
+                   }
+               })
+           }
+           catch(ex){}
+        }
         function initmodules()
         {
             loadclass()
@@ -269,7 +391,59 @@ require APPPATH.'views/__layout/leftnavigation.php';
             }
         }
 
-        
+        // Delete Detail id
+$(document).on('click','.del',function(){
+
+            $("#detail_modal").modal('show');
+
+            dvalue =  $(this).attr('id');
+
+         
+
+            row_slug =   $(this).parent().parent().attr('id');
+
+            
+
+        });
+$(document).on('click','#UserDelete',function(){
+
+            $("#detail_modal").modal('hide');
+
+            ajaxType = "GET";
+
+            urlpath = "<?php echo $path_url; ?>Principal_controller/removeDetailDatesheet";
+
+            var dataString = ({'id':dvalue});
+
+            ajaxfunc(urlpath,dataString,userDeleteFailureHandler,loadUserDeleteResponse);
+
+        });
+
+    function userDeleteFailureHandler()
+
+        {
+
+            $(".user-message").show();
+
+            $(".message-text").text("Datesheet has been not deleted").fadeOut(10000);
+
+        }
+
+
+
+        function loadUserDeleteResponse(response)
+
+        {
+
+            if (response.message === true){
+                getDetailDatesheetData();
+                
+                message('Record has been deleted','show');
+            } 
+
+        }
+
+// End here
         function loadclass()
         {
             if($scope.classlist != null && $scope.classlist.length > 0 && $scope.firsttimeload == false)
@@ -403,6 +577,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
                         message('Datesheet added','show');
                         $scope.lastid =response.lastid;
                         $('#myModal').modal('show');
+                        $('.detail_area').show();
+                        
                         //window.location.href = "<?php echo $path_url;?>datesheetlist";
                     }
 
@@ -418,6 +594,28 @@ require APPPATH.'views/__layout/leftnavigation.php';
                     message('Mid Datesheet not saved','show')
                 });
         }
+// Get listing after insertion 
+        function getDetailDatesheetData(){
+            try{
+                //$scope.semesterlist = []
+                var data = ({datesheetinfo:$scope.lastid})
+                httprequest('<?php echo base_url(); ?>getdetaildatesheet',data).then(function(response){
+                    if(response.length > 0 && response != null)
+                    {
+
+                        $scope.datesheetlistinfo = response[0]['details'];
+                        
+
+                    }
+                    else{
+                        $scope.semesterlist = [];
+                    }
+                });
+             }
+            catch(ex){}
+        }
+        
+        // End here
 // Save Datesheet Details
 $scope.savedatesheetdatail = function()
         {
@@ -426,7 +624,7 @@ $scope.savedatesheetdatail = function()
             var exam_date = $("#exam_date").val();
             var starttime = $("#inputStartitme1").val();
             var endtime = $("#InputEndTime1").val();
-            
+            var detail_id = $("#detail_id").val();
             message("",'hide')
             $("#time_error").hide()
 
@@ -474,6 +672,7 @@ $scope.savedatesheetdatail = function()
             formdata.append('inputFrom',$scope.inputStartitme1);
             formdata.append('inputTo',$scope.InputEndTime1);
             formdata.append('datesheet_id',$scope.lastid);
+            formdata.append('detail_id',detail_id);
             var request = {
                 method: 'POST',
                 url: "<?php echo $path_url; ?>Principal_controller/saveDatesheetDetail",
@@ -491,7 +690,7 @@ $scope.savedatesheetdatail = function()
                         $(".success_datesheet").fadeTo(2000, 500).slideUp(500, function(){
                             $(".success_datesheet").slideUp(500);
                         });
-                        
+                        getDetailDatesheetData();
                     }
 
                     if(response.message == false){
@@ -709,15 +908,18 @@ $(document).ready(function(){
                 {
                     $scope.inputSubject = response[0];
                     $scope.subjectlist = response;
-                    if($scope.firsttimeload == true)
-                    {
-                        var found = $filter('filter')($scope.subjectlist, {id: $scope.editresponse.subject}, true);
+                    
+                   
+
+                        //console.log($scope.editresponse.subject_id);
+                        //console.log("Calling");
+                        var found = $filter('filter')($scope.subjectlist, {id: $scope.editresponse.subject_id}, true);
                         if(found.length)
                         {
                             $scope.inputSubject = found[0];
                         }
                         $scope.firsttimeload = false;
-                    }
+                    
                     //changesubject()
                 }
                 else{
