@@ -452,7 +452,9 @@
                         if(response != null && response.message == true)
                         {
                             $scope.sessionobj.activeid = null;
-                            message('Session set','show')
+                            message('Session set','show');
+                            getSemesterDetail();
+                            
                         }
                         else{
                             message('Session  not set','show')

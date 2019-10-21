@@ -521,40 +521,46 @@ $(document).on('click','#UserDelete',function(){
                         ]
                         },
                         
-                        // Start Footer
-                        {
-                            margin: [0, 40, 0, 5],
-                            columns: [
-                               {
-                                    width: '*',
-                                    text: 'Notes: ',
-                                    alignment: 'left',
-                                    fontSize:"14",
-                                    bold: true,
+                        
 
-                                },
-                            
-                                 
-                            ]
-                        },
-                        {
-                            margin: [0, 0, 0, 15],
-                            columns: [
-                               {
-                                    width: '*',
-                                    text: $scope.notes,
-                                    alignment: 'left',
-                                    fontSize:"10",
-                                    bold: false,
+                            {
+                               
+                                margin: [0, 40, 0, 5],
 
-                                },
-                            
-                                 
-                            ]
-                        },
-                                        
+                                columns: [
+
+                                   {
+                                        width: '*',
+                                        text:'Notes: ',
+                                        alignment: 'left',
+                                        fontSize:"14",
+                                        bold: true,
+
+                                    },
+                                
+                                     
+                                ]
+                              
+                            },
+                            {
+                                margin: [0, 0, 0, 15],
+                                columns: [
+                                   {
+                                        width: '*',
+                                        text: $scope.notes,
+                                        alignment: 'left',
+                                        fontSize:"10",
+                                        bold: false,
+
+                                    },
+                                
+                                     
+                                ]
+                            },
+                                   
 
                    ],
+
                    footer: {
                     margin: [0, 0, 30, 0],
                     columns: [
@@ -569,6 +575,7 @@ $(document).on('click','#UserDelete',function(){
                         //     alignment: 'center',
                         //     margin: [0, 10, 0, 30]
                         // },
+                        
                         report_logo: {
                             alignment: 'center'
                         },
@@ -603,7 +610,7 @@ $(document).on('click','#UserDelete',function(){
 
                 body.push(dataRow);
             });
-
+            
             return body;
         }
         function table(data, columns ) {

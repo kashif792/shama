@@ -48,3 +48,10 @@ ERROR - 2019-10-21 11:22:54 --> Severity: error --> Exception: syntax error, une
 ERROR - 2019-10-21 11:23:38 --> Severity: error --> Exception: syntax error, unexpected ';', expecting ',' or ')' C:\wamp64\www\shama\application\controllers\Principal_Extension_controller.php 691
 ERROR - 2019-10-21 11:26:58 --> Severity: error --> Exception: syntax error, unexpected ';', expecting ',' or ')' C:\wamp64\www\shama\application\controllers\Principal_Extension_controller.php 691
 ERROR - 2019-10-21 11:27:33 --> Severity: error --> Exception: syntax error, unexpected ';', expecting ',' or ')' C:\wamp64\www\shama\application\controllers\Principal_Extension_controller.php 691
+ERROR - 2019-10-21 13:16:12 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select s.* from subjects s  where s.class_id = 82 AND s.session_id = 42 AND s.semsterid = 
+ERROR - 2019-10-21 13:16:13 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select s.* from subjects s  where s.class_id = 82 AND s.session_id = 42 AND s.semsterid = 
+ERROR - 2019-10-21 13:18:09 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1 - Invalid query: Select s.* from subjects s  where s.class_id = 82 AND s.session_id = 42 AND s.semsterid = 
+ERROR - 2019-10-21 13:34:29 --> Severity: error --> Exception: syntax error, unexpected '{' C:\wamp64\www\shama\application\views\principal\datesheet\show_datesheet_list.php 529
+ERROR - 2019-10-21 13:41:03 --> Unable to connect to the database
+ERROR - 2019-10-21 13:44:32 --> Severity: error --> Exception: syntax error, unexpected '{' C:\wamp64\www\shama\application\views\principal\datesheet\show_datesheet_list.php 534
+ERROR - 2019-10-21 14:24:57 --> Unable to connect to the database

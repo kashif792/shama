@@ -608,14 +608,14 @@ $(document).on('click','#UserDelete',function(){
 
                     if(response.message == false){
                         initmodules();
-                        message('Mid Datesheet not saved','show')
+                        message('Record already exists','show')
                     }
                 })
                 .error(function(){
                     var $this = $(".btn-primary");
                     $this.button('reset');
                     initmodules();
-                    message('Mid Datesheet not saved','show')
+                    message('Record already exists','show')
                 });
         }
 // Get listing after insertion 

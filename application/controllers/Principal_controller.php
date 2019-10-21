@@ -5904,25 +5904,37 @@ if(!$this->session->userdata('id'))
 			else
 			{
 				$subject_schedual_check = true;
-				$data =  array(
-							'class_id'=>$this->input->post('select_class'),
-						 	'session_id'=>$this->input->post('session_id'),
-						 	'school_id'=>$locations[0]['school_id'],
-						 	'semester_id'=>$this->input->post('semester_id'),
-						 	'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
-						 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
-							'notes'=>$this->input->post('notes'),
-							'exam_type'=>$this->input->post('exam_type'),
-							'start_date'=> date('Y-m-d',strtotime($this->input->post('inputFromdate'))),
-							'end_date'=> date('Y-m-d',strtotime($this->input->post('inputTodate'))),
-						 	'created_at'=> date('Y-m-d H:i'),
-						);
+				// Check Validation
 				$this->operation->table_name = 'datesheets';
-				$id = $this->operation->Create($data);
-				if(count($id))
-				{
-					$result['message'] = true;
-					$result['lastid'] = $id;
+            	$is_datesheet = $this->operation->GetByWhere(array('class_id' => $this->input->post('select_class'),'session_id' => $this->input->post('session_id'),'semester_id' => $this->input->post('semester_id'),'exam_type' => $this->input->post('exam_type'),'school_id' => $locations[0]['school_id']));
+            	
+            	if(count($is_datesheet)>0)
+            	{
+            		$result['message'] = false;
+            		
+            	}
+            	else
+            	{
+	            	$data =  array(
+								'class_id'=>$this->input->post('select_class'),
+							 	'session_id'=>$this->input->post('session_id'),
+							 	'school_id'=>$locations[0]['school_id'],
+							 	'semester_id'=>$this->input->post('semester_id'),
+							 	'start_time'=>date('H:i',strtotime($this->input->post('inputFrom'))),
+							 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
+								'notes'=>$this->input->post('notes'),
+								'exam_type'=>$this->input->post('exam_type'),
+								'start_date'=> date('Y-m-d',strtotime($this->input->post('inputFromdate'))),
+								'end_date'=> date('Y-m-d',strtotime($this->input->post('inputTodate'))),
+							 	'created_at'=> date('Y-m-d H:i'),
+							);
+					$this->operation->table_name = 'datesheets';
+					$id = $this->operation->Create($data);
+					if(count($id))
+					{
+						$result['message'] = true;
+						$result['lastid'] = $id;
+					}
 				}
 			}
 				
