@@ -6240,7 +6240,12 @@ if(!$this->session->userdata('id'))
 			$semester_id = $datesheet_single[0]->semester_id;
 
 			$session_id = $datesheet_single[0]->session_id;
-			$notes = $datesheet_single[0]->notes;
+			if($datesheet_single[0]->notes)
+			{
+				$notes = $datesheet_single[0]->notes;
+				$notes_text = "Notes";
+			}
+			
 
 			$type = $datesheet_single[0]->exam_type;
 			$start_time = date('H:i',strtotime($datesheet_single[0]->start_time));
@@ -6276,7 +6281,7 @@ if(!$this->session->userdata('id'))
 
             //$school_name_q = $this->operation->GetByWhere(array('id'=>$locations[0]['school_id']));
 	    	
-	    	$data_array = array('type'=>$type,'notes'=>$notes,'grade'=>$is_class[0]->grade,'session_dates'=>$session_dates,'semester_dates'=>$semester_dates,'semester_name' =>$semester_name_q[0]->semester_name,'school_name'=>$school_name_q[0]->name);
+	    	$data_array = array('type'=>$type,'notes_text'=>$notes_text,'notes'=>$notes,'grade'=>$is_class[0]->grade,'session_dates'=>$session_dates,'semester_dates'=>$semester_dates,'semester_name' =>$semester_name_q[0]->semester_name,'school_name'=>$school_name_q[0]->name);
 	    	
 	    	 
 		// End here

@@ -464,6 +464,7 @@ $(document).on('click','#UserDelete',function(){
                         $scope.semester_dates = response[0]['data_array']['semester_dates'];
                         $scope.semester_name = response[0]['data_array']['semester_name'];
                         $scope.notes = response[0]['data_array']['notes'];
+                        $scope.notes_text = response[0]['data_array']['notes_text'];
                         
                         var reportobj = $scope.renderprintdata();
             
@@ -523,7 +524,7 @@ $(document).on('click','#UserDelete',function(){
                         },
                         
                         
-
+                        
                             {
                                
                                 margin: [0, 40, 0, 5],
@@ -531,8 +532,9 @@ $(document).on('click','#UserDelete',function(){
                                 columns: [
 
                                    {
+
                                         width: '*',
-                                        text:'Notes: ',
+                                        text:$scope.notes_text,
                                         alignment: 'left',
                                         fontSize:"14",
                                         bold: true,
@@ -558,7 +560,7 @@ $(document).on('click','#UserDelete',function(){
                                      
                                 ]
                             },
-                                   
+                                  
 
                    ],
 
@@ -569,6 +571,7 @@ $(document).on('click','#UserDelete',function(){
                       { text: 'Principal: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ', alignment: 'right',fontSize:'14',bold:true }
                     ]
                   },
+
                     styles: {
                         // report_header: {
                         //     fontSize: 14,
