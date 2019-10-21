@@ -6243,7 +6243,7 @@ if(!$this->session->userdata('id'))
 			if($datesheet_single[0]->notes)
 			{
 				$notes = $datesheet_single[0]->notes;
-				$notes_text = "Notes";
+				$notes_text = "Notes:";
 			}
 			
 
