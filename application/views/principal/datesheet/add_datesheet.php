@@ -74,27 +74,57 @@ require APPPATH.'views/__layout/leftnavigation.php';
                             </div>
                         </div> -->
                         <div class="form-group">
-                            <div class="col-sm-12">
+                            <div class="col-md-6">
+                                
                                 <label><span class="icon-user"></span> Grade <span class="required">*</span></label>
+                                
+                                    <select class="form-control" ng-options="item.name for item in classlist track by item.id"  id="select_class" name="select_class" ng-model="select_class" ng-change="changeclass()"></select>
+                                
                             </div>
-                            <div class="col-sm-6">
-                                <select class="form-control" ng-options="item.name for item in classlist track by item.id"  id="select_class" name="select_class" ng-model="select_class" ng-change="changeclass()"></select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <label><span class="icon-user"></span> Type <span class="required">*</span></label>
-                            </div>
-                            <div class="col-sm-6">
+                            <div class="col-md-6">
+                               <label><span class="icon-user"></span> Type <span class="required">*</span></label>
                                 <select class="form-control"  id="exam_type" name="exam_type">
                                 <option>Mid</option>
                                 <option>Final</option>
                                 </select>
+                            
                             </div>
+                            <div class="clearfix"></div>
                         </div>
+
+
                         
-                           <div class="form-group">
+                        
+                           
+                         <div class="form-group">
+                            <div class="col-md-6">
+                                
+                                <label><span class="icon-clock"></span> School Time From <span class="required">*</span></label>
+                                
+                                    <input type="text" class="form-control" id="inputStartitme" name="inputFrom" ng-model="inputStartitme"  placeholder="Start Time"  tabindex="1" value="" required>
+                                
+                            </div>
+                            <div class="col-md-6">
+                                <label><span class="icon-clock"></span> To <span class="required">*</span></label>
+                               <input type="text" class="form-control" id="InputEndTime" name="inputTo" ng-model="InputEndTime"  placeholder="End Time"  tabindex="1" value="" required>
+                            
+                            </div>
+                            <div id="time_error" class="required row endtimeerror">End time must be greater then start time</div>
+                            <div class="clearfix"></div>
+                        </div> 
+                            
+                         <div class="form-group ">
+                            <div class="col-md-6">
+                                 <label><span class="icon-calendar"></span> Start Date <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="inputStartdate" name="inputStartdate" ng-model="inputStartdate"  placeholder="Start Date"  tabindex="1" value="" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label><span class="icon-calendar"></span> End Date <span class="required">*</span></label>
+                                <input type="text" class="form-control" id="InputEnddate" name="InputEnddate" ng-model="InputEnddate"  placeholder="End Date"  tabindex="1" value="" required></div>
+                            <div id="date_error" class="required row endtimeerror">End date must be greater then start date</div>
+                            <div class="clearfix"></div>
+                        </div> 
+                        <div class="form-group">
                             <div class="col-sm-12">
                                 <label><span class="icon-mail-alt"></span> Notes</label>
                             </div>
@@ -102,20 +132,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                 <textarea class="form-control"  placeholder="Notes..." id="notes" name="notes" ></textarea>
                                                         
                             </div>
-                         </div> 
-                            <div class="form-group ">
-                            <div class="col-sm-12">
-                                <label><span class="icon-clock"></span> School Time From <span class="required">*</span></label>
-                            </div>
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" id="inputStartitme" name="inputFrom" ng-model="inputStartitme"  placeholder="Start Time"  tabindex="1" value="" required>
-                            </div>  
-                            <div class="col-sm-6">
-                                <input type="text" class="form-control" id="InputEndTime" name="inputTo" ng-model="InputEndTime"  placeholder="End Time"  tabindex="1" value="" required>
-                            </div>  
-                                <div id="time_error" class="required row endtimeerror">End time must be greater then start time</div>
-                            </div>
-                        
+                         </div>
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <button type="button" tabindex="8" class="btn btn-primary"  id="save" ng-click="savedatesheettable()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
@@ -126,7 +143,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
                 <?php echo form_close();?>
         <div class="detail_area" style="display: none;">
-        <a href="javascript:void(0)" ng-click="getDatesheetDetail(0)" class="btn btn-primary addmore">Add Detail Datesheet</a>  
+        <a href="javascript:void(0)" ng-click="getDatesheetDetail(0)" class="btn btn-primary addmore">Add Papers</a>  
         
 
         <table  class="table table-striped table-bordered row-border hover">
@@ -176,7 +193,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3>Add Datesheet Detail</h3>
+                <h3>Add Paper</h3>
                 
             </div>
             <div class="alert alert-success success_datesheet" style="display: none;">
@@ -188,23 +205,17 @@ require APPPATH.'views/__layout/leftnavigation.php';
                     <input type="hidden" ng-model="detail_id"  name="detail_id" id="detail_id">
                     <input type="hidden" ng-model="inputQestionSerail" value="<?php if($this->uri->segment(2)){ echo $this->uri->segment(2);} ?>" name="inputQestionSerail" id="inputQestionSerail">
                     <div class="form-group">
-                            <div class="col-sm-12">
-                                <label><span class="icon-phone"></span> Subject<span class="required">*</span></label>
+                            <div class="col-md-6">
+                                <label><span class="icon-mail-alt"></span> Subject <span class="required">*</span></label>
+                                 <select class="form-control" ng-options="item.name for item in subjectlist track by item.id" name="select_subject" id="select_subject" ng-change="checksche()" ng-model="inputSubject"></select>
                             </div>
-                            <div class="col-sm-6">
-                                <select class="form-control" ng-options="item.name for item in subjectlist track by item.id" name="select_subject" id="select_subject" ng-change="checksche()" ng-model="inputSubject"></select>
+                            <div class="col-md-6">
+                               <label><span class="icon-calendar"></span> Date <span class="required">*</span></label>
+                                <input class="form-control" type="text"  placeholder="" ng-model="exam_date" id="exam_date" name="exam_date"  value="">
                             </div>
+                            <div class="clearfix"></div>
                          </div>
-                     <div class="form-group">
-                        <div class="col-sm-12">
-                            <label><span class="icon-mail-alt"></span> Date<span class="required">*</span></label>
-                        </div>
-                        <div class="col-sm-6">
-                            <input class="form-control" type="text"  placeholder="" ng-model="exam_date" id="exam_date" name="exam_date"  value="">
-                                                    
-                        </div>
-                     </div>
-                        
+                    
                         <div class="form-group ">
                         <div class="col-sm-12">
                             <label><span class="icon-clock"></span> From <span class="required">*</span></label>
@@ -215,7 +226,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="InputEndTime1" name="inputTo1" ng-model="InputEndTime1"  placeholder="End Time"  tabindex="1" value="" required>
                         </div>  
-                            <div id="time_error" class="required row endtimeerror">End time must be greater then start time</div>
+                            
                         </div>
                     <div class="clearfix"></div>
                     
@@ -387,6 +398,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 $scope.InputEndTime1 = '<?php if(isset($result)){echo date('H:i',strtotime($result['end_time']));}else{ $seconds = time(); $rounded_seconds = round($seconds / (15 * 60)) * (15 * 60); echo date('H:i', $rounded_seconds + 900); } ?>'
                 
                 $scope.exam_date = '<?php echo date('Y-m-d') ?>'
+                $scope.start_date = '<?php echo date('Y-m-d') ?>'
+                $scope.end_date = '<?php echo date('Y-m-d') ?>'
                 $scope.type = '<?php echo "Mid" ?>'
             }
         }
@@ -498,10 +511,11 @@ $(document).on('click','#UserDelete',function(){
 
             var starttime = $("#inputStartitme").val();
             var endtime = $("#InputEndTime").val();
-            
+            var startdate = $("#inputStartdate").val();
+            var enddate = $("#InputEnddate").val();
             message("",'hide')
             $("#time_error").hide()
-
+            $("#date_error").hide()
 
             if(!$scope.select_class){
                 jQuery("#select_class").css("border", "1px solid red");
@@ -512,7 +526,7 @@ $(document).on('click','#UserDelete',function(){
                 jQuery("#select_class").css("border", "1px solid #C9C9C9");
             }
 
-             
+            
              
             var reg = /(\d|2[0-3]):([0-5]\d)/;
 
@@ -547,7 +561,15 @@ $(document).on('click','#UserDelete',function(){
                 $("#time_error").show()
                 return false;
             }
+            // Date Validation
+            var startDate = new Date($('#inputStartdate').val());
+            var endDate = new Date($('#InputEnddate').val());
 
+            if (startDate >= endDate){
+                $("#date_error").show();
+                return false;
+            }
+            // End here
              var $this = $(".btn-primary");
              $this.button('loading');
 
@@ -559,6 +581,8 @@ $(document).on('click','#UserDelete',function(){
             formdata.append('session_id',$scope.filterobj.session.id);
             formdata.append('inputFrom',$scope.inputStartitme);
             formdata.append('inputTo',$scope.InputEndTime);
+            formdata.append('inputFromdate',startdate);
+            formdata.append('inputTodate',enddate);
             formdata.append('serial',$scope.serial);
             
             var request = {
@@ -707,6 +731,8 @@ $scope.savedatesheetdatail = function()
         }
 $(document).ready(function(){
         initdatepickter('input[name="exam_date"]',new Date('<?php echo date('Y-m-d') ?>'))
+        initdatepickter('input[name="inputStartdate"]',new Date('<?php echo date('Y-m-d') ?>'))
+        initdatepickter('input[name="InputEnddate"]',new Date('<?php echo date('Y-m-d',strtotime('+1 day')) ?>'))
         
         function initdatepickter(dateinput,inputdate)
 

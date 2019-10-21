@@ -5888,6 +5888,8 @@ if(!$this->session->userdata('id'))
 						 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
 							'notes'=>$this->input->post('notes'),
 							'exam_type'=>$this->input->post('exam_type'),
+							'start_date'=> date('Y-m-d',strtotime($this->input->post('inputFromdate'))),
+							'end_date'=> date('Y-m-d',strtotime($this->input->post('inputTodate'))),
 						 	'updated_at'=> date('Y-m-d H:i'),
 						);
 				$this->operation->table_name = 'datesheets';
@@ -5911,6 +5913,8 @@ if(!$this->session->userdata('id'))
 						 	'end_time'=>date('H:i',strtotime($this->input->post('inputTo'))),
 							'notes'=>$this->input->post('notes'),
 							'exam_type'=>$this->input->post('exam_type'),
+							'start_date'=> date('Y-m-d',strtotime($this->input->post('inputFromdate'))),
+							'end_date'=> date('Y-m-d',strtotime($this->input->post('inputTodate'))),
 						 	'created_at'=> date('Y-m-d H:i'),
 						);
 				$this->operation->table_name = 'datesheets';
@@ -6095,6 +6099,9 @@ if(!$this->session->userdata('id'))
 					$result['start_time'] = date('H:i',strtotime($schedule_single[0]->start_time));
 
 					$result['end_time'] = date('H:i',strtotime($schedule_single[0]->end_time));
+
+					$result['start_date'] = date('Y-m-d',strtotime($schedule_single[0]->start_date));
+					$result['end_date'] = date('Y-m-d',strtotime($schedule_single[0]->end_date));
 
 				}
 
