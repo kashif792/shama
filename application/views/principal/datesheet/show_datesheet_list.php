@@ -52,12 +52,14 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 <div class="panel panel-default">
                     <!-- widget title -->
                    <div class="panel-heading">
-                    <div class="panel-heading plheading" id="widget-header">
+                    <div class="" id="widget-header">
                         <h4>Datesheet list
                         <a href="<?php echo $path_url; ?>add_datesheet" class="btn btn-primary colorwhite">Add New Datesheet</a>
                         </h4>
           
-                </div>
+                    </div>
+                    
+                    </div>
                     <div class="panel-body whide" id="class_report" >
                         
                         <div class="row">
@@ -142,7 +144,6 @@ require APPPATH.'views/__layout/leftnavigation.php';
                             </div>
                         </div>
                     </div>
-                </div>
             </div>
         </div>
     </div>
@@ -575,7 +576,7 @@ $(document).on('click','#UserDelete',function(){
                         //     alignment: 'center',
                         //     margin: [0, 10, 0, 30]
                         // },
-                        
+
                         report_logo: {
                             alignment: 'center'
                         },
