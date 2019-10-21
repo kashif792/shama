@@ -55,7 +55,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                     <input type="hidden" value="<?php if($this->uri->segment(2)){ echo $this->uri->segment(2);} ?>" name="serial" id="serial" ng-model="serial">
                     <input type="hidden" value="Mid" name="type" id="type" ng-model="type">
                     <fieldset>
-                        <div class="form-group">
+                        <!-- <div class="form-group">
                             <div class="col-sm-12">
                             <label for="inputRSession">Session <span class="required">*</span></label>
                             </div>
@@ -72,7 +72,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
                              <select class="form-control" ng-options="item.name for item in semesterlist track by item.id"  name="inputSemester" id="inputSemester"  ng-model="filterobj.semester"></select>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <label><span class="icon-user"></span> Grade <span class="required">*</span></label>
