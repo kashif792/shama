@@ -54,7 +54,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                    <div class="panel-heading">
                     <div class="panel-heading plheading" id="widget-header">
                         <h4>Datesheet list
-                        <a href="<?php echo $path_url; ?>add_datesheet" class="btn btn-primary" id="add-action">Add New Datesheet</a>
+                        <a href="<?php echo $path_url; ?>add_datesheet" class="btn btn-primary colorwhite">Add New Datesheet</a>
                         </h4>
           
                 </div>
@@ -101,7 +101,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                             <th>Type</th>
                                             <th>Start Time</th>
                                             <th>End Time</th>
-                                            
+                                            <th>Start date</th>
+                                            <th>End date</th>
                                             <th>Options</th>
                                         </tr>
                                     </thead>
@@ -112,6 +113,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                                 <td>{{d.type}}</td>
                                                 <td>{{d.start_time}}</td>
                                                 <td>{{d.end_time}}</td>
+                                                <td>{{d.start_date}}</td>
+                                                <td>{{d.end_date}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)" class="link-student" ng-click="download(d.id)" title="Download"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
                                                     <a href="<?php echo $path_url; ?>update_datesheet/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">

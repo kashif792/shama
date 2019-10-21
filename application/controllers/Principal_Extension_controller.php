@@ -584,22 +584,29 @@ class Principal_Extension_controller extends MY_Controller
         }
 
         $this->operation->table_name = 'semester_dates';
-        $current_active_session = $this->operation->GetByWhere(array('id'=>$serail));
+        $new_sem_dates = $this->operation->GetByWhere(array('id'=>$serail));
         $result['message'] = false;
         if(count($error_array) == false)
         {
-            if($current_active_session)
+            if($new_sem_dates)
             {
+
+                $this->operation->table_name = 'semester_dates';
+                $current_active_sem_dates = $this->operation->GetByWhere(array('school_id'=>$this->userlocation,'status'=>'a'));
+
                 $this->db->query("Update semester_dates set status = 'i' where school_id = ".$this->userlocation);
                 
                 $semester_datail = array(
                     'status'=>'a',
                 );
                 $id = $this->operation->Create($semester_datail,$serail);
+                //echo $current_active_sem_dates[0]->id;
+                //echo "Id:" . $id . " ";
+                //exit();
                 if(count($id))
                 {
-                    $this->MakeEvaluationActive((int) $current_active_session[0]->id,$id);
-                    $this->MakeGradesActive((int)$current_active_session[0]->id,$id);
+                    $this->MakeEvaluationActive((int) $current_active_sem_dates[0]->id,$id);
+                    $this->MakeGradesActive((int)$current_active_sem_dates[0]->id,$id);
                     $result['message'] = true;
                 }
             }
@@ -657,23 +664,25 @@ class Principal_Extension_controller extends MY_Controller
             $this->operation->table_name = 'grades';
             $get_last_grades = $this->operation->GetByWhere(array('semester_date_id'=>$current_semester_id));
             
+            
             if(count($get_last_grades))
             {
                 $this->db->query("Update grades set status = 'i' where semester_date_id = ".$current_semester_id);
                 $this->operation->primary_key = "semester_date_id";
                 $option = array(
                     'semester_date_id'=>$new_semester_id,
-                    'option_value'=>serialize($get_last_grades[0]->option_value),
+                    //'option_value'=>serialize($get_last_grades[0]->option_value),
                     'status'=>'a'
                 );
                 $id = $this->operation->Create($option,$new_semester_id);
+                
             }else{
-                $option = array(
-                    'semester_date_id'=>$new_semester_id,
-                    'option_value'=>serialize(parent::DefaultGradesList()),
-                    'status'=>'a'
-                );
-                $id = $this->operation->Create($option);
+                
+                $grade_str = serialize(parent::DefaultGradesList());
+                $q = "INSERT INTO `grades` (`status`, `semester_date_id`, `option_value`) VALUES ('a', ". $new_semester_id .", '". $grade_str."')";
+                $result = $this->db->query($q);
+                $id = $this->db->insert_id();
+               
             }
         }
     }

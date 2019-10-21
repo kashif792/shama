@@ -5947,6 +5947,8 @@ if(!$this->session->userdata('id'))
 							d.id
 							,d.start_time
 							,d.end_time
+							,d.start_date
+							,d.end_date
 						    ,classes.grade
 							, semester.semester_name
 						    , d.exam_type
@@ -5974,7 +5976,7 @@ if(!$this->session->userdata('id'))
 	    		foreach ($datesheelist as $key => $value)
 	    		{
 
-	    			$listarray[] =array('id' => $value->id,'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->exam_type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d, Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'');
+	    			$listarray[] =array('id' => $value->id,'start_date'=>date('M d, Y',strtotime($value->start_date)),'end_date'=>date('M d, Y',strtotime($value->end_date)),'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->exam_type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d, Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'');
 	    		}
 
 	    	}
