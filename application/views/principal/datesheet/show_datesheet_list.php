@@ -46,6 +46,39 @@ require APPPATH.'views/__layout/leftnavigation.php';
     </div>
 
 </div>   
+<!-- <div id="copy_modal" class="modal fade">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">Confirmation</h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>Are you sure you want to copy this record?</p>
+
+             </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+                <button type="button" id="CopyDatesheet" class="btn btn-default " value="save">Yes</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div> --> 
     <div class="">
         <div class="row">
             <div class="col-sm-12">
@@ -70,22 +103,22 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                         <label for="inputRSession">Session:</label>
                                         <select  class="form-control" ng-options="item.name for item in rsessionlist track by item.id"  name="inputRSession" id="inputRSession"  ng-model="filterobj.session" ng-change="changeclass()" ></select>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label for="select_class">Grade:</label>
                                         <select class="form-control" ng-options="item.name for item in classlist track by item.id"  name="select_class" id="select_class"  ng-model="filterobj.class" ng-change="changeclass()"></select>
-                                    </div>
+                                    </div> -->
 
                                     <div class="form-group">
                                         <label for="inputSemester">Semester:</label>
                                         <select class="form-control"    ng-options="item.name for item in semesterlist track by item.id"  name="inputSemester" id="inputSemester"  ng-model="filterobj.semester" ng-change="changeclass()"></select>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label for="select_class">Type:</label>
                                         <select class="form-control" name="inputType" id="inputType" ng-model="filterobj.type" ng-change="changeclass()">
                                             <option>Mid</option>
                                             <option>Final</option>
                                         </select>
-                                    </div>
+                                    </div> -->
                                 </form>
                             </div>
                         </div>
@@ -99,10 +132,10 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                         <thead>
                                         <tr>
                                             <th>Grade</th>
-                                            <th>Semester</th>
+                                            <!-- <th>Semester</th> -->
                                             <th>Type</th>
-                                            <th>Start Time</th>
-                                            <th>End Time</th>
+                                            <th>School Start</th>
+                                            <th>School End</th>
                                             <th>Start date</th>
                                             <th>End date</th>
                                             <th>Options</th>
@@ -111,7 +144,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                         <tbody class="report-body">
                                            <tr ng-repeat="d in datesheetlist"  ng-init="$last && finished()" >
                                                 <td>{{d.grade}}</td>
-                                                <td>{{d.semester_name}}</td>
+                                                <!-- <td>{{d.semester_name}}</td> -->
                                                 <td>{{d.type}}</td>
                                                 <td>{{d.start_time}}</td>
                                                 <td>{{d.end_time}}</td>
@@ -119,14 +152,18 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                                 <td>{{d.end_date}}</td>
                                                 <td>
                                                     <a href="javascript:void(0)" class="link-student" ng-click="download(d.id)" title="Download"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
-                                                    <a href="<?php echo $path_url; ?>update_datesheet/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
+                                                    
+                                                    <a ng-hide="d.hide==true" href="<?php echo $path_url; ?>update_datesheet/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
 
                                                      <i class="fa fa-edit" aria-hidden="true"></i>
 
-                                                </a>
+                                                        </a>
 
-                                                <a href="javascript:void(0)" title="Delete" id="{{d.id}}" class="del">
+                                                <a ng-hide="d.hide==true" href="javascript:void(0)" title="Delete" id="{{d.id}}" class="del">
                                                 <i class="fa fa-remove" aria-hidden="true"></i>
+                                                    
+                                                <!-- <a href="javascript:void(0)" title="Copy" id="{{d.id}}" class="copy">
+                                                <i class="fa fa-bookmark" aria-hidden="true"></i> -->
 
                                                 </a></td>
                                                 
@@ -251,7 +288,7 @@ require APPPATH.'views/__layout/footer.php';
                 //console.log(response.length);
                 if(response != null && response.length > 0)
                 {
-                    console.log(response[0]['Mid']);
+                    //console.log(response[0]['Mid']);
                     $scope.type = response
                     $scope.filterobj.type = response[0]['Mid'];
                     
@@ -298,10 +335,10 @@ require APPPATH.'views/__layout/footer.php';
                 if($scope.filterobj.class && $scope.filterobj.session.id && $scope.filterobj.semester)
                 {
                      var data ={
-                        inputclassid:$scope.filterobj.class.id,
+                        //inputclassid:$scope.filterobj.class.id,
                         inputsessionid:$scope.filterobj.session.id,
                         inputsemesterid:$scope.filterobj.semester.id,
-                        inputtype:$scope.filterobj.type,
+                        //inputtype:$scope.filterobj.type,
                     }
                     //console.log(data);
                     httppostrequest('getdatesheetdata',data).then(function(response){
@@ -315,6 +352,7 @@ require APPPATH.'views/__layout/footer.php';
                             $scope.semester_dates = response[0]['data_array']['semester_dates'];
                             $scope.semester_name = response[0]['data_array']['semester_name'];
                             $scope.school_name = response[0]['data_array']['school_name'];
+                            $scope.hide_operation = response[0]['data_array']['hide_icon'];
                             //console.log($scope.datesheet_type);
                            // $scope.filterobj.subjectid = response[0];
                            // $scope.GetEvulationHeader();
@@ -339,7 +377,47 @@ require APPPATH.'views/__layout/footer.php';
             
 
         }
+// Copy Datesheet
+// $(document).on('click','.copy',function(){
 
+//             $("#copy_modal").modal('show');
+
+//             dvalue =  $(this).attr('id');
+
+         
+
+//             //row_slug =   $(this).parent().parent().attr('id');
+
+            
+
+//         });
+// $(document).on('click','#CopyDatesheet',function(){
+
+//             $("#copy_modal").modal('hide');
+
+//             ajaxType = "GET";
+
+//             urlpath = "<?php echo $path_url; ?>Principal_controller/CopyDatesheets";
+
+//             var dataString = ({'id':dvalue});
+
+//             ajaxfunc(urlpath,dataString,userDeleteFailureHandler,loadDatesheetResponse);
+
+//         });
+// function loadDatesheetResponse(response)
+
+//         {
+
+//             if (response.message === true){
+//                 $scope.getDatesheetData();
+                
+//                 message('Record has been saved','show');
+
+                
+
+//             } 
+
+//         }
 // Delete Datesheet id
 $(document).on('click','.del',function(){
 
@@ -468,7 +546,7 @@ $(document).on('click','#UserDelete',function(){
                         
                         var reportobj = $scope.renderprintdata();
             
-                        pdfMake.createPdf(reportobj).download("Datesheet");
+                        pdfMake.createPdf(reportobj).download("Datesheet-"+response[0]['data_array']['file_name']);
 
                     }
                     else{

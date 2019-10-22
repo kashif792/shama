@@ -73,6 +73,10 @@ require APPPATH.'views/__layout/leftnavigation.php';
                         	</div>
                         </div> -->
                         <div class="form-group">
+                            <div class="col-md-6">
+                                <label><span class="icon-user"></span> Grade <span class="required">*</span></label>
+                                <select class="form-control" ng-options="item.name for item in classlist track by item.id"  id="select_class" name="select_class" ng-model="select_class" ng-change="changeclass()"></select>
+                            </div>
                 			<div class="col-md-6">
                             <label for="inputRSession">Term <span class="required">*</span></label>
                         	<select class="form-control" id="exam_type" name="exam_type">
@@ -80,10 +84,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                 <option value="Final" <?php if($result['type']=="Final") {echo 'selected="selected"';} ?>>Final</option>
                              </select>
                             </div>
-                            <div class="col-md-6">
-                                <label><span class="icon-user"></span> Grade <span class="required">*</span></label>
-                                <select class="form-control" ng-options="item.name for item in classlist track by item.id"  id="select_class" name="select_class" ng-model="select_class" ng-change="changeclass()"></select>
-                        	</div>
+                            
                             <div class="clearfix"></div>
                         </div>
                 	<fieldset>

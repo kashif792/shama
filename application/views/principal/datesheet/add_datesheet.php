@@ -600,10 +600,10 @@ $(document).on('click','#UserDelete',function(){
                     if(response.message == true){
                         message('Datesheet added','show');
                         $scope.lastid =response.lastid;
-                        $('#myModal').modal('show');
-                        $('.detail_area').show();
+                        //$('#myModal').modal('show');
+                        //$('.detail_area').show();
                         
-                        //window.location.href = "<?php echo $path_url;?>datesheetlist";
+                        window.location.href = "<?php echo base_url();?>/update_datesheet/"+response.lastid;
                     }
 
                     if(response.message == false){

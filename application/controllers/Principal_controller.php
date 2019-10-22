@@ -680,6 +680,79 @@ function removeDatesheets()
 
 		echo json_encode($result);
 }
+// function CopyDatesheets()
+// {
+// 	if(!($this->session->userdata('id'))){
+
+// 				parent::redirectUrl('signin');
+
+// 			}
+// 		$locations = $this->session->userdata('locations');
+// 		$result['message'] = false;
+// 		$id =  $this->input->get('id');
+// 		$this->operation->table_name = 'datesheets';
+
+//         $datesheet_info = $this->operation->GetByWhere(array('id'=>$id));
+// 		// Insert into datesheets
+// 		$this->operation->table_name = 'sessions';
+//         $active_session = $this->operation->GetByWhere(array('school_id'=>$locations[0]['school_id'],'status'=>'a'));
+
+
+//         $this->operation->table_name = 'semester_dates';
+//         $active_semester = $this->operation->GetByWhere(array('session_id'=>$active_session[0]->id,'status'=>'a'));
+        
+//         // Check already exists
+//         $this->operation->table_name = 'datesheets';
+//     	$is_datesheet = $this->operation->GetByWhere(array('class_id' => $datesheet_info[0]->class_id,'session_id' => $active_session[0]->id,'semester_id' => $active_semester[0]->id,'exam_type' => $datesheet_info[0]->exam_type,'school_id' => $locations[0]['school_id']));
+    	
+//     	if(count($is_datesheet)>0)
+//     	{
+//     		$result['message'] = false;
+    		
+//     	}
+//     	else
+//     	{
+// 			$data =  array(
+// 						'class_id'=>$datesheet_info[0]->class_id,
+// 					 	'session_id'=>$active_session[0]->id,
+// 					 	'school_id'=>$locations[0]['school_id'],
+// 					 	'semester_id'=>$active_semester[0]->id,
+// 					 	'start_time'=>date('H:i',strtotime($datesheet_info[0]->start_time)),
+// 					 	'end_time'=>date('H:i',strtotime($datesheet_info[0]->end_time)),
+// 						'notes'=>$datesheet_info[0]->notes,
+// 						'exam_type'=>$datesheet_info[0]->exam_type,
+// 						'start_date'=> date('Y-m-d',strtotime($datesheet_info[0]->start_date)),
+// 						'end_date'=> date('Y-m-d',strtotime($datesheet_info[0]->end_date)),
+// 					 	'created_at'=> date('Y-m-d H:i'),
+// 					);
+// 			$this->operation->table_name = 'datesheets';
+// 			$insert_id = $this->operation->Create($data);
+// 			// Insert into detail sheet table
+// 			$this->operation->table_name = 'datesheet_details';
+// 			$query = $this->operation->GetByWhere(array('datesheet_id'=>$id));
+// 			if(count($query))
+// 			{
+// 				foreach ($query as $key => $value) 
+// 				{
+// 					$data =  array(
+// 								'datesheet_id'=>$insert_id,
+// 							 	'start_time'=>date('H:i',strtotime($value->start_time)),
+// 							 	'end_time'=>date('H:i',strtotime($value->end_time)),
+// 								'exam_date'=>date('Y-m-d',strtotime($value->exam_date)),
+// 								'subject_id'=>$value->subject_id,
+// 							 	'created_at'=> date('Y-m-d H:i'),
+// 							);
+// 					$this->operation->table_name = 'datesheet_details';
+// 					$id = $this->operation->Create($data);
+// 				}
+// 			}
+// 			$result['message'] = true;
+// 		}
+
+		
+
+// 		echo json_encode($result);
+// }
 /**
 
 	 * Load form
@@ -5952,6 +6025,9 @@ if(!$this->session->userdata('id'))
         $inputsessionid = $this->security->xss_clean(trim($request->inputsessionid));
         $inputsemesterid = $this->security->xss_clean(trim($request->inputsemesterid));
         $inputtype = $this->security->xss_clean(trim($request->inputtype));
+        // get active session
+        $this->operation->table_name = 'sessions';
+		$active_session = $this->operation->GetByWhere(array('school_id'=>$locations[0]['school_id'],'status'=>'a'));
 
     	if (!is_null($inputclassid)  && !is_null($inputsessionid) && !is_null($inputsemesterid))
     	{
@@ -5975,20 +6051,25 @@ if(!$this->session->userdata('id'))
 						    
 						    INNER JOIN sessions 
 						        ON (d.session_id = sessions.id)
-						    
 						    WHERE
-					        d.class_id  = ".$inputclassid." AND
 					        d.session_id  = ".$inputsessionid." AND
 					        d.semester_id  = ".$inputsemesterid." AND
-					        d.exam_type  = '".$inputtype."' AND
+					        
 					        d.school_id =".$locations[0]['school_id']." ORDER BY d.created_at desc");
 	    	if (count($datesheelist))
 	    	{	
 
 	    		foreach ($datesheelist as $key => $value)
 	    		{
+	    			// Hide Edit and delete option
+			    	$icon_hide =true;
+			    	if($inputsessionid==$active_session[0]->id)
+			    	{
+			    		$icon_hide = false;
+			    	}
+			    	// End here
 
-	    			$listarray[] =array('id' => $value->id,'start_date'=>date('M d, Y',strtotime($value->start_date)),'end_date'=>date('M d, Y',strtotime($value->end_date)),'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->exam_type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d, Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'');
+	    			$listarray[] =array('id' => $value->id,'hide' =>$icon_hide ,'start_date'=>date('M d, Y',strtotime($value->start_date)),'end_date'=>date('M d, Y',strtotime($value->end_date)),'start_time'=>date('H:i',strtotime($value->start_time)),'end_time'=>date('H:i',strtotime($value->end_time)),'grade'=>$value->grade,'type'=>$value->exam_type,'semester_name'=>$value->semester_name,'subject_name'=>$value->subject_name,'subject_name'=>$value->subject_name,'exam_date'=>date("M d, Y",strtotime($value->exam_date)),'exam_day'=>date("l",strtotime($value->exam_date)),'duration'=>getDuration($value->start_time,$value->end_time),'action'=>'');
 	    		}
 
 	    	}
@@ -6003,6 +6084,7 @@ if(!$this->session->userdata('id'))
 
             $is_session = $this->operation->GetByWhere(array('id'=>$inputsessionid));
 	    	$session_dates =date("Y",strtotime($is_session[0]->datefrom)).' - '.date("Y",strtotime($is_session[0]->dateto));
+	    	
 	    	
 	    	// get semester dates
 	    	$this->operation->table_name = 'semester_dates';
@@ -6019,6 +6101,8 @@ if(!$this->session->userdata('id'))
 
             $school_name_q = $this->operation->GetByWhere(array('id'=>$locations[0]['school_id']));
 	    	
+	    	
+
 	    	$data_array = array('type'=>$inputtype,'grade'=>$is_class[0]->grade,'session_dates'=>$session_dates,'semester_dates'=>$semester_dates,'semester_name' =>$semester_name_q[0]->semester_name,'school_name'=>$school_name_q[0]->name);
 	    	
 	    	 $result[] = array(
@@ -6265,7 +6349,7 @@ if(!$this->session->userdata('id'))
 
             $is_session = $this->operation->GetByWhere(array('id'=>$session_id));
 	    	$session_dates =date("Y",strtotime($is_session[0]->datefrom)).' - '.date("Y",strtotime($is_session[0]->dateto));
-	    	
+	    	$session_dates_file_name =date("Y",strtotime($is_session[0]->datefrom)).'-'.date("Y",strtotime($is_session[0]->dateto));
 	    	// get semester dates
 	    	$this->operation->table_name = 'semester_dates';
 
@@ -6280,8 +6364,9 @@ if(!$this->session->userdata('id'))
 	    	//$this->operation->table_name = 'schools';
 
             //$school_name_q = $this->operation->GetByWhere(array('id'=>$locations[0]['school_id']));
-	    	
-	    	$data_array = array('type'=>$type,'notes_text'=>$notes_text,'notes'=>$notes,'grade'=>$is_class[0]->grade,'session_dates'=>$session_dates,'semester_dates'=>$semester_dates,'semester_name' =>$semester_name_q[0]->semester_name,'school_name'=>$school_name_q[0]->name);
+	    	// Create file name
+	    	$file_name = $session_dates_file_name.'-'.$semester_name_q[0]->semester_name.'-'.$type.'-'.$is_class[0]->grade; 
+	    	$data_array = array('type'=>$type,'notes_text'=>$notes_text,'notes'=>$notes,'grade'=>$is_class[0]->grade,'session_dates'=>$session_dates,'semester_dates'=>$semester_dates,'semester_name' =>$semester_name_q[0]->semester_name,'school_name'=>$school_name_q[0]->name,'file_name'=>$file_name);
 	    	
 	    	 
 		// End here
