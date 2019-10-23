@@ -527,7 +527,7 @@ require APPPATH.'views/__layout/footer.php';
                             ]
                         },
                         {
-                            margin: [0, 12, 0, 20],
+                            margin: [0, 12, 0, 15],
                             columns: [
                                {
                                     width: '*',
@@ -539,7 +539,7 @@ require APPPATH.'views/__layout/footer.php';
                         },
                         
                          {
-                            margin: [0, 12, 0, 20],
+                            margin: [0, 12, 0, 15],
                             columns: [
                                {
                                     width: '*',
@@ -550,7 +550,7 @@ require APPPATH.'views/__layout/footer.php';
                             ]
                         },
                         {
-                            margin: [0, 12, 0, 20],
+                            margin: [0, 12, 0, 15],
                             columns: [
                                {
                                     width: '*',
@@ -561,7 +561,7 @@ require APPPATH.'views/__layout/footer.php';
                             ]
                         },
                         {
-                            margin: [0, 12, 0, 20],
+                            margin: [0, 12, 0, 15],
                             columns: [
                                {
                                     width: '*',
@@ -572,7 +572,7 @@ require APPPATH.'views/__layout/footer.php';
                             ]
                         },
                         {
-                            margin: [0, 12, 0, 20],
+                            margin: [0, 12, 0, 15],
                             columns: [
                                {
                                     width: '*',

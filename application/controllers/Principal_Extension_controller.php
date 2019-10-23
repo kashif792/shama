@@ -635,7 +635,7 @@ class Principal_Extension_controller extends MY_Controller
                 $this->operation->primary_key = "semester_date_id";
                 $option = array(
                     'semester_date_id'=>$new_semester_id,
-                    'option_value'=>serialize($get_last_evaluation[0]->option_value),
+//                    'option_value'=>serialize($get_last_evaluation[0]->option_value),
                     'status'=>'a'
                 );
                 $id = $this->operation->Create($option,$new_semester_id);

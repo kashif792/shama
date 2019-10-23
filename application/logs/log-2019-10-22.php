@@ -120,3 +120,4 @@ ERROR - 2019-10-22 06:57:14 --> Query error: You have an error in your SQL synta
 					        d.semester_id  =  AND
 					        
 					        d.school_id =1 ORDER BY d.created_at desc
+ERROR - 2019-10-22 12:08:28 --> Severity: error --> Exception: syntax error, unexpected '=>' (T_DOUBLE_ARROW), expecting ',' or ')' C:\wamp64\www\shama\application\controllers\Principal_controller.php 2545

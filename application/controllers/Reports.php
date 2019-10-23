@@ -504,7 +504,7 @@ class Reports extends MY_Controller
     
                         
                         $mid = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = '.$value->id.' AND studentid= '.$studentid."");
-                        
+                       
                         $total_marks = $mid[0]->marks;
                         $obtain_marks = $mid[0]->marks;
                         $student_obtain_marks += $total_marks;
@@ -514,7 +514,7 @@ class Reports extends MY_Controller
                             
                             'mid'=>(count($mid) ? $mid[0]->marks : 0),
                             'grade'=>(parent::GetGradeBySemesterDates((double)(($obtain_marks/MID_TOTAL_MARKS)*100),$inputsessionid,$inputsemesterid)) ,
-                            'obtain_marks'=>$obtain_marks,
+                            'obtain_marks'=> $obtain_marks == NULL ? 0:$obtain_marks,
                             'total_marks'=>MID_TOTAL_MARKS,
                         );    
                         $result[] = array(
@@ -539,7 +539,10 @@ class Reports extends MY_Controller
                     $semester_date_q = $this->operation->GetRowsByQyery("SELECT * FROM semester_dates  where semester_id = ".$inputsemesterid. " AND session_id =".$inputsessionid);
                     $semester_dates =date("M d, Y",strtotime($semester_date_q[0]->start_date)).' - '.date("M d, Y",strtotime($semester_date_q[0]->end_date));
                     // Calculation Attendence 
-                    $total_attendence = ($countread/$total_lesson)*100;
+                    $total_attendence = 0;
+                    if($total_lesson){
+                        $total_attendence = ($countread/$total_lesson)*100;
+                    }
                    
                     // exit;
                     // ENd Here
@@ -551,7 +554,7 @@ class Reports extends MY_Controller
                         'count_attendence'=>$countread,
                         'total_attendence'=>round($total_attendence,2),
                         'total_lesson'=>(int)($total_lesson),
-                        'obtain_marks'=> $total_obtain_mid_marks,
+                        'obtain_marks'=> $total_obtain_mid_marks == NULL ? 0:$total_obtain_mid_marks,
                         'total_marks'=>round($all_total_marks,2),
                         'percent'=>round((float)(($student_obtain_marks/((count($all_total_marks)*100)))*100),2),
                         'grade'=>parent::GetGradeBySemesterDates((float)(($student_obtain_marks/$all_total_marks)*100),$inputsessionid,$inputsemesterid),
@@ -559,6 +562,7 @@ class Reports extends MY_Controller
                 }
             }
         }
+        
         echo json_encode($studentresult);
     }
     function GetStudentProgress($lessonid, $studentid)
@@ -756,8 +760,11 @@ class Reports extends MY_Controller
                     $semester_date_q = $this->operation->GetRowsByQyery("SELECT * FROM semester_dates  where semester_id = ".$inputsemesterid. " AND session_id =".$inputsessionid);
                     $semester_dates =date("M d, Y",strtotime($semester_date_q[0]->start_date)).' - '.date("M d, Y",strtotime($semester_date_q[0]->end_date));
                     // Calculation Attendence 
-                    $total_attendence = ($countread/$total_lesson)*100;
                     
+                    $total_attendence = 0;
+                    if($total_lesson){
+                        $total_attendence = ($countread/$total_lesson)*100;
+                    }
 
                     
                     // ENd Here
@@ -780,7 +787,7 @@ class Reports extends MY_Controller
                         'semester_dates'=>$semester_dates,
                         'total_attendence'=>round($total_attendence,2),
                         'total_lesson'=>(int)($total_lesson),
-                        'count_attendence'=>$countread,
+                        'count_attendence'=>$countread == NULL ? 0 :$countread,
                     ); 
                 }
             }

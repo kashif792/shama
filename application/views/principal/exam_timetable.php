@@ -59,7 +59,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 	                		</div>
 	                	</div>
-	                		<div class="form-group ">
+	                		<!-- <div class="form-group ">
 	                		<div class="col-sm-12">
 	                			<label><span class="icon-clock"></span> From <span class="required">*</span></label>
 	                		</div>
@@ -70,8 +70,66 @@ require APPPATH.'views/__layout/leftnavigation.php';
 	                			<input type="text" class="form-control" id="InputEndTime" name="inputTo" ng-model="InputEndTime"  placeholder="End Time"  tabindex="1" value="" required>
 	                		</div>	
 		                		<div id="time_error" class="required row endtimeerror">End time must be greater then start time</div>
+	                		</div> -->
+	                	<div class="form-group">
+	                		<div class="col-md-12">
+	                			<table  class="table table-striped table-bordered row-border hover">
+	                				<thead>
+                                        <tr>
+                                            <th>Status</th>
+                                            <th>Day</th>
+                                            <th>Start Time</th>
+                                            <th>End Time</th>
+                                            
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    	<tr>
+                                    		<td><input type="checkbox" name="mon_status" id="mon_status" value="Active"></td>
+                                    		<td>Monday</td>
+                                    		<td><input type="text" class="form-control scheduletimepicker mon_start_time" autocomplete="off"  name="inputFrom" ng-model="timeobj.monstarttime" placeholder="Start Time" required></td>
+                                    		<td><input type="text" class="form-control scheduletimepicker mon_end_time" autocomplete="off"  name="inputTo"  ng-model="timeobj.monendtime"  placeholder="End Time"  tabindex="1" required></td>
+                                    	</tr>
+                                    	<tr>
+                                    		<td><input type="checkbox" name="tue_status" id="tue_status" value="Active"></td>
+                                    		<td>Tuesday</td>
+                                    		<td><input type="text" class="form-control scheduletimepicker tue_start_time" autocomplete="off"  name="inputFrom" ng-model="timeobj.tuestarttime" placeholder="Start Time" required></td>
+                                    		<td><input type="text" class="form-control scheduletimepicker tue_end_time" autocomplete="off"  name="inputTo"  ng-model="timeobj.tueendtime"  placeholder="End Time"  tabindex="1" required></td>
+                                    	</tr>
+                                    	<tr>
+                                    		<td><input type="checkbox" name="wed_status" id="wed_status" value="Active"></td>
+                                    		<td>Wednesday</td>
+                                    		<td><input type="text" class="form-control scheduletimepicker wed_start_time" autocomplete="off"  name="inputFrom" ng-model="timeobj.wedstarttime" placeholder="Start Time" required></td>
+                                    		<td><input type="text" class="form-control scheduletimepicker wed_end_time" autocomplete="off"  name="inputTo"  ng-model="timeobj.wedendtime"  placeholder="End Time"  tabindex="1" required></td>
+                                    	</tr>
+                                    	<tr>
+                                    		<td><input type="checkbox" name="thu_status" id="thu_status" value="Active"></td>
+                                    		<td>Thursday</td>
+                                    		<td><input type="text" class="form-control scheduletimepicker thu_start_time" autocomplete="off"  name="inputFrom" ng-model="timeobj.thustarttime" placeholder="Start Time" required></td>
+                                    		<td><input type="text" class="form-control scheduletimepicker thu_end_time" autocomplete="off"  name="inputTo"  ng-model="timeobj.thuendtime"  placeholder="End Time"  tabindex="1" required></td>
+                                    	</tr>
+                                    	<tr>
+                                    		<td><input type="checkbox" name="fri_status" id="fri_status" value="Active"></td>
+                                    		<td>Friday</td>
+                                    		<td><input type="text" class="form-control scheduletimepicker fri_start_time" autocomplete="off"  name="inputFrom" ng-model="timeobj.fristarttime" placeholder="Start Time" required></td>
+                                    		<td><input type="text" class="form-control scheduletimepicker fri_end_time" autocomplete="off"  name="inputTo"  ng-model="timeobj.friendtime"  placeholder="End Time"  tabindex="1" required></td>
+                                    	</tr>
+                                    	<tr>
+                                    		<td><input type="checkbox" name="sat_status" id="sat_status" value="Active"></td>
+                                    		<td>Saturday</td>
+                                    		<td><input type="text" class="form-control scheduletimepicker sat_start_time" autocomplete="off"  name="inputFrom" ng-model="timeobj.satstarttime" placeholder="Start Time" required></td>
+                                    		<td><input type="text" class="form-control scheduletimepicker sat_end_time" autocomplete="off"  name="inputTo"  ng-model="timeobj.satendtime"  placeholder="End Time"  tabindex="1" required></td>
+                                    	</tr>
+                                    	<tr>
+                                    		<td><input type="checkbox" name="sun_status" id="sun_status" value="Active"></td>
+                                    		<td>Sunday</td>
+                                    		<td><input type="text" class="form-control scheduletimepicker sun_start_time" autocomplete="off"  name="inputFrom" ng-model="timeobj.sunstarttime" placeholder="Start Time" required></td>
+                                    		<td><input type="text" class="form-control scheduletimepicker sun_end_time" autocomplete="off"  name="inputTo"  ng-model="timeobj.sunendtime"  placeholder="End Time"  tabindex="1" required></td>
+                                    	</tr>
+                                    </tbody>
+	                			</table>
 	                		</div>
-	                	
+	                	</div>
 	                	<div class="form-group">
 	                		<div class="col-sm-12">
 	                			<button type="button" tabindex="8" class="btn btn-primary"  id="save" ng-click="savetimetable()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
@@ -231,14 +289,52 @@ require APPPATH.'views/__layout/leftnavigation.php';
         	loadSections();
         }
 
+		$('.scheduletimepicker').timepicker({
+               showLeadingZero: false,
+               onSelect: tpStartSelect,
+               
+                showNowButton: false,
+                nowBuscheduletimepickerttonText: 'Now',
+                minutes: {
+                    starts: 0,                // First displayed minute
+                    ends: 59,                 // Last displayed minute
+                    interval: 5,              // Interval of displayed minutes
+                    manual: []                // Optional extra entries for minutes
+                },
+                
+                
 
+           });
         $scope.savetimetable = function()
         {
     	 	var subj_name = $("#select_subject").val();
             var section = $("#inputSection").val();
 
-            var starttime = $("#inputStartitme").val();
-            var endtime = $("#InputEndTime").val();
+            //var starttime = $("#inputStartitme").val();
+            //var endtime = $("#InputEndTime").val();
+            // Timing
+            var mon_status = $('input[name="mon_status"]:checked');
+
+            var mon_start_time = $(".mon_start_time").val();
+            var mon_end_time = $(".mon_end_time").val();
+            var tue_status = $('input[name="tue_status"]:checked');
+            var tue_start_time = $(".tue_start_time").val();
+            var tue_end_time = $(".tue_end_time").val();
+            var wed_status = $('input[name="wed_status"]:checked');
+            var wed_start_time = $(".wed_start_time").val();
+            var wed_end_time = $(".wed_end_time").val();
+            var thu_status = $('input[name="thu_status"]:checked');
+            var thu_start_time = $(".thu_start_time").val();
+            var thu_end_time = $(".thu_end_time").val();
+            var fri_status = $('input[name="fri_status"]:checked');
+            var fri_start_time = $(".fri_start_time").val();
+            var fri_end_time = $(".fri_end_time").val();
+            var sat_status = $('input[name="sat_status"]:checked');
+            var sat_start_time = $(".sat_start_time").val();
+            var sat_end_time = $(".sat_end_time").val();
+            var sun_status = $('input[name="sun_status"]:checked');
+            var sun_start_time = $(".sun_start_time").val();
+            var sun_end_time = $(".sun_end_time").val();
             message("",'hide')
             $("#time_error").hide()
 
@@ -278,43 +374,43 @@ require APPPATH.'views/__layout/leftnavigation.php';
             else{
                 jQuery("#select_subject").css("border", "1px solid #C9C9C9");
             }
-            var reg = /(\d|2[0-3]):([0-5]\d)/;
+   //          var reg = /(\d|2[0-3]):([0-5]\d)/;
 
-            if(reg.test(starttime) == false){
-                jQuery("#inputStartitme").css("border", "1px solid red");
-                return false;
-            }
-            else{
-                jQuery("#inputStartitme").css("border", "1px solid #C9C9C9");
-            }
+   //          if(reg.test(starttime) == false){
+   //              jQuery("#inputStartitme").css("border", "1px solid red");
+   //              return false;
+   //          }
+   //          else{
+   //              jQuery("#inputStartitme").css("border", "1px solid #C9C9C9");
+   //          }
 
-            if(reg.test(endtime) == false){
-                jQuery("#InputEndTime").css("border", "1px solid red");
-                return false;
-            }
-            else{
-                jQuery("#InputEndTime").css("border", "1px solid #C9C9C9");
-            }
-
-
+   //          if(reg.test(endtime) == false){
+   //              jQuery("#InputEndTime").css("border", "1px solid red");
+   //              return false;
+   //          }
+   //          else{
+   //              jQuery("#InputEndTime").css("border", "1px solid #C9C9C9");
+   //          }
 
 
 
-           	var t = new Date();
-			d = t.getDate();
-			m = t.getMonth() + 1;
-			y = t.getFullYear();
 
-			var d1 = new Date(m + "/" + d + "/" + y + " " + starttime);
-			var d2 = new Date(m + "/" + d + "/" + y + " " + endtime);
-			var t1 = d1.getTime();
-			var t2 = d2.getTime();
 
-			if(t2 <= t1)
-			{
-				$("#time_error").show()
-				return false;
-			}
+   //         	var t = new Date();
+			// d = t.getDate();
+			// m = t.getMonth() + 1;
+			// y = t.getFullYear();
+
+			// var d1 = new Date(m + "/" + d + "/" + y + " " + starttime);
+			// var d2 = new Date(m + "/" + d + "/" + y + " " + endtime);
+			// var t1 = d1.getTime();
+			// var t2 = d2.getTime();
+
+			// if(t2 <= t1)
+			// {
+			// 	$("#time_error").show()
+			// 	return false;
+			// }
 
 			 var $this = $(".btn-primary");
              $this.button('loading');
@@ -324,10 +420,25 @@ require APPPATH.'views/__layout/leftnavigation.php';
 			formdata.append('select_class',$scope.select_class.id);
 			formdata.append('inputSection',$scope.inputSection.id);
 			formdata.append('select_teacher',$scope.select_teacher.id);
-			formdata.append('inputFrom',$scope.inputStartitme);
-			formdata.append('inputTo',$scope.InputEndTime);
+			// formdata.append('inputFrom',$scope.inputStartitme);
+			// formdata.append('inputTo',$scope.InputEndTime);
 			formdata.append('serial',$scope.serial);
-
+			// Timing add
+			formdata.append('mon_start_time',mon_start_time);
+			formdata.append('mon_end_time',mon_end_time);
+			formdata.append('tue_start_time',tue_start_time);
+			formdata.append('tue_end_time',tue_end_time);
+			formdata.append('wed_start_time',wed_start_time);
+			formdata.append('wed_end_time',wed_end_time);
+			formdata.append('thu_start_time',thu_start_time);
+			formdata.append('thu_end_time',thu_end_time);
+			formdata.append('fri_start_time',fri_start_time);
+			formdata.append('fri_end_time',fri_end_time);
+			formdata.append('sat_start_time',sat_start_time);
+			formdata.append('sat_end_time',sat_end_time);
+			formdata.append('sun_start_time',sun_start_time);
+			formdata.append('sun_end_time',sun_end_time);
+			// end here
 			var request = {
                 method: 'POST',
                 url: "<?php echo $path_url; ?>Principal_controller/saveTimtable",
@@ -873,9 +984,13 @@ require APPPATH.'views/__layout/leftnavigation.php';
         return (response.data);
       }
 	});
+    
+           
 </script>
 
 <?php
 // require_footer
 require APPPATH.'views/__layout/footer.php';
 ?>
+
+

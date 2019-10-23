@@ -2539,8 +2539,23 @@ function uploadContent()
 								 	'class_id'=>$this->input->post('select_class'),
 								 	'section_id'=>$this->input->post('inputSection'),
 								 	'teacher_uid'=>$this->input->post('select_teacher'),
-								 	'start_time'=>strtotime($this->input->post('inputFrom')),
-								 	'end_time'=>strtotime($this->input->post('inputTo')),
+								 	//'start_time'=>strtotime($this->input->post('inputFrom')),
+								 	//'end_time'=>strtotime($this->input->post('inputTo')),
+							 	 	'mon_start_time'=>date('H:i',strtotime($this->input->post('mon_start_time'))),
+								 	'mon_end_time'=>date('H:i',strtotime($this->input->post('mon_end_time'))),
+							 	 	'tue_start_time'=>date('H:i',strtotime($this->input->post('tue_start_time'))),
+								 	'tue_end_time'=>date('H:i',strtotime($this->input->post('tue_end_time'))),
+								 	'wed_start_time'=>date('H:i',strtotime($this->input->post('wed_start_time'))),
+								 	'wed_end_time'=>date('H:i',strtotime($this->input->post('wed_end_time'))),
+								 	'thu_start_time'=>date('H:i',strtotime($this->input->post('thu_start_time'))),
+								 	'thu_end_time'=>date('H:i',strtotime($this->input->post('thu_end_time'))),
+								 	'fri_start_time'=>date('H:i',strtotime($this->input->post('fri_start_time'))),
+								 	'fri_end_time'=>date('H:i',strtotime($this->input->post('fri_end_time'))),
+								 	'sat_start_time'=>date('H:i',strtotime($this->input->post('sat_start_time'))),
+								 	'sat_end_time'=>date('H:i',strtotime($this->input->post('sat_end_time'))),
+								 	'sun_start_time'=>date('H:i',strtotime($this->input->post('sun_start_time'))),
+								 	'sun_end_time'=>date('H:i',strtotime($this->input->post('sun_end_time'))),
+								 	
 							 	 	'semsterid'=>$active_semester[0]->semester_id,
 								 	'sessionid'=>$active_session[0]->id,
 								);
@@ -2590,15 +2605,31 @@ function uploadContent()
 				}
 
     */
+				// Check
 				$schedule =  array(
 									'last_update'=> date('Y-m-d'),
 									'subject_id'=>$this->input->post('select_subject'),
 								 	'class_id'=>$this->input->post('select_class'),
 								 	'section_id'=>$this->input->post('inputSection'),
 								 	'teacher_uid'=>$this->input->post('select_teacher'),
-								 	'start_time'=>strtotime($this->input->post('inputFrom')),
-								 	'end_time'=>strtotime($this->input->post('inputTo')),
-							'semsterid'=>$active_semester[0]->semester_id,
+								 	//'start_time'=>strtotime($this->input->post('inputFrom')),
+								 	//'end_time'=>strtotime($this->input->post('inputTo')),
+								 	'mon_start_time'=>date('H:i',strtotime($this->input->post('mon_start_time'))),
+								 	'mon_end_time'=>date('H:i',strtotime($this->input->post('mon_end_time'))),
+							 	 	'tue_start_time'=>date('H:i',strtotime($this->input->post('tue_start_time'))),
+								 	'tue_end_time'=>date('H:i',strtotime($this->input->post('tue_end_time'))),
+								 	'wed_start_time'=>date('H:i',strtotime($this->input->post('wed_start_time'))),
+								 	'wed_end_time'=>date('H:i',strtotime($this->input->post('wed_end_time'))),
+								 	'thu_start_time'=>date('H:i',strtotime($this->input->post('thu_start_time'))),
+								 	'thu_end_time'=>date('H:i',strtotime($this->input->post('thu_end_time'))),
+								 	'fri_start_time'=>date('H:i',strtotime($this->input->post('fri_start_time'))),
+								 	'fri_end_time'=>date('H:i',strtotime($this->input->post('fri_end_time'))),
+								 	'sat_start_time'=>date('H:i',strtotime($this->input->post('sat_start_time'))),
+								 	'sat_end_time'=>date('H:i',strtotime($this->input->post('sat_end_time'))),
+								 	'sun_start_time'=>date('H:i',strtotime($this->input->post('sun_start_time'))),
+								 	'sun_end_time'=>date('H:i',strtotime($this->input->post('sun_end_time'))),
+								 	
+									'semsterid'=>$active_semester[0]->semester_id,
 								 	'sessionid'=>$active_session[0]->id,
 								);
                
