@@ -1,0 +1,7 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2019-10-23 08:09:08 --> Severity: error --> Exception: syntax error, unexpected ',' C:\wamp64\www\shama\application\controllers\Principal_controller.php 2687
+ERROR - 2019-10-23 13:20:27 --> Query error: Column 'mon_status' cannot be null - Invalid query: INSERT INTO `schedule` (`last_update`, `subject_id`, `class_id`, `section_id`, `teacher_uid`, `mon_status`, `mon_start_time`, `mon_end_time`, `tue_status`, `tue_start_time`, `tue_end_time`, `wed_status`, `wed_start_time`, `wed_end_time`, `thu_status`, `thu_start_time`, `thu_end_time`, `fri_status`, `fri_start_time`, `fri_end_time`, `sat_status`, `sat_start_time`, `sat_end_time`, `sun_status`, `sun_start_time`, `sun_end_time`, `semsterid`, `sessionid`) VALUES ('2019-10-23', '979', '82', '78', '350', NULL, '08:20', '14:20', NULL, '08:20', '14:20', NULL, '09:20', '15:20', 'Inactive', '00:00', '00:00', 'Inactive', '00:00', '00:00', 'Inactive', '00:00', '00:00', 'Inactive', '00:00', '00:00', '1', '42')
+ERROR - 2019-10-23 15:05:27 --> Severity: error --> Exception: syntax error, unexpected '}', expecting ',' or ';' C:\wamp64\www\shama\application\views\principal\exam_timetable.php 88
+ERROR - 2019-10-23 15:05:42 --> Severity: error --> Exception: syntax error, unexpected '=' C:\wamp64\www\shama\application\views\principal\exam_timetable.php 88
+ERROR - 2019-10-23 15:37:14 --> Severity: error --> Exception: syntax error, unexpected '}', expecting ',' or ';' C:\wamp64\www\shama\application\views\principal\exam_timetable.php 404

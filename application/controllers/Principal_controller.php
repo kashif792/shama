@@ -2368,7 +2368,7 @@ function uploadContent()
 
 			$roles = $this->session->userdata('roles');
 
-			$result = array();
+			$result = array('mon_status'=>"Active",'tue_status'=>"Active",'wed_status'=>"Active",'thu_status'=>"Active",'fri_status'=>"Active",'sat_status'=>"Inactive",'sun_status'=>"Inactive",'mon_start_time'=>"00:00:00",'mon_end_time'=>"00:00:00",'tue_start_time'=>"00:00:00",'tue_end_time'=>"00:00:00",'wed_start_time'=>"00:00:00",'wed_end_time'=>"00:00:00",'thu_start_time'=>"00:00:00",'thu_end_time'=>"00:00:00",'fri_start_time'=>"00:00:00",'fri_end_time'=>"00:00:00",'sat_start_time'=>"00:00:00",'sat_end_time'=>"00:00:00",'sun_start_time'=>"00:00:00",'sun_end_time'=>"00:00:00");
 
 			if($this->uri->segment(2) AND $this->uri->segment(2) != "page" ){
 
@@ -2389,14 +2389,36 @@ function uploadContent()
 
 					$result['end_time'] = date('H:i',$schedule_single[0]->end_time);
 
+					$result['mon_status'] = $schedule_single[0]->mon_status;
+					$result['mon_start_time'] = $schedule_single[0]->mon_start_time;
+					$result['mon_end_time'] = $schedule_single[0]->mon_end_time;
+					$result['tue_status'] = $schedule_single[0]->tue_status;
+					$result['tue_start_time'] = $schedule_single[0]->tue_start_time;
+					$result['tue_end_time'] = $schedule_single[0]->tue_end_time;
+					$result['wed_status'] = $schedule_single[0]->wed_status;
+					$result['wed_start_time'] = $schedule_single[0]->wed_start_time;
+					$result['wed_end_time'] = $schedule_single[0]->wed_end_time;
+					$result['thu_status'] = $schedule_single[0]->thu_status;
+					$result['thu_start_time'] = $schedule_single[0]->thu_start_time;
+					$result['thu_end_time'] = $schedule_single[0]->thu_end_time;
+					$result['fri_status'] = $schedule_single[0]->fri_status;
+					$result['fri_start_time'] = $schedule_single[0]->fri_start_time;
+					$result['fri_end_time'] = $schedule_single[0]->fri_end_time;
+					$result['sat_status'] = $schedule_single[0]->sat_status;
+					$result['sat_start_time'] = $schedule_single[0]->sat_start_time;
+					$result['sat_end_time'] = $schedule_single[0]->sat_end_time;
+					$result['sun_status'] = $schedule_single[0]->sun_status;
+					$result['sun_start_time'] = $schedule_single[0]->sun_start_time;
+					$result['sun_end_time'] = $schedule_single[0]->sun_end_time;
 				}
 
 				$this->data['result'] = $result;
-
+				
 		}
 
 
-
+		//print_r($result);
+		$this->data['result'] = $result;
 		$this->data['teacherlist'] = $this->operation->GetRowsByQyery("SELECT i.id, i.username, i.nic FROM invantageuser i INNER JOIN user_locations ul ON ul.user_id = i.id INNER JOIN user_roles ur ON ur.user_id = i.id WHERE ur.role_id = 4 AND ul.school_id = ".$locations[0]['school_id']);
 
 		//$this->data['sectionlist'] = $this->operation->GetRowsByQyery("SELECT username, nic FROM `invantageuser` WHERE type ='t'");
@@ -2470,7 +2492,6 @@ function uploadContent()
 		$this->data['subjects'] = $subjects;
 
 
-
 		$this->load->view('principal/exam_timetable',$this->data);
 
 	}
@@ -2498,6 +2519,92 @@ function uploadContent()
 			$result['message'] = false;
 		}
 		else{
+			// Check days status
+				if($this->input->post('mon_status')=='Active')
+				{
+					$mon_status = "Active";
+					$mon_start_time = $this->input->post('mon_start_time')!='' ? $this->input->post('mon_start_time') :"00:00:00";
+					$mon_end_time = $this->input->post('mon_end_time')!='' ? $this->input->post('mon_end_time') :"00:00:00";
+				}
+				else
+				{
+					$mon_status = "Inactive";
+					$mon_start_time = "00:00:00";
+					$mon_end_time ="00:00:00";
+				}
+				if($this->input->post('tue_status')=='Active')
+				{
+					$tue_status = "Active";
+					$tue_start_time = $this->input->post('tue_start_time')!='' ? $this->input->post('tue_start_time') :"00:00:00";
+					$tue_end_time = $this->input->post('tue_end_time')!='' ? $this->input->post('tue_end_time') :"00:00:00";
+				}
+				else
+				{
+					$tue_status = "Inactive";
+					$tue_start_time = "00:00:00";
+					$tue_end_time ="00:00:00";
+				}
+				if($this->input->post('wed_status')=='Active')
+				{
+					$wed_status = "Active";
+					$wed_start_time = $this->input->post('wed_start_time')!='' ? $this->input->post('wed_start_time') :"00:00:00";
+					$wed_end_time = $this->input->post('wed_end_time')!='' ? $this->input->post('wed_end_time') :"00:00:00";
+				}
+				else
+				{
+					$wed_status = "Inactive";
+					$wed_start_time = "00:00:00";
+					$wed_end_time ="00:00:00";
+				}
+				if($this->input->post('thu_status')=='Active')
+				{
+					$thu_status = "Active";
+					$thu_start_time = $this->input->post('thu_start_time')!='' ? $this->input->post('thu_start_time') :"00:00:00";
+					$thu_end_time = $this->input->post('thu_end_time')!='' ? $this->input->post('thu_end_time') :"00:00:00";
+				}
+				else
+				{
+					$thu_status = "Inactive";
+					$thu_start_time = "00:00:00";
+					$thu_end_time ="00:00:00";
+				}
+				if($this->input->post('fri_status')=='Active')
+				{
+					$fri_status = "Active";
+					$fri_start_time = $this->input->post('fri_start_time')!='' ? $this->input->post('fri_start_time') :"00:00:00";
+					$fri_end_time = $this->input->post('fri_end_time')!='' ? $this->input->post('fri_end_time') :"00:00:00";
+				}
+				else
+				{
+					$fri_status = "Inactive";
+					$fri_start_time = "00:00:00";
+					$fri_end_time ="00:00:00";
+				}
+				if($this->input->post('sat_status')=='Active')
+				{
+					$sat_status = "Active";
+					$sat_start_time = $this->input->post('sat_start_time')!='' ? $this->input->post('sat_start_time') :"00:00:00";
+					$sat_end_time = $this->input->post('sat_end_time')!='' ? $this->input->post('sat_end_time') :"00:00:00";
+				}
+				else
+				{
+					$sat_status = "Inactive";
+					$sat_start_time = "00:00:00";
+					$sat_end_time ="00:00:00";
+				}
+				if($this->input->post('sun_status')=='Active')
+				{
+					$sun_status = "Active";
+					$sun_start_time = $this->input->post('sun_start_time')!='' ? $this->input->post('sun_start_time') :"00:00:00";
+					$sun_end_time = $this->input->post('sun_end_time')!='' ? $this->input->post('sun_end_time') :"00:00:00";
+				}
+				else
+				{
+					$sun_status = "Inactive";
+					$sun_start_time = "00:00:00";
+					$sun_end_time ="00:00:00";
+				}
+				
 			if($this->input->post('serial')){
 				$get_schedule_row = $this->operation->GetRowsByQyery(array('id'=>$this->input->post('serial')));
 				$subject_schedual_check = true;
@@ -2541,20 +2648,27 @@ function uploadContent()
 								 	'teacher_uid'=>$this->input->post('select_teacher'),
 								 	//'start_time'=>strtotime($this->input->post('inputFrom')),
 								 	//'end_time'=>strtotime($this->input->post('inputTo')),
-							 	 	'mon_start_time'=>date('H:i',strtotime($this->input->post('mon_start_time'))),
-								 	'mon_end_time'=>date('H:i',strtotime($this->input->post('mon_end_time'))),
-							 	 	'tue_start_time'=>date('H:i',strtotime($this->input->post('tue_start_time'))),
-								 	'tue_end_time'=>date('H:i',strtotime($this->input->post('tue_end_time'))),
-								 	'wed_start_time'=>date('H:i',strtotime($this->input->post('wed_start_time'))),
-								 	'wed_end_time'=>date('H:i',strtotime($this->input->post('wed_end_time'))),
-								 	'thu_start_time'=>date('H:i',strtotime($this->input->post('thu_start_time'))),
-								 	'thu_end_time'=>date('H:i',strtotime($this->input->post('thu_end_time'))),
-								 	'fri_start_time'=>date('H:i',strtotime($this->input->post('fri_start_time'))),
-								 	'fri_end_time'=>date('H:i',strtotime($this->input->post('fri_end_time'))),
-								 	'sat_start_time'=>date('H:i',strtotime($this->input->post('sat_start_time'))),
-								 	'sat_end_time'=>date('H:i',strtotime($this->input->post('sat_end_time'))),
-								 	'sun_start_time'=>date('H:i',strtotime($this->input->post('sun_start_time'))),
-								 	'sun_end_time'=>date('H:i',strtotime($this->input->post('sun_end_time'))),
+							 	 	'mon_status'=>$mon_status,
+								 	'mon_start_time'=>date('H:i',strtotime($mon_start_time)),
+								 	'mon_end_time'=>date('H:i',strtotime($mon_end_time)),
+								 	'tue_status'=>$tue_status,
+							 	 	'tue_start_time'=>date('H:i',strtotime($tue_start_time)),
+								 	'tue_end_time'=>date('H:i',strtotime($tue_end_time)),
+								 	'wed_status'=>$wed_status,
+								 	'wed_start_time'=>date('H:i',strtotime($wed_start_time)),
+								 	'wed_end_time'=>date('H:i',strtotime($wed_end_time)),
+								 	'thu_status'=>$thu_status,
+								 	'thu_start_time'=>date('H:i',strtotime($thu_start_time)),
+								 	'thu_end_time'=>date('H:i',strtotime($thu_end_time)),
+								 	'fri_status'=>$fri_status,
+								 	'fri_start_time'=>date('H:i',strtotime($fri_start_time)),
+								 	'fri_end_time'=>date('H:i',strtotime($fri_end_time)),
+								 	'sat_status'=>$sat_status,
+								 	'sat_start_time'=>date('H:i',strtotime($sat_start_time)),
+								 	'sat_end_time'=>date('H:i',strtotime($sat_end_time)),
+								 	'sun_status'=>$sun_status,
+								 	'sun_start_time'=>date('H:i',strtotime($sun_start_time)),
+								 	'sun_end_time'=>date('H:i',strtotime($sun_end_time)),
 								 	
 							 	 	'semsterid'=>$active_semester[0]->semester_id,
 								 	'sessionid'=>$active_session[0]->id,
@@ -2605,7 +2719,7 @@ function uploadContent()
 				}
 
     */
-				// Check
+				
 				$schedule =  array(
 									'last_update'=> date('Y-m-d'),
 									'subject_id'=>$this->input->post('select_subject'),
@@ -2614,20 +2728,27 @@ function uploadContent()
 								 	'teacher_uid'=>$this->input->post('select_teacher'),
 								 	//'start_time'=>strtotime($this->input->post('inputFrom')),
 								 	//'end_time'=>strtotime($this->input->post('inputTo')),
-								 	'mon_start_time'=>date('H:i',strtotime($this->input->post('mon_start_time'))),
-								 	'mon_end_time'=>date('H:i',strtotime($this->input->post('mon_end_time'))),
-							 	 	'tue_start_time'=>date('H:i',strtotime($this->input->post('tue_start_time'))),
-								 	'tue_end_time'=>date('H:i',strtotime($this->input->post('tue_end_time'))),
-								 	'wed_start_time'=>date('H:i',strtotime($this->input->post('wed_start_time'))),
-								 	'wed_end_time'=>date('H:i',strtotime($this->input->post('wed_end_time'))),
-								 	'thu_start_time'=>date('H:i',strtotime($this->input->post('thu_start_time'))),
-								 	'thu_end_time'=>date('H:i',strtotime($this->input->post('thu_end_time'))),
-								 	'fri_start_time'=>date('H:i',strtotime($this->input->post('fri_start_time'))),
-								 	'fri_end_time'=>date('H:i',strtotime($this->input->post('fri_end_time'))),
-								 	'sat_start_time'=>date('H:i',strtotime($this->input->post('sat_start_time'))),
-								 	'sat_end_time'=>date('H:i',strtotime($this->input->post('sat_end_time'))),
-								 	'sun_start_time'=>date('H:i',strtotime($this->input->post('sun_start_time'))),
-								 	'sun_end_time'=>date('H:i',strtotime($this->input->post('sun_end_time'))),
+								 	'mon_status'=>$mon_status,
+								 	'mon_start_time'=>date('H:i',strtotime($mon_start_time)),
+								 	'mon_end_time'=>date('H:i',strtotime($mon_end_time)),
+								 	'tue_status'=>$tue_status,
+							 	 	'tue_start_time'=>date('H:i',strtotime($tue_start_time)),
+								 	'tue_end_time'=>date('H:i',strtotime($tue_end_time)),
+								 	'wed_status'=>$wed_status,
+								 	'wed_start_time'=>date('H:i',strtotime($wed_start_time)),
+								 	'wed_end_time'=>date('H:i',strtotime($wed_end_time)),
+								 	'thu_status'=>$thu_status,
+								 	'thu_start_time'=>date('H:i',strtotime($thu_start_time)),
+								 	'thu_end_time'=>date('H:i',strtotime($thu_end_time)),
+								 	'fri_status'=>$fri_status,
+								 	'fri_start_time'=>date('H:i',strtotime($fri_start_time)),
+								 	'fri_end_time'=>date('H:i',strtotime($fri_end_time)),
+								 	'sat_status'=>$sat_status,
+								 	'sat_start_time'=>date('H:i',strtotime($sat_start_time)),
+								 	'sat_end_time'=>date('H:i',strtotime($sat_end_time)),
+								 	'sun_status'=>$sun_status,
+								 	'sun_start_time'=>date('H:i',strtotime($sun_start_time)),
+								 	'sun_end_time'=>date('H:i',strtotime($sun_end_time)),
 								 	
 									'semsterid'=>$active_semester[0]->semester_id,
 								 	'sessionid'=>$active_session[0]->id,
