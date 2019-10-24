@@ -367,7 +367,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 				                    </thead>
 
-				                    <!-- <tfoot>
+				                    <tfoot>
 
 				                        <tr>
 
@@ -387,7 +387,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 				                        </tr>
 
-				                    </tfoot> -->
+				                    </tfoot>
 
 			                        <tbody >
 
@@ -688,88 +688,23 @@ require APPPATH.'views/__layout/footer.php';
         }
 
         $(document).ready(function(){
-
-
-
         $('#setting').easyResponsiveTabs({ tabidentify: 'vert' });
-
-
-
-
-
-        
-
-
-
-
-
-
-
         function loadClassByIdReponseError(){}
-
-
-
         function loadClassByIdResponse(data)
-
         {
-
             if(data.message == true)
-
             {
-
                 $("#class_name").html(data.grade);
-
                 $("#section_name").html(data.section_name);
-
-                
-
-                            
-
                 $("#myModal").modal('show');
-
             }
-
-
-
         }
-
-
-
-
-
-         /*
-
-
-
-         * ---------------------------------------------------------
-
-
-
-         *   Delete User
-
-
-
-         * ---------------------------------------------------------
-
-
-
-         */
-
-
-
-
     
 })
 
     var dvalue ;
     var rowdata;
-
-
     $(document).ready(function(){
-
-
-
-    
         $scope.loaddatatable = function(data)
         {
             var listdata= data;
@@ -792,7 +727,8 @@ require APPPATH.'views/__layout/footer.php';
                     },
                 ],
 
-                "pageLength": 10
+                "pageLength": 10,
+
             })
             $('#table-body-phase-tow tbody').on( 'click', '.fa-edit', function () {
                 var data = table.row( $(this).parents('tr') ).data();
@@ -805,7 +741,59 @@ require APPPATH.'views/__layout/footer.php';
                 dvalue =  data['id'];
                 rowdata = table.row( $(this).parents('tr') ).data();
             } );
+
+            table.columns(0).every( function () {
+                var column = this;
+                var select = $('<select><option value="">All</option></select>')
+                .appendTo( $(column.footer()).empty() )
+                .on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex(
+                $(this).val()
+                );
+                column
+                .search( val ? '^'+val+'$' : '', true, false )
+                .draw();
+                });
+                column.data().unique().sort().each( function ( d, j ) {
+                select.append( '<option value="'+d+'">'+d+'</option>' )
+                });
             
+          });
+            table.columns(1).every( function () {
+                var column = this;
+                var select = $('<select><option value="">All</option></select>')
+                .appendTo( $(column.footer()).empty() )
+                .on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex(
+                $(this).val()
+                );
+                column
+                .search( val ? '^'+val+'$' : '', true, false )
+                .draw();
+                });
+                column.data().unique().sort().each( function ( d, j ) {
+                select.append( '<option value="'+d+'">'+d+'</option>' )
+                });
+            
+          });
+            table.columns(2).every( function () {
+                var column = this;
+                var select = $('<select><option value="">All</option></select>')
+                .appendTo( $(column.footer()).empty() )
+                .on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex(
+                $(this).val()
+                );
+                column
+                .search( val ? '^'+val+'$' : '', true, false )
+                .draw();
+                });
+                column.data().unique().sort().each( function ( d, j ) {
+                select.append( '<option value="'+d+'">'+d+'</option>' )
+                });
+            
+          });
+                    
             // $('#table-body-phase-tow').DataTable( {
 
 
