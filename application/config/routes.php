@@ -183,6 +183,7 @@ $route['show_section_list'] = 'Principal_controller/show_section_list';
 $route['show_assignclass_list'] = 'Principal_controller/show_assign_class';
 $route['show_timtbl_list'] = 'Principal_controller/show_exam_timetable';
 $route['getschedulelist'] = 'Principal_controller/show_schedule_list';
+$route['getdaylist'] = 'Principal_controller/getDayList';
 
 
 //$route['show_schedule'] = 'Principal_controller/fetch_exam_timetable';

@@ -342,7 +342,28 @@ require APPPATH.'views/__layout/leftnavigation.php';
      
 		</label>
 	</div>
-	<div class="panel-body">
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-sm-12">
+                
+                       <form class="form-inline" >
+                        <label for="select_class">Select Days:</label>
+                        
+                        <select class="form-control" name="inputDay" id="inputDay" ng-model="filterobj.day" ng-change="changeclass()" >
+                            <option value="" style="display: none;">loading...</option>
+                            <option value="mon">Monday</option>
+                            <option value="tue">Tuesday</option>
+                            <option value="wed">Wednesday</option>
+                            <option value="thu">Thursday</option>
+                            <option value="fri">Friday</option>
+                            <option value="sat">Saturday</option>
+                            <option value="sun">Sunday</option>
+                        </select>
+                    </form>
+                </div>
+                
+            </div>
+        
 		<table class="table table-striped table-bordered row-border hover" id="table-body-phase-tow" >
 
 			                        <thead>
@@ -482,8 +503,9 @@ require APPPATH.'views/__layout/footer.php';
     });
     app.controller('class_report_ctrl', function($scope, $window, $http, $document, $timeout,$interval,$compile,$filter){
     $scope.currentPage = 0;
+    $scope.filterobj = {};
     $scope.pageSize = 10;
-
+    $scope.day = [];
     $scope.data = [];
     $scope.numberOfPages=function(){
         return Math.ceil($scope.data.length/$scope.pageSize);                
@@ -520,13 +542,53 @@ require APPPATH.'views/__layout/footer.php';
             return (response.data);
         }
         
+        $scope.changeclass = function()
+        {
+            //$('#table-body-phase-tow').DataTable().destroy();
+            //$('#table-body-phase-tow').DataTable().destroy();
+            //$('#table-body-phase-tow').DataTable().clear().destroy();
+            //$("#example").dataTable().fnDestroy();
+            //$("#table-body-phase-tow").dataTable().fnDestroy();
+            $scope.getScheduleData();
+            //$scope.loaddatatable($scope.data);
+            
+            $scope.active = 1;
+            
+            // var datatable =  $('#table-body-phase-tow').DataTable();
+            //   datatable.clear();
+            //   data = $scope.data;
+            //   if(data.length>0){
+            //       datatable.rows.add(data);
+            //   }
+            //   datatable.draw();
+        }
+        // Days Select box
+        function getDayList()
+        {
+            httprequest('getdaylist',({})).then(function(response){
+                //console.log(response.length);
+                if(response != null && response.length > 0)
+                {
+                    //console.log()
+                    $scope.daylist = response;
+                    $scope.filterobj.day = response[0];
+                    //$scope.getDatesheetData();
+                }
+            });
+        }
+        //getDayList();
+
         $scope.getScheduleData = function()
         //function getScheduleData()
         {
 
             try{
-                
-                    //console.log(data);
+                    var data ={
+                        //inputclassid:$scope.filterobj.class.id,
+                        inputday:$scope.filterobj.day,
+                        
+                    }
+
                     httppostrequest('getschedulelist',data).then(function(response){
                         //console.log(response)
                         $scope.data = [];
@@ -537,8 +599,8 @@ require APPPATH.'views/__layout/footer.php';
                                 
                                 
                             }
-                            //$scope.datalist = response[0]['listarray'];
-                            //console.log($scope.data);
+                            $("#inputDay").val(response[0]['data_array']['select_day']);
+                            $("#table-body-phase-tow").dataTable().fnDestroy();
                             $scope.loaddatatable($scope.data);
                             
                         }
@@ -558,11 +620,11 @@ require APPPATH.'views/__layout/footer.php';
 
             
 
-            // $("#myUserModal").modal('show');
+            $("#myUserModal").modal('show');
 
 
 
-            // dvalue =  $(this).attr('id');
+            dvalue =  $(this).attr('id');
 
 
 
@@ -708,6 +770,7 @@ require APPPATH.'views/__layout/footer.php';
         $scope.loaddatatable = function(data)
         {
             var listdata= data;
+            
             var table = $('#table-body-phase-tow').DataTable( {
                 data: listdata,
                 responsive: true,
@@ -717,30 +780,40 @@ require APPPATH.'views/__layout/footer.php';
                     { data: 'subject_name' },
                     { data: 'grade' },
                     { data: 'username' },
-                    { data: 'mon_start_time' },
-                    { data: 'mon_end_time' },
+                    { data: 'start_time' },
+                    { data: 'end_time' },
                     {
                      "className": '',
                      "orderable": false,
                      "data": null,
-                     "defaultContent": "<a href='javascript:void(0)'><i class='fa fa-edit' aria-hidden='true'></i></a> <a href='javascript:void(0)' class='del'><i class='fa fa-remove' aria-hidden='true'></i></a>"
+
+                     "defaultContent": "",
+                     "render" : function ( data, type, full, meta ) {
+                          if ( data != null && data != '') {
+                             
+                             return "<a href='<?php echo $path_url; ?>add_timtble/"+data['id']+"'  ><i class='fa fa-edit' aria-hidden='true'></i></a> <a href='javascript:void(0)' id="+data['id']+" class='del'><i class='fa fa-remove' aria-hidden='true'></i></a>";
+                         }
+                         else {
+                                 return;
+                         }
+                      }
                     },
                 ],
 
                 "pageLength": 10,
 
             })
-            $('#table-body-phase-tow tbody').on( 'click', '.fa-edit', function () {
-                var data = table.row( $(this).parents('tr') ).data();
-                window.location.href = '<?php echo $path_url; ?>add_timtble/'+data['id'];
+            // $('#table-body-phase-tow tbody').on( 'click', '.fa-edit', function () {
+            //     var data = table.row( $(this).parents('tr') ).data();
+            //     window.location.href = '<?php echo $path_url; ?>add_timtble/'+data['id'];
             
-            } );
-            $('#table-body-phase-tow tbody').on( 'click', '.fa-remove', function () {
-                var data = table.row( $(this).parents('tr') ).data();
-                $("#myUserModal").modal('show');
-                dvalue =  data['id'];
-                rowdata = table.row( $(this).parents('tr') ).data();
-            } );
+            // } );
+            // $('#table-body-phase-tow tbody').on( 'click', '.fa-remove', function () {
+            //     var data = table.row( $(this).parents('tr') ).data();
+            //     $("#myUserModal").modal('show');
+            //     dvalue =  data['id'];
+            //     rowdata = table.row( $(this).parents('tr') ).data();
+            // } );
 
             table.columns(0).every( function () {
                 var column = this;

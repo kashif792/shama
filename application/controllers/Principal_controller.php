@@ -2838,8 +2838,19 @@ function uploadContent()
 	 	{
 			parent::redirectUrl('signin');
 		}
+		$date = date('Y-m-d');
+		
+		$currentday = strtolower(date('D', strtotime($date)));
+		$request = json_decode(file_get_contents('php://input'));
+		$inputday = $this->security->xss_clean(trim($request->inputday));
+		if($inputday)
+		{
+			$currentday = $inputday;
+		}
 		$listarray =array();
 		$data_array =array();
+		$d_start_time = array();
+		$d_end_time = array();
 		$locations = $this->session->userdata('locations');
 		$roles = $this->session->userdata('roles');
 		$active_session = parent::GetUserActiveSession();
@@ -2855,6 +2866,13 @@ function uploadContent()
 			 		$subcod=$this->operation->GetRowsByQyery("select subject_code from subjects where id= ".$value->subid);
 			 		$value->subject_name=$value->subject_name."(".$subcod[0]->subject_code.")";
 			 	 	$value->subject_name;
+			 	 	// Create Day wise start and end time
+			 	 	$s_time =  $currentday.'_start_time';
+			 	 	$e_time =  $currentday.'_end_time';
+			 	 	//$d_start_time[] = $value->$s_time;
+			 	 	//$d_end_time[] = $value->$e_time;
+			 	 	$value->start_time = $value->$s_time;
+					$value->end_time = $value->$e_time;
 			 	}
 		 	}
 		 	
@@ -2863,8 +2881,8 @@ function uploadContent()
 	   {
 	   		$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.id, subject_name,grade,section_name,username,start_time,end_time FROM schedule sc  INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id where sc.teacher_uid=".$this->session->userdata('id')." AND cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id);
 	   }
-
-		$result[] = array(
+	   $data_array = array('select_day'=>$currentday);
+	   $result[] = array(
                         'listarray'=>$this->data['timetable_list'],
                         
                         'data_array'=>$data_array
@@ -2874,8 +2892,14 @@ function uploadContent()
 	   	//echo json_encode($this->data['timetable_list']);
 	
 	}
-
-	 public function take_pic()
+	function getDayList()
+	{
+		$listarray = array();
+    	$listarray[] = array("mon"=>"Monday","tue"=>"Tuesday","wed"=>"Wednesday","thu"=>"Thursday","fri"=>"Friday","sat"=>"Saturday","sun"=>"Sunday");
+ 
+		echo json_encode($listarray);
+	}
+	public function take_pic()
 
 	{
 
