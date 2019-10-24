@@ -5,3 +5,87 @@ ERROR - 2019-10-23 13:20:27 --> Query error: Column 'mon_status' cannot be null 
 ERROR - 2019-10-23 15:05:27 --> Severity: error --> Exception: syntax error, unexpected '}', expecting ',' or ';' C:\wamp64\www\shama\application\views\principal\exam_timetable.php 88
 ERROR - 2019-10-23 15:05:42 --> Severity: error --> Exception: syntax error, unexpected '=' C:\wamp64\www\shama\application\views\principal\exam_timetable.php 88
 ERROR - 2019-10-23 15:37:14 --> Severity: error --> Exception: syntax error, unexpected '}', expecting ',' or ';' C:\wamp64\www\shama\application\views\principal\exam_timetable.php 404
+ERROR - 2019-10-23 11:54:12 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.semester_id  =  AND
+					        
+					        d.school_id' at line 22 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+							,d.start_date
+							,d.end_date
+						    ,classes.grade
+							, semester.semester_name
+						    , d.exam_type
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheets as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    WHERE
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        
+					        d.school_id =1 ORDER BY d.created_at desc
+ERROR - 2019-10-23 12:11:57 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.semester_id  =  AND
+					        
+					        d.school_id' at line 22 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+							,d.start_date
+							,d.end_date
+						    ,classes.grade
+							, semester.semester_name
+						    , d.exam_type
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheets as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    WHERE
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        
+					        d.school_id =1 ORDER BY d.created_at desc
+ERROR - 2019-10-23 12:12:54 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND
+					        d.semester_id  =  AND
+					        
+					        d.school_id' at line 22 - Invalid query: SELECT
+							d.id
+							,d.start_time
+							,d.end_time
+							,d.start_date
+							,d.end_date
+						    ,classes.grade
+							, semester.semester_name
+						    , d.exam_type
+						    , sessions.datefrom
+						    , sessions.dateto
+							FROM
+						   	datesheets as d
+						    INNER JOIN classes 
+						        ON (d.class_id = classes.id)
+						    INNER JOIN semester 
+						        ON (semester.id = d.semester_id)
+						    
+						    INNER JOIN sessions 
+						        ON (d.session_id = sessions.id)
+						    WHERE
+					        d.session_id  =  AND
+					        d.semester_id  =  AND
+					        
+					        d.school_id =1 ORDER BY d.created_at desc

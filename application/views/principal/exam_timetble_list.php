@@ -44,7 +44,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 <link rel="stylesheet" href="<?php echo $path_url; ?>css/intlTelInput.css">
 
-
+<div class="col-sm-10 col-md-10 col-lg-10 class-page "  ng-controller="class_report_ctrl" ng-init="processfinished=false">
 
 <div id="myUserModal" class="modal fade">
 
@@ -318,7 +318,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 
 
-<div class="col-sm-10">
+<div class="">
 
 
 
@@ -343,7 +343,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 		</label>
 	</div>
 	<div class="panel-body">
-		<table class="table-body timtbleflter" id="table-body-phase-tow" >
+		<table class="table table-striped table-bordered row-border hover" id="table-body-phase-tow" >
 
 			                        <thead>
 
@@ -367,7 +367,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 				                    </thead>
 
-				                    <tfoot>
+				                    <!-- <tfoot>
 
 				                        <tr>
 
@@ -387,52 +387,58 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 				                        </tr>
 
-				                    </tfoot>
+				                    </tfoot> -->
 
-			                        <tbody id="reporttablebody-phase-two" class="report-body">
+			                        <tbody >
 
-			                        	<?php $i = 1 ; if(isset($timetable_list)){ ?>
+                                        
 
-			                                <?php foreach ($timetable_list as $key => $value) {?>
+                                            
 
-			                                <tr <?php if($i%2 == 0){echo "class='green-bar row-update'";} else{echo "class='yellow-bar row-update'";} ?> id="tr_<?php echo $value->row_slug ;?>" data-view="<?php echo $this->encrypt->encode($value->row_slug) ;?>">
+                                           <!-- <tr ng-repeat="d in data | startFrom:currentPage*pageSize | limitTo:pageSize"> -->
+                                            <!-- <tr ng-repeat="d in schedulelist">    
+                                            <td> {{d.subject_name}}</td>
+                                                
+                                                <td>{{d.grade}}</td>
+                                                <td>{{d.username}}</td>
+                                                <td>{{d.mon_start_time}}</td>
+                                                <td>{{d.mon_end_time}}</td>
+                                                <td>
+                                                   
+                                                    
+                                                    <a  href="<?php echo $path_url; ?>add_timtble/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
 
-			                                
+                                                     <i class="fa fa-edit" aria-hidden="true"></i>
 
-			                                    <td class="row-bar-user" data-view="<?php echo $value->row_slug ;?>"><?php echo ucwords($value->subject_name); ?></td>
+                                                        </a>
 
-			                                    <td class="row-bar-user" data-view="<?php echo $value->row_slug ;?>"><?php echo $value->grade." (".$value->section_name.")"; ?></td>
+                                                <a  href="javascript:void(0)" title="Delete" id="{{d.id}}" class="del">
+                                                <i class="fa fa-remove" aria-hidden="true"></i>
+                                                    
+                                                
+                                                </a></td>
+                                                
+                                            </tr>
+                                            
+                                             <tr ng-hide="schedulelist.length > 0">
+                                                <td colspan="11" class="no-record">No data found</td>
+                                            </tr> -->
 
-			                                    <td class="row-bar-user" data-view="<?php echo $value->row_slug ;?>"><?php echo $value->username; ?></td>
-
-			                                    <td class="row-bar-user" data-view="<?php echo $value->row_slug ;?>"><?php echo date('H:i',$value->start_time); ?></td>
-
-			                                    <td class="row-bar-user" data-view="<?php echo $value->row_slug ;?>"><?php echo date('H:i',$value->end_time); ?></td>
-
-			                                    <td>
-
-			                                        <a href="<?php echo $path_url; ?>add_timtble/<?php echo $value->id ;?>" id="<?php echo $value->id ;?>" class='edit' title="Edit">
-
-			                                             <i class="fa fa-edit" aria-hidden="true"></i>
-
-			                                        </a>
-
-			                                        <a href="#" title="Delete" id="<?php echo  $value->id ;?>" class="del">
- <i class="fa fa-remove" aria-hidden="true"></i>
-
-			                                        </a>
-
-			                                    </td>
-
-			                                </tr>
-
-			                                <?php $i++;} ?>
-
-			                                <?php }  ?>
+                                            <!-- <tr>
+                                            <td colspan="11">
+                                                <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+                                                    Previous
+                                                </button>
+                                                {{currentPage+1}}/{{numberOfPages()}}
+                                                <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
+                                                    Next
+                                                </button>
+                                            </td>
+                                             </tr> -->
 
 
 
-					                </tbody>
+                                    </tbody>
 
 
 
@@ -443,7 +449,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 </div>
 
-
+</div>
 
 <?php
 
@@ -463,181 +469,237 @@ require APPPATH.'views/__layout/footer.php';
 
 <script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
 
-
-
 <script type="text/javascript">
 
 
 
-	var dvalue ;
+    var app = angular.module('invantage', []);
+    app.filter('startFrom', function() {
+    return function(input, start) {
+        start = +start; //parse to int
+        return input.slice(start);
+    }
+    });
+    app.controller('class_report_ctrl', function($scope, $window, $http, $document, $timeout,$interval,$compile,$filter){
+    $scope.currentPage = 0;
+    $scope.pageSize = 10;
+
+    $scope.data = [];
+    $scope.numberOfPages=function(){
+        return Math.ceil($scope.data.length/$scope.pageSize);                
+    }
+    
 
+    function httprequest(url,data)
+        {
+            var request = $http({
+                method:'get',
+                url:url,
+                params:data,
+                headers : {'Accept' : 'application/json'}
+            });
+            return (request.then(responseSuccess,responseFail))
+        }
 
+        function httppostrequest(url,data)
+        {
+            var request = $http({
+                method:'POST',
+                url:url,
+                data:data,
+                headers : {'Accept' : 'application/json'}
+            });
+            return (request.then(responseSuccess,responseFail))
+        }
 
-	$(document).ready(function(){
+        function responseSuccess(response){
+            return (response.data);
+        }
 
+        function responseFail(response){
+            return (response.data);
+        }
+        
+        $scope.getScheduleData = function()
+        //function getScheduleData()
+        {
 
+            try{
+                
+                    //console.log(data);
+                    httppostrequest('getschedulelist',data).then(function(response){
+                        //console.log(response)
+                        $scope.data = [];
+                        if(response.length > 0 && response != null)
+                        {
+                            for (var i=0; i<response[0]['listarray'].length; i++) {
+                                $scope.data.push(response[0]['listarray'][i]);
+                                
+                                
+                            }
+                            //$scope.datalist = response[0]['listarray'];
+                            console.log($scope.data);
+                            $scope.loaddatatable($scope.data);
+                            
+                        }
+                        else{
+                            $scope.schedulelist = [];
+                         
+                        }
+                    });
+                
+            }
+            catch(e){}
+        }
+        $scope.getScheduleData();
+        console.log($scope.datalist);
+        //getScheduleData();
+        $(document).on('click','.del',function(){
 
-		$(".table-choice").show();
+            
 
+            $("#myUserModal").modal('show');
 
 
-	
 
+            dvalue =  $(this).attr('id');
 
 
-		loaddatatable();
 
+         
 
 
-	  	/**
 
+            row_slug =   $(this).parent().parent().attr('id');
 
 
-     	 * ---------------------------------------------------------
 
+            
 
 
-	     *   load table
 
+        });
 
 
-	     * ---------------------------------------------------------
 
+        
 
 
-	     */
 
+        /*
 
 
-	    function loaddatatable()
 
+         * ---------------------------------------------------------
 
 
-	    {
 
+         *   User notification on deleting user 
 
 
-	        $('#table-body-phase-tow').DataTable( {
 
+         * ---------------------------------------------------------
 
 
-	            responsive: true,
 
+         */
 
 
-	             "order": [[ 0, "asc"  ]],
 
+        $(document).on('click','#UserDelete',function(){
 
 
-	            initComplete: function () {
 
+            $("#myUserModal").modal('hide');
 
 
-	                this.api().columns().every( function () {
 
+            ajaxType = "GET";
 
 
-	                    var column = this;
 
+            urlpath = "<?php echo $path_url; ?>Teacher/removeSchedule";
 
 
-	                       var select = $('<select><option value="">All</option></select>')
 
+            var dataString = ({'id':dvalue});
 
 
-	                        .appendTo( $(column.footer()).empty() )
 
+            ajaxfunc(urlpath,dataString,userDeleteFailureHandler,loadUserDeleteResponse);
 
 
-	                        .on( 'change', function () {
 
+        });
 
 
-	                            var val = $.fn.dataTable.util.escapeRegex(
 
 
 
-	                                $(this).val()
 
 
+        function userDeleteFailureHandler()
 
-	                            );
 
 
+        {
 
-	     
 
 
+            $(".user-message").show();
 
-	                            column
 
 
+            $(".message-text").text("Schedule has been not deleted").fadeOut(10000);
 
-	                                .search( val ? '^'+val+'$' : '', true, false )
 
 
+        }
 
-	                                .draw();
 
 
 
-	                        });
 
 
 
-	                    column.data().unique().sort().each( function ( d, j ) {
+        function loadUserDeleteResponse(response)
 
 
 
-	                        select.append( '<option value="'+d+'">'+d+'</option>' )
+        {
 
 
 
-	                    });
+            if (response.message === true){
 
 
 
-	                });
+                $("#"+row_slug).remove();
 
 
 
-	            }
+                $(".user-message").show();
 
 
 
-	        });
+                $(".message-text").text("schedule has been deleted").fadeOut(10000);
 
+                //$scope.schedulelist();
+                $scope.getScheduleData();
+                //getScheduleData();
+                message('Record has been deleted','show');
 
+            } 
 
-	    }
 
 
+        }
 
-	});
+        $(document).ready(function(){
 
 
 
-</script>
-
-
-
-<script src="<?php echo $path_url; ?>js/jquery.easyResponsiveTabs.js"></script>
-
-
-
-
-
-
-
-<script type="text/javascript">
-
-
-
-	$(document).ready(function(){
-
-
-
-		$('#setting').easyResponsiveTabs({ tabidentify: 'vert' });
+        $('#setting').easyResponsiveTabs({ tabidentify: 'vert' });
 
 
 
@@ -703,39 +765,63 @@ require APPPATH.'views/__layout/footer.php';
 
 
 
-        $(document).on('click','.del',function(){
+
+    
+})
+
+    var dvalue ;
 
 
 
-            $("#myUserModal").modal('show');
+    $(document).ready(function(){
 
 
 
-            dvalue =  $(this).attr('id');
+        $(".table-choice").show();
 
 
 
-         
+    
+
+        console.log(data);
+        var array = [
+            [
+                "Ram",
+                "21",
+                "Male",
+                "Doctor"
+            ],
+            [
+                "Mohan",
+                "32",
+                "Male",
+                "Teacher"
+            ],
+            [
+                "Rani",
+                "42",
+                "Female",
+                "Nurse"
+            ],
+            [
+                "Johan",
+                "23",
+                "Female",
+                "Software Engineer"
+            ],
+            [
+                "Shajia",
+                "39",
+                "Female",
+                "Farmer"
+            ]
+];
+ 
+        //loaddatatable(array);
 
 
 
-            row_slug =   $(this).parent().parent().attr('id');
-
-
-
-            
-
-
-
-        });
-
-
-
-        
-
-
-
-        /*
+        /**
 
 
 
@@ -743,7 +829,7 @@ require APPPATH.'views/__layout/footer.php';
 
 
 
-         *   User notification on deleting user 
+         *   load table
 
 
 
@@ -755,51 +841,121 @@ require APPPATH.'views/__layout/footer.php';
 
 
 
-        $(document).on('click','#UserDelete',function(){
-
-
-
-            $("#myUserModal").modal('hide');
-
-
-
-    		ajaxType = "GET";
-
-
-
-            urlpath = "<?php echo $path_url; ?>Teacher/removeSchedule";
-
-
-
-            var dataString = ({'id':dvalue});
-
-
-
-            ajaxfunc(urlpath,dataString,userDeleteFailureHandler,loadUserDeleteResponse);
-
-
-
-    	});
-
-
-
-
-
-
-
-        function userDeleteFailureHandler()
+        $scope.loaddatatable = function(data)
 
 
 
         {
+            //$scope.getScheduleData();
+            //$scope.getScheduleData();
+            //console.log(data);
+            var listdata= data;
+            //console.log(listdata);
+
+            $('#table-body-phase-tow').DataTable( {
+                data: listdata,
+                responsive: true,
+                "order": [[ 0, "asc"  ]],
+                columns: [
+                    { data: 'subject_name' },
+                    { data: 'grade' },
+                    { data: 'username' },
+                    { data: 'mon_start_time' },
+                    { data: 'mon_end_time' },
+                    { data: 'id' },
+                ],
+                "pageLength": 10
+            })
+
+            // $('#table-body-phase-tow').DataTable( {
 
 
 
- 		 	$(".user-message").show();
+            //     responsive: true,
 
 
 
-	    	$(".message-text").text("Schedule has been not deleted").fadeOut(10000);
+            //      "order": [[ 0, "asc"  ]],
+
+
+
+            //     initComplete: function () {
+
+
+
+            //         this.api().columns().every( function () {
+
+
+
+            //             var column = this;
+
+
+
+            //                var select = $('<select><option value="">All</option></select>')
+
+
+
+            //                 .appendTo( $(column.footer()).empty() )
+
+
+
+            //                 .on( 'change', function () {
+
+
+
+            //                     var val = $.fn.dataTable.util.escapeRegex(
+
+
+
+            //                         $(this).val()
+
+
+
+            //                     );
+
+
+
+         
+
+
+
+            //                     column
+
+
+
+            //                         .search( val ? '^'+val+'$' : '', true, false )
+
+
+
+            //                         .draw();
+
+
+
+            //                 });
+
+
+
+            //             column.data().unique().sort().each( function ( d, j ) {
+
+
+
+            //                 select.append( '<option value="'+d+'">'+d+'</option>' )
+
+
+
+            //             });
+
+
+
+            //         });
+
+
+
+            //     }
+
+
+
+            // });
 
 
 
@@ -807,63 +963,32 @@ require APPPATH.'views/__layout/footer.php';
 
 
 
-
-
-
-
-        function loadUserDeleteResponse(response)
-
-
-
-        {
-
-
-
-        	if (response.message === true){
-
-
-
-                $("#"+row_slug).remove();
-
-
-
-     		 	$(".user-message").show();
-
-
-
-		    	$(".message-text").text("schedule has been deleted").fadeOut(10000);
-
-
-
-         	} 
-
-
-
-        }
-
-
-
-        
-
-
-
-	});
-
-
-
+    });
+});
 </script>
-
-
 
 <script type="text/javascript">
 
 
 
-	var app = angular.module('invantage', []);
-
 
 
 </script>
+
+
+
+<script src="<?php echo $path_url; ?>js/jquery.easyResponsiveTabs.js"></script>
+
+
+
+
+
+
+
+
+
+
+
 
 
 

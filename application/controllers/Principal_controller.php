@@ -2604,7 +2604,7 @@ function uploadContent()
 					$sun_start_time = "00:00:00";
 					$sun_end_time ="00:00:00";
 				}
-				
+
 			if($this->input->post('serial')){
 				$get_schedule_row = $this->operation->GetRowsByQyery(array('id'=>$this->input->post('serial')));
 				$subject_schedual_check = true;
@@ -2788,14 +2788,14 @@ function uploadContent()
 			$locations = $this->session->userdata('locations');
 
 			$roles = $this->session->userdata('roles');
-		$active_session = parent::GetUserActiveSession();
+			$active_session = parent::GetUserActiveSession();
 			$active_semester = parent::GetCurrentSemesterData($active_session[0]->id);
 
 	 	if( $roles[0]['role_id'] == 3 && count($active_session) && count($active_semester)){
 
 
 
-	 	$datameta=$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.id,sub.id as subid,subject_name,grade,section_name,username,start_time,end_time FROM schedule sc INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id WHERE cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id." ORDER by sc.id desc");
+	 	$datameta=$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.*,sc.id,sub.id as subid,subject_name,grade,section_name,username,start_time,end_time FROM schedule sc INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id WHERE cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id." ORDER by sc.id desc");
 
 	 	if(count($datameta))
 	 	foreach ($datameta as $key => $value) {
@@ -2831,7 +2831,49 @@ function uploadContent()
 
 	 }
 
+	function show_schedule_list()
+	{
+		date_default_timezone_set("Asia/Karachi");
+	 	if(!($this->session->userdata('id')))
+	 	{
+			parent::redirectUrl('signin');
+		}
+		$listarray =array();
+		$data_array =array();
+		$locations = $this->session->userdata('locations');
+		$roles = $this->session->userdata('roles');
+		$active_session = parent::GetUserActiveSession();
+		$active_semester = parent::GetCurrentSemesterData($active_session[0]->id);
+	 	if( $roles[0]['role_id'] == 3 && count($active_session) && count($active_semester))
+	 	{
 
+		 	$datameta=$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.*,sc.id,sub.id as subid,subject_name,grade,section_name,username,start_time,end_time FROM schedule sc INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id WHERE cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id." ORDER by sc.id desc");
+		 	if(count($datameta))
+		 	{
+		 		foreach ($datameta as $key => $value) 
+			 	{
+			 		$subcod=$this->operation->GetRowsByQyery("select subject_code from subjects where id= ".$value->subid);
+			 		$value->subject_name=$value->subject_name."(".$subcod[0]->subject_code.")";
+			 	 	$value->subject_name;
+			 	}
+		 	}
+		 	
+	   }
+	   else if( $roles[0]['role_id'] == 4 && count($active_session) && count($active_semester))
+	   {
+	   		$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.id, subject_name,grade,section_name,username,start_time,end_time FROM schedule sc  INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id where sc.teacher_uid=".$this->session->userdata('id')." AND cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id);
+	   }
+
+		$result[] = array(
+                        'listarray'=>$this->data['timetable_list'],
+                        
+                        'data_array'=>$data_array
+                    );
+
+	    echo json_encode($result);
+	   	//echo json_encode($this->data['timetable_list']);
+	
+	}
 
 	 public function take_pic()
 
