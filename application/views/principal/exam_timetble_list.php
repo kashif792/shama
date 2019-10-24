@@ -538,7 +538,7 @@ require APPPATH.'views/__layout/footer.php';
                                 
                             }
                             //$scope.datalist = response[0]['listarray'];
-                            console.log($scope.data);
+                            //console.log($scope.data);
                             $scope.loaddatatable($scope.data);
                             
                         }
@@ -552,17 +552,17 @@ require APPPATH.'views/__layout/footer.php';
             catch(e){}
         }
         $scope.getScheduleData();
-        console.log($scope.datalist);
+        //console.log($scope.datalist);
         //getScheduleData();
         $(document).on('click','.del',function(){
 
             
 
-            $("#myUserModal").modal('show');
+            // $("#myUserModal").modal('show');
 
 
 
-            dvalue =  $(this).attr('id');
+            // dvalue =  $(this).attr('id');
 
 
 
@@ -570,7 +570,7 @@ require APPPATH.'views/__layout/footer.php';
 
 
 
-            row_slug =   $(this).parent().parent().attr('id');
+            // row_slug =   $(this).parent().parent().attr('id');
 
 
 
@@ -672,21 +672,13 @@ require APPPATH.'views/__layout/footer.php';
 
             if (response.message === true){
 
-
-
-                $("#"+row_slug).remove();
-
-
-
-                $(".user-message").show();
-
-
-
-                $(".message-text").text("schedule has been deleted").fadeOut(10000);
-
-                //$scope.schedulelist();
-                $scope.getScheduleData();
-                //getScheduleData();
+                var table = $('#table-body-phase-tow').DataTable();
+                    table
+                        .row(rowdata)
+                        .remove()
+                        .draw();
+                
+                //$scope.success=response.message;
                 message('Record has been deleted','show');
 
             } 
@@ -770,103 +762,50 @@ require APPPATH.'views/__layout/footer.php';
 })
 
     var dvalue ;
-
+    var rowdata;
 
 
     $(document).ready(function(){
 
 
 
-        $(".table-choice").show();
-
-
-
     
-
-        console.log(data);
-        var array = [
-            [
-                "Ram",
-                "21",
-                "Male",
-                "Doctor"
-            ],
-            [
-                "Mohan",
-                "32",
-                "Male",
-                "Teacher"
-            ],
-            [
-                "Rani",
-                "42",
-                "Female",
-                "Nurse"
-            ],
-            [
-                "Johan",
-                "23",
-                "Female",
-                "Software Engineer"
-            ],
-            [
-                "Shajia",
-                "39",
-                "Female",
-                "Farmer"
-            ]
-];
- 
-        //loaddatatable(array);
-
-
-
-        /**
-
-
-
-         * ---------------------------------------------------------
-
-
-
-         *   load table
-
-
-
-         * ---------------------------------------------------------
-
-
-
-         */
-
-
-
         $scope.loaddatatable = function(data)
-
-
-
         {
-            //$scope.getScheduleData();
-            //$scope.getScheduleData();
-            //console.log(data);
             var listdata= data;
-            //console.log(listdata);
-
-            $('#table-body-phase-tow').DataTable( {
+            var table = $('#table-body-phase-tow').DataTable( {
                 data: listdata,
                 responsive: true,
                 "order": [[ 0, "asc"  ]],
+
                 columns: [
                     { data: 'subject_name' },
                     { data: 'grade' },
                     { data: 'username' },
                     { data: 'mon_start_time' },
                     { data: 'mon_end_time' },
-                    { data: 'id' },
+                    {
+                     "className": '',
+                     "orderable": false,
+                     "data": null,
+                     "defaultContent": "<a href='javascript:void(0)'><i class='fa fa-edit' aria-hidden='true'></i></a> <a href='javascript:void(0)' class='del'><i class='fa fa-remove' aria-hidden='true'></i></a>"
+                    },
                 ],
+
                 "pageLength": 10
             })
-
+            $('#table-body-phase-tow tbody').on( 'click', '.fa-edit', function () {
+                var data = table.row( $(this).parents('tr') ).data();
+                window.location.href = '<?php echo $path_url; ?>add_timtble/'+data['id'];
+            
+            } );
+            $('#table-body-phase-tow tbody').on( 'click', '.fa-remove', function () {
+                var data = table.row( $(this).parents('tr') ).data();
+                $("#myUserModal").modal('show');
+                dvalue =  data['id'];
+                rowdata = table.row( $(this).parents('tr') ).data();
+            } );
+            
             // $('#table-body-phase-tow').DataTable( {
 
 
