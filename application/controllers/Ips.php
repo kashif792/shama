@@ -2804,7 +2804,10 @@ class Ips extends MY_Controller
             // Break time fetch from database
             $today = strtolower(date("l"));
             $this->operation->table_name = 'break';
-
+            $date = date('Y-m-d');
+        
+            $currentday = strtolower(date('D', strtotime($date)));
+            
             $is_break_found = $this->operation->GetByWhere(array('school_id' => $locations[0]['school_id']));
             if(count($is_break_found))
             {
@@ -2844,9 +2847,7 @@ class Ips extends MY_Controller
             if ($roles[0]['role_id'] == 3 && count($active_session) && count($active_semester))
             {
                 // get current day data
-                $date = date('Y-m-d');
-        
-                $currentday = strtolower(date('D', strtotime($date)));
+                
                 $query = $this->operation->GetRowsByQyery("SELECT sch.* FROM schedule sch  Where sch.semsterid = " . $active_semester[0]->semester_id . " AND sch.sessionid =" . $active_session[0]->id . " Order by sch.id,sch.start_time");
                 if (count($query))
                 {
@@ -2864,14 +2865,14 @@ class Ips extends MY_Controller
                         $e_time =  $currentday.'_end_time';
                         $d_start_time = $value->$s_time;
                         $d_end_time = $value->$e_time;
-                        if ($is_class_found == false && date('H:i', $value->start_time) >= date('H:i', DateTime::createFromFormat('H:i', $ass_start_time)))
+                        if ($is_class_found == false && date('H:i', strtotime($d_start_time)) >= date('H:i', DateTime::createFromFormat('H:i', $ass_start_time)))
                         {
                             array_push($class_array, $grade);
                             $schedule[] = array('grade' => $grade, 'section_name' => $section[0]->section_name, 'subject_name' => "Assembly", 'screenname' => "Assembly", 'start_time' => $ass_start_time, 'end_time' => $ass_end_time,);
                         }
                         $is_kin_class_found = in_array($section[0]->id, $kindergarten_section);
                         // break to kindergarten
-                        if ($is_kin_class_found == false && $grade == 'Kindergarten' && date('H:i', $value->start_time) >= date('H:i', DateTime::createFromFormat('H:i', $break_start_time)))
+                        if ($is_kin_class_found == false && $grade == 'Kindergarten' && date('H:i', strtotime($d_start_time)) >= date('H:i', DateTime::createFromFormat('H:i', $break_start_time)))
                         {
                             array_push($kindergarten_section, $section[0]->id);
                             $schedule[] = array('grade' => $grade, 'section_name' => $section[0]->section_name, 'subject_name' => "Break", 'screenname' => "Break", 'start_time' => $break_start_time, 'end_time' => $break_end_time,);
@@ -2879,7 +2880,7 @@ class Ips extends MY_Controller
                         }
                         $is_rest_class_found = in_array($grade, $rest_section);
                         // break to rest school
-                        if ($is_rest_class_found == false && $grade != 'Kindergarten' && date('H:i', $value->start_time) >= date('H:i', DateTime::createFromFormat('H:i', $break_start_time)))
+                        if ($is_rest_class_found == false && $grade != 'Kindergarten' && date('H:i', strtotime($d_start_time)) >= date('H:i', DateTime::createFromFormat('H:i', $break_start_time)))
                         {
                             array_push($rest_section, $grade);
                             $schedule[] = array('grade' => $grade, 'section_name' => $section[0]->section_name, 'subject_name' => "Break", 'screenname' => "Break", 'start_time' => $break_start_time, 'end_time' => $break_end_time,);
@@ -2902,22 +2903,26 @@ class Ips extends MY_Controller
                         $section = parent::getSectionList($value->section_id);
                         $subject = parent::GetSubject($value->subject_id);
                         $teacher = parent::GetUserById($value->teacher_uid);
-                        if ($is_teacher_assembly_found == false && date('H:i', $value->start_time) >= date('H:i', DateTime::createFromFormat('H:i', $ass_start_time)))
+                        $s_time =  $currentday.'_start_time';
+                        $e_time =  $currentday.'_end_time';
+                        $d_start_time = $value->$s_time;
+                        $d_end_time = $value->$e_time;
+                        if ($is_teacher_assembly_found == false && date('H:i', strtotime($d_start_time)) >= date('H:i', DateTime::createFromFormat('H:i', $ass_start_time)))
                         {
                             $schedule[] = array('grade' => "Assembly", 'section_name' => "Assembly", 'subject_name' => "Assembly", 'screenname' => "Assembly", 'start_time' => $ass_start_time, 'end_time' => $ass_end_time,);
                             $is_teacher_assembly_found = true;
                         }
-                        if ($grade == 'Kindergarten' && $is_teacher_break_found == false && date('H:i', $value->start_time) >= date('H:i', DateTime::createFromFormat('H:i', $break_start_time)))
+                        if ($grade == 'Kindergarten' && $is_teacher_break_found == false && date('H:i', strtotime($d_start_time)) >= date('H:i', DateTime::createFromFormat('H:i', $break_start_time)))
                         {
                             $schedule[] = array('grade' => "Break", 'section_name' => "Break", 'subject_name' => "", 'screenname' => "Break", 'start_time' => $break_start_time, 'end_time' => $break_end_time,);
                             $is_teacher_break_found = true;
                         }
-                        if ($grade != 'Kindergarten' && $is_teacher_break_found == false && date('H:i', $value->start_time) >= date('H:i', DateTime::createFromFormat('H:i', $break_start_time)))
+                        if ($grade != 'Kindergarten' && $is_teacher_break_found == false && date('H:i', strtotime($d_start_time)) >= date('H:i', DateTime::createFromFormat('H:i', $break_start_time)))
                         {
                             $schedule[] = array('grade' => "Break", 'section_name' => "Break", 'subject_name' => "Break", 'screenname' => "Break", 'start_time' => $break_start_time, 'end_time' => $break_end_time,);
                             $is_teacher_break_found = true;
                         }
-                        $schedule[] = array('grade' => $grade, 'section_name' => $section[0]->section_name, 'subject_name' => $subject[0]->subject_name, 'screenname' => $teacher[0]->screenname, 'start_time' => date('H:i', $value->start_time), 'end_time' => date('H:i', $value->end_time),);
+                        $schedule[] = array('grade' => $grade, 'section_name' => $section[0]->section_name, 'subject_name' => $subject[0]->subject_name, 'screenname' => $teacher[0]->screenname, 'start_time' => date('H:i', strtotime($d_start_time)), 'end_time' => date('H:i', strtotime($d_end_time)),);
                     }
                 }
             }
