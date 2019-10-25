@@ -2864,13 +2864,12 @@ function uploadContent()
 		 		foreach ($datameta as $key => $value) 
 			 	{
 			 		$subcod=$this->operation->GetRowsByQyery("select subject_code from subjects where id= ".$value->subid);
-			 		$value->subject_name=$value->subject_name."(".$subcod[0]->subject_code.")";
+			 		$value->subject_name=$value->subject_name." (".$subcod[0]->subject_code.")";
 			 	 	$value->subject_name;
 			 	 	// Create Day wise start and end time
 			 	 	$s_time =  $currentday.'_start_time';
 			 	 	$e_time =  $currentday.'_end_time';
-			 	 	//$d_start_time[] = $value->$s_time;
-			 	 	//$d_end_time[] = $value->$e_time;
+			 	 	
 			 	 	$value->start_time = $value->$s_time;
 					$value->end_time = $value->$e_time;
 			 	}

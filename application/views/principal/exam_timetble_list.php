@@ -544,53 +544,41 @@ require APPPATH.'views/__layout/footer.php';
         
         $scope.changeclass = function()
         {
-            //$('#table-body-phase-tow').DataTable().destroy();
-            //$('#table-body-phase-tow').DataTable().destroy();
-            //$('#table-body-phase-tow').DataTable().clear().destroy();
-            //$("#example").dataTable().fnDestroy();
-            //$("#table-body-phase-tow").dataTable().fnDestroy();
+            
             $scope.getScheduleData();
-            //$scope.loaddatatable($scope.data);
+            
             
             $scope.active = 1;
             
-            // var datatable =  $('#table-body-phase-tow').DataTable();
-            //   datatable.clear();
-            //   data = $scope.data;
-            //   if(data.length>0){
-            //       datatable.rows.add(data);
-            //   }
-            //   datatable.draw();
         }
         // Days Select box
         function getDayList()
         {
             httprequest('getdaylist',({})).then(function(response){
-                //console.log(response.length);
+               
                 if(response != null && response.length > 0)
                 {
-                    //console.log()
+                    
                     $scope.daylist = response;
                     $scope.filterobj.day = response[0];
-                    //$scope.getDatesheetData();
+                    
                 }
             });
         }
-        //getDayList();
-
+        
         $scope.getScheduleData = function()
-        //function getScheduleData()
+        
         {
 
             try{
                     var data ={
-                        //inputclassid:$scope.filterobj.class.id,
+                        
                         inputday:$scope.filterobj.day,
                         
                     }
 
                     httppostrequest('getschedulelist',data).then(function(response){
-                        //console.log(response)
+                       
                         $scope.data = [];
                         if(response.length > 0 && response != null)
                         {
@@ -614,129 +602,36 @@ require APPPATH.'views/__layout/footer.php';
             catch(e){}
         }
         $scope.getScheduleData();
-        //console.log($scope.datalist);
-        //getScheduleData();
-        $(document).on('click','.del',function(){
-
-            
-
-            $("#myUserModal").modal('show');
-
-
-
-            dvalue =  $(this).attr('id');
-
-
-
-         
-
-
-
-            // row_slug =   $(this).parent().parent().attr('id');
-
-
-
-            
-
-
-
-        });
-
-
-
         
-
-
-
-        /*
-
-
-
-         * ---------------------------------------------------------
-
-
-
-         *   User notification on deleting user 
-
-
-
-         * ---------------------------------------------------------
-
-
-
-         */
-
-
+        $(document).on('click','.del',function(){
+            $("#myUserModal").modal('show');
+            dvalue =  $(this).attr('id');
+            row_slug =   $(this).parent().parent().attr('id');
+            //rowdata = table.row( $(this).parents('tr') ).data();
+        });
 
         $(document).on('click','#UserDelete',function(){
-
-
-
             $("#myUserModal").modal('hide');
-
-
-
             ajaxType = "GET";
-
-
-
             urlpath = "<?php echo $path_url; ?>Teacher/removeSchedule";
-
-
-
             var dataString = ({'id':dvalue});
-
-
-
             ajaxfunc(urlpath,dataString,userDeleteFailureHandler,loadUserDeleteResponse);
-
-
-
         });
 
-
-
-
-
-
-
         function userDeleteFailureHandler()
-
-
-
         {
-
-
-
             $(".user-message").show();
-
-
-
             $(".message-text").text("Schedule has been not deleted").fadeOut(10000);
-
-
-
         }
 
-
-
-
-
-
-
         function loadUserDeleteResponse(response)
-
-
-
         {
-
-
-
             if (response.message === true){
-
+               
+                
                 var table = $('#table-body-phase-tow').DataTable();
                     table
-                        .row(rowdata)
+                        .row("#"+row_slug)
                         .remove()
                         .draw();
                 
@@ -752,6 +647,7 @@ require APPPATH.'views/__layout/footer.php';
         $(document).ready(function(){
         $('#setting').easyResponsiveTabs({ tabidentify: 'vert' });
         function loadClassByIdReponseError(){}
+
         function loadClassByIdResponse(data)
         {
             if(data.message == true)
@@ -775,7 +671,7 @@ require APPPATH.'views/__layout/footer.php';
                 data: listdata,
                 responsive: true,
                 "order": [[ 0, "asc"  ]],
-
+                rowId: 'id',
                 columns: [
                     { data: 'subject_name' },
                     { data: 'grade' },
@@ -866,97 +762,6 @@ require APPPATH.'views/__layout/footer.php';
                 });
             
           });
-                    
-            // $('#table-body-phase-tow').DataTable( {
-
-
-
-            //     responsive: true,
-
-
-
-            //      "order": [[ 0, "asc"  ]],
-
-
-
-            //     initComplete: function () {
-
-
-
-            //         this.api().columns().every( function () {
-
-
-
-            //             var column = this;
-
-
-
-            //                var select = $('<select><option value="">All</option></select>')
-
-
-
-            //                 .appendTo( $(column.footer()).empty() )
-
-
-
-            //                 .on( 'change', function () {
-
-
-
-            //                     var val = $.fn.dataTable.util.escapeRegex(
-
-
-
-            //                         $(this).val()
-
-
-
-            //                     );
-
-
-
-         
-
-
-
-            //                     column
-
-
-
-            //                         .search( val ? '^'+val+'$' : '', true, false )
-
-
-
-            //                         .draw();
-
-
-
-            //                 });
-
-
-
-            //             column.data().unique().sort().each( function ( d, j ) {
-
-
-
-            //                 select.append( '<option value="'+d+'">'+d+'</option>' )
-
-
-
-            //             });
-
-
-
-            //         });
-
-
-
-            //     }
-
-
-
-            // });
-
 
 
         }
