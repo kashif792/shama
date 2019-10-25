@@ -2858,7 +2858,7 @@ function uploadContent()
 	 	if( $roles[0]['role_id'] == 3 && count($active_session) && count($active_semester))
 	 	{
 
-		 	$datameta=$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.*,sc.id,sub.id as subid,subject_name,grade,section_name,username,start_time,end_time FROM schedule sc INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id WHERE cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id." ORDER by sc.id desc");
+		 	$datameta=$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.*,sc.id,sub.id as subid,subject_name,grade,section_name,screenname,start_time,end_time FROM schedule sc INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id WHERE cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id." ORDER by sc.id desc");
 		 	if(count($datameta))
 		 	{
 		 		foreach ($datameta as $key => $value) 
@@ -2875,7 +2875,7 @@ function uploadContent()
 			 	 	}
 			 	 	else
 			 	 	{
-			 	 		$value->start_time = $value->$s_time;
+			 	 		$value->start_time = date('H:i',strtotime($value->$s_time));
 			 	 	}
 			 	 	if($value->$e_time=="00:00:00")
 			 	 	{
@@ -2883,7 +2883,7 @@ function uploadContent()
 			 	 	}
 			 	 	else
 			 	 	{
-			 	 		$value->end_time = $value->$e_time;
+			 	 		$value->end_time = date('H:i',strtotime($value->$e_time));
 			 	 	}
 					
 			 	}
@@ -2895,6 +2895,17 @@ function uploadContent()
 	   		$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.id, subject_name,grade,section_name,username,start_time,end_time FROM schedule sc  INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id where sc.teacher_uid=".$this->session->userdata('id')." AND cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id);
 	   }
 	   $data_array = array('select_day'=>$currentday);
+	   
+	   
+	   foreach ($this->data['timetable_list'] as $key => $element) {
+	   		
+		    if ($element->start_time=="") {
+		    	
+		        unset($this->data['timetable_list'][$key]);
+		    }
+		}
+		array_shift($this->data['timetable_list']);
+		
 	   $result[] = array(
                         'listarray'=>$this->data['timetable_list'],
                         

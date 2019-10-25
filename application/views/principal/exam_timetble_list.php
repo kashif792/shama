@@ -675,7 +675,7 @@ require APPPATH.'views/__layout/footer.php';
                 columns: [
                     { data: 'subject_name' },
                     { data: 'grade' },
-                    { data: 'username' },
+                    { data: 'screenname' },
                     { data: 'start_time' },
                     { data: 'end_time' },
                     {
