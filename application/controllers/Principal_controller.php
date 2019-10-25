@@ -2869,9 +2869,23 @@ function uploadContent()
 			 	 	// Create Day wise start and end time
 			 	 	$s_time =  $currentday.'_start_time';
 			 	 	$e_time =  $currentday.'_end_time';
-			 	 	
-			 	 	$value->start_time = $value->$s_time;
-					$value->end_time = $value->$e_time;
+			 	 	if($value->$s_time=="00:00:00")
+			 	 	{
+			 	 		$value->start_time = "";
+			 	 	}
+			 	 	else
+			 	 	{
+			 	 		$value->start_time = $value->$s_time;
+			 	 	}
+			 	 	if($value->$e_time=="00:00:00")
+			 	 	{
+			 	 		$value->end_time = "";
+			 	 	}
+			 	 	else
+			 	 	{
+			 	 		$value->end_time = $value->$e_time;
+			 	 	}
+					
 			 	}
 		 	}
 		 	
