@@ -2786,7 +2786,7 @@ function uploadContent()
 			}
 
 			$locations = $this->session->userdata('locations');
-
+			$this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/small_nrlogo.png");
 			$roles = $this->session->userdata('roles');
 			$active_session = parent::GetUserActiveSession();
 			$active_semester = parent::GetCurrentSemesterData($active_session[0]->id);
@@ -2915,6 +2915,158 @@ function uploadContent()
 	    echo json_encode($result);
 	   	//echo json_encode($this->data['timetable_list']);
 	
+	}
+	function getTimetable()
+	{
+		try
+        {
+
+            $roles = $this->session->userdata('roles');
+            $locations = $this->session->userdata('locations');
+            $active_session = parent::GetUserActiveSession();
+            $active_semester = parent::GetCurrentSemesterData($active_session[0]->id);
+            $request = json_decode(file_get_contents('php://input'));
+			$grade_id = $this->input->get('grade_id');
+			$this->operation->table_name = 'classes';
+            $is_class = $this->operation->GetByWhere(array('grade' => $grade_id,'school_id' => $locations[0]['school_id']));
+            //print($is_class[0]->id);
+			//exit;
+            $schedule = array();
+            $class_array = array();
+            $kindergarten_section = array();
+            $rest_section = array();
+            $result = array();
+            $data_array = array();
+            $day_array = array();
+            // Assembly time fetch from database
+            $this->operation->table_name = 'assembly';
+            $is_assembly_found = $this->operation->GetByWhere(array('school_id' => $locations[0]['school_id']));
+            if(count($is_assembly_found))
+            {
+                $ass_start_time = $is_assembly_found[0]->start_time;
+                $ass_end_time = $is_assembly_found[0]->end_time;
+            }
+            else
+            {
+                $ass_start_time = ASSEMBLY_START;
+                $ass_end_time = ASSEMBLY_END;
+            }
+            // Break time fetch from database
+            $today = strtolower(date("l"));
+            $this->operation->table_name = 'break';
+            $date = date('Y-m-d');
+        
+            //$currentday = strtolower(date('D', strtotime($date)));
+            
+            $is_break_found = $this->operation->GetByWhere(array('school_id' => $locations[0]['school_id']));
+            if(count($is_break_found))
+            {
+                    $mon_break = date('H:i', strtotime($is_break_found[0]->monday_start_time)).' - '.date('H:i', strtotime($is_break_found[0]->monday_end_time));
+                    $tue_break = date('H:i', strtotime($is_break_found[0]->tuesday_start_time)).' - '.date('H:i', strtotime($is_break_found[0]->tuesday_end_time));
+                    $wed_break = date('H:i', strtotime($is_break_found[0]->wednesday_start_time)).' - '.date('H:i', strtotime($is_break_found[0]->wednesday_end_time));
+                    $thu_break = date('H:i', strtotime($is_break_found[0]->thursday_start_time)).' - '.date('H:i', strtotime($is_break_found[0]->thursday_end_time));
+                    $fri_break = date('H:i', strtotime($is_break_found[0]->friday_start_time)).' - '.date('H:i', strtotime($is_break_found[0]->friday_end_time));
+            }
+            else
+                {
+                    $break_start_time = BREAK_START;
+                    $break_end_time  = BREAK_END;
+                }
+               
+                
+                $query = $this->operation->GetRowsByQyery("SELECT sch.* FROM schedule sch  Where class_id =".$is_class[0]->id." AND sch.semsterid = " . $active_semester[0]->semester_id . " AND sch.sessionid =" . $active_session[0]->id . " Order by sch.id,sch.start_time");
+                if (count($query))
+                {
+                    $is_yellow_section_found = false;
+                    foreach ($query as $key => $value)
+                    {
+                        // add assembly to each class
+                        $grade = parent::getClass($value->class_id);
+                        $section = parent::getSectionList($value->section_id);
+                        $subject = parent::GetSubject($value->subject_id);
+                        $teacher = parent::GetUserById($value->teacher_uid);
+                        $is_class_found = in_array($grade, $class_array);
+                       	if($value->mon_start_time=="00:00:00")
+				 	 	{
+				 	 		$mon_timing = "";
+				 	 	}
+				 	 	else
+				 	 	{
+				 	 		$mon_status = "Active";
+
+				 	 		$mon_timing = date('H:i', strtotime($value->mon_start_time)).' - '.date('H:i', strtotime($value->mon_end_time));
+				 	 	}
+				 	 	if($value->tue_start_time=="00:00:00")
+				 	 	{
+				 	 		$tue_timing = "";
+				 	 	}
+				 	 	else
+				 	 	{
+				 	 		$tue_status = "Active";
+				 	 		$tue_timing = date('H:i', strtotime($value->tue_start_time)).' - '.date('H:i', strtotime($value->tue_end_time));
+				 	 	}
+				 	 	if($value->wed_start_time=="00:00:00")
+				 	 	{
+				 	 		$wed_timing = "";
+				 	 	}
+				 	 	else
+				 	 	{
+				 	 		$wed_status = "Active";
+				 	 		$wed_timing = date('H:i', strtotime($value->wed_start_time)).' - '.date('H:i', strtotime($value->wed_end_time));
+				 	 	}
+				 	 	if($value->thu_start_time=="00:00:00")
+				 	 	{
+				 	 		$thu_timing = "";
+				 	 	}
+				 	 	else
+				 	 	{
+				 	 		$thu_status = "Active";
+				 	 		$thu_timing = date('H:i', strtotime($value->thu_start_time)).' - '.date('H:i', strtotime($value->thu_end_time));
+				 	 	}
+
+				 	 	if($value->fri_start_time=="00:00:00")
+				 	 	{
+				 	 		$fri_timing = "";
+				 	 	}
+				 	 	else
+				 	 	{
+				 	 		$fri_status = "Active";
+				 	 		$fri_timing = date('H:i', strtotime($value->fri_start_time)).' - '.date('H:i', strtotime($value->fri_end_time));
+				 	 	}
+				 	 	if($value->sat_start_time=="00:00:00")
+				 	 	{
+				 	 		$sat_timing = "";
+				 	 	}
+				 	 	else
+				 	 	{
+				 	 		$sat_status = "Active";
+				 	 		$sat_timing = date('H:i', strtotime($value->sat_start_time)).' - '.date('H:i', strtotime($value->sat_end_time));
+				 	 	}
+				 	 	if($value->sun_start_time=="00:00:00")
+				 	 	{
+				 	 		$sun_timing = "";
+				 	 	}
+				 	 	else
+				 	 	{
+				 	 		$sun_status = "Active";
+				 	 		$sun_timing = date('H:i', strtotime($value->sun_start_time)).' - '.date('H:i', strtotime($value->sun_end_time));
+				 	 	}
+                        $schedule[] = array('mon_timing' => $mon_timing,'tue_timing' => $tue_timing,'wed_timing' => $wed_timing,'thu_timing' => $thu_timing,'fri_timing' => $fri_timing,'sat_timing' => $sat_timing,'sun_timing' => $sun_timing, 'grade' => $grade, 'subject_name' => $subject[0]->subject_name, 'screenname' => $teacher[0]->screenname,'mon_break'=>$mon_break,'tue_break'=>$tue_break,'wed_break'=>$wed_break,'thu_break'=>$thu_break,'fri_break'=>$fri_break);
+                    }
+                }
+            $data_array = array('grade_name'=>$is_class[0]->grade);
+            $result[] = array(
+                        'details'=>$schedule,
+                        
+                        'data_array'=>$data_array
+                    );
+
+	    	echo json_encode($result);
+            //echo json_encode($schedule);
+        }
+        catch(Exception $e)
+        {
+        }
 	}
 	function getDayList()
 	{

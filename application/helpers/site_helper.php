@@ -11,7 +11,7 @@ function getName($table,$filedName,$id)
 	$ci=& get_instance();
     $ci->load->database(); 
 
-    $sql ="SELECT ".$filedName." FROM $table
+    echo $sql ="SELECT ".$filedName." FROM $table
           WHERE id =".$id; 
 
     $query = $ci->db->query($sql);

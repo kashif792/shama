@@ -423,7 +423,8 @@ require APPPATH.'views/__layout/leftnavigation.php';
 			                    </table>
 		
 	</div>
-    <div id="timetable" style="min-height:280px;" ></div>
+    <!-- <div id="timetable" style="min-height:280px;" ></div> -->
+    
 </div>
 
 </div>
@@ -662,26 +663,26 @@ require APPPATH.'views/__layout/footer.php';
 
             })
             
-            table.columns(0).every( function () {
-                var column = this;
-                var select = $('<select><option value="">All</option></select>')
-                .appendTo( $(column.footer()).empty() )
-                .on( 'change', function () {
-                var val = $.fn.dataTable.util.escapeRegex(
-                $(this).val()
-                );
-                column
-                .search( val ? '^'+val+'$' : '', true, false )
-                .draw();
-                });
-                column.data().unique().sort().each( function ( d, j ) {
-                select.append( '<option value="'+d+'">'+d+'</option>' )
-                });
+          //   table.columns(0).every( function () {
+          //       var column = this;
+          //       var select = $('<select><option value="">All</option></select>')
+          //       .appendTo( $(column.footer()).empty() )
+          //       .on( 'change', function () {
+          //       var val = $.fn.dataTable.util.escapeRegex(
+          //       $(this).val()
+          //       );
+          //       column
+          //       .search( val ? '^'+val+'$' : '', true, false )
+          //       .draw();
+          //       });
+          //       column.data().unique().sort().each( function ( d, j ) {
+          //       select.append( '<option value="'+d+'">'+d+'</option>' )
+          //       });
             
-          });
+          // });
             table.columns(1).every( function () {
                 var column = this;
-                var select = $('<select><option value="">All</option></select>')
+                var select = $('<select id="grade_id"><option value="">All</option></select>')
                 .appendTo( $(column.footer()).empty() )
                 .on( 'change', function () {
                 var val = $.fn.dataTable.util.escapeRegex(
@@ -722,26 +723,57 @@ require APPPATH.'views/__layout/footer.php';
             try{
 
                 var docDefinition = {
-                    pageOrientation: 'portrait',
+                    pageOrientation: 'landscape',
                     content: [
-                        
-                        {text:$scope.drawTable,style:'report_header'},
-                        
-                        //table($scope.drawTable),  
-                        //table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Grade"],["subject","evalution",]),
-                                           
 
+                        {image:'<?php echo $logo ?>',style:'report_logo'},
+                        {
+                            margin: [0, 10, 0, 30],
+                            columns: [
+                               {
+                                    width: '*',
+                                    text: ' Time Table of class: '+$scope.grade_name,
+                                    alignment: 'center',
+                                    fontSize: '24',
+                                    bold: true,
+                                },
+                                 
+                            ]
+                        },
+                        
+                        {
+                        columns: [
+                            
+                               table($scope.scheduletimetable,["subject_name","mon_timing","tue_timing","wed_timing","thu_timing","fri_timing","sat_timing","sun_timing"]),
+                        ]
+                        },
                    ],
+                   footer: {
+                    margin: [0, 0, 30, 0],
+                    columns: [
+
+                      { text: 'Principal: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ', alignment: 'right',fontSize:'14',bold:true }
+                    ]
+                  },
 
                     styles: {
                         report_header: {
-                            fontSize: 14,
+                            fontSize: 10,
                             bold: false,
                             alignment: 'center',
                             margin: [0, 10, 0, 40]
                         },
                         report_logo: {
-                            alignment: 'center'
+                            alignment: 'center',
+                            margin: [0, 10, 0, 20]
+                        },
+                        header_txt: {
+                            alignment: 'left',
+                            margin: [0, 10, 0, 10],
+                            fontSize: 14,
+                            
+                            fillColor: '#4c9eda',
+                            color:"#fff",
                         },
                         
                     }
@@ -750,16 +782,146 @@ require APPPATH.'views/__layout/footer.php';
             }
             catch(e){}
         }
-        $scope.download = function()
+        // Generate PDF
+        function buildTableBody(data, columns) {
+            var body = [];
+            //console.log(data);
+            var back_color = ['#008000','#ff66ff','#ff0000','#0099cc','#cc0066'];
+            var i = 1;
+            var temp = [];
+                    temp.push({ text: 'Subject', bold: true,style:'header_txt' });
+                    temp.push({ text: 'Monday', bold: true,style:'header_txt' });
+                    temp.push({ text: 'Tuesday', bold: true,style:'header_txt' });
+                    temp.push({ text: 'Wednesday', bold: true,style:'header_txt' });
+                    temp.push({ text: 'Thursday', bold: true,style:'header_txt' });
+                    temp.push({ text: 'Friday', bold: true,style:'header_txt' });
+                    temp.push({ text: 'Saturday', bold: true,style:'header_txt' });
+                    temp.push({ text: 'Sunday', bold: true,style:'header_txt' });
+                    body.push(temp)
+
+            data.forEach(function(row) {
+                var dataRow = [];
+                //console.log(row);
+                columns.forEach(function(column) {
+                    
+                    if(i==1)
+                    {
+                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#663300',margin: [0, 10, 0, 10],});
+                    }
+                    else if(i==2)
+                    {
+                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#cc3300',margin: [0, 10, 0, 10],});
+                    }
+                    else if(i==3)
+                    {
+                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#993300',margin: [0, 10, 0, 10],});
+                    }
+                    else if(i==4)
+                    {
+                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#990000',margin: [0, 10, 0, 10],});
+                    }
+                    else if(i==5)
+                    {
+                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 10, 0, 10],});
+                    }
+                    else
+                    {
+                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#333300',margin: [0, 10, 0, 10],});
+                    i = 0;
+                    }
+                    i++;
+                })
+
+                body.push(dataRow);
+            });
+            
+            return body;
+        }
+        function table(data, columns ) {
+            try{
+                return {
+                    fontSize: 14,
+                    alignment: "left",
+                    style: 'tableExample',
+                    width: '*',
+                    table: {
+                        headerRows: 1,
+                        widths: [ '*', '*', '*', '*', '*', '*', '*','*'],
+                        body: buildTableBody(data,columns),
+
+                        alignment: "center",
+                    },
+
+                    layout: {
+                    fillColor: function (rowIndex, node, columnIndex) {
+
+                            return (rowIndex % 2 === 0) ? '#f1f1f1' : null;
+                        
+                        
+                        }
+                    }
+                };
+            }
+            catch(e){
+                console.log(e)
+            }
+            
+        } 
+        $scope.printreport = function()
         {
             var reportobj = $scope.renderprintdata();
-            var filename = "Schedule";
+         
+            pdfMake.createPdf(reportobj).print();
+        }
+        $scope.download = function()
+        {
+            $scope.getGradeWiseTimeTableData();
             
-             pdfMake.createPdf(reportobj).download(filename);
+        }
+
+        $scope.getGradeWiseTimeTableData = function()
+        {
+            try{
+                //$scope.semesterlist = []
+                var grade_id = $("#grade_id").val();
+                if(grade_id=='')
+                {
+                    message('Please select grade','show');
+                    return false;
+                }
+                var data = ({grade_id:grade_id});
+                
+                httprequest('<?php echo base_url(); ?>getTimetable',data).then(function(response){
+                
+                    if(response.length > 0 && response != null)
+                    {
+
+                        $scope.scheduletimetable = response[0]['details'];
+                        //console.log($scope.datesheetlistinfo);
+                         $scope.grade_name = response[0]['data_array']['grade_name'];
+                        // $scope.grade = response[0]['data_array']['grade'];
+                        // $scope.session_dates = response[0]['data_array']['session_dates'];
+                        // $scope.semester_dates = response[0]['data_array']['semester_dates'];
+                        // $scope.semester_name = response[0]['data_array']['semester_name'];
+                        // $scope.notes = response[0]['data_array']['notes'];
+                        // $scope.notes_text = response[0]['data_array']['notes_text'];
+                        
+                        var reportobj = $scope.renderprintdata();
+            
+                        pdfMake.createPdf(reportobj).download("Schedule");
+
+                    }
+                    else{
+                        $scope.semesterlist = [];
+                    }
+                });
+             }
+            catch(ex){}
         }
 
     });
 // Pdf Graph
+/*
     $scope.scheduleData = null;
     $scope.isDataAvailable = 1;
     $("#ttable").show();
@@ -824,6 +986,7 @@ require APPPATH.'views/__layout/footer.php';
           }
           
         }
+*/   
 });
 </script>
 <script src="<?php echo $path_url; ?>js/jquery.easyResponsiveTabs.js"></script>
