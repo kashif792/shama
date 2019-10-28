@@ -2892,23 +2892,21 @@ function uploadContent()
 	   }
 	   else if( $roles[0]['role_id'] == 4 && count($active_session) && count($active_semester))
 	   {
-	   		$this->data['timetable_list'] = print("SELECT sc.id, subject_name,grade,section_name,username,start_time,end_time FROM schedule sc  INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id where sc.teacher_uid=".$this->session->userdata('id')." AND cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id);
+	   		$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT sc.id, subject_name,grade,section_name,username,start_time,end_time FROM schedule sc  INNER JOIN classes cl ON  sc.class_id=cl.id INNER JOIN invantageuser inv ON sc.teacher_uid=inv.id INNER JOIN subjects sub ON sc.subject_id=sub.id INNER JOIN sections  sct ON sc.section_id=sct.id where sc.teacher_uid=".$this->session->userdata('id')." AND cl.school_id =".$locations[0]['school_id']." AND sub.session_id = ".$active_session[0]->id." AND sub.semsterid = ".$active_semester[0]->semester_id);
 	   		
 		 	 	
 	   }
 	   $data_array = array('select_day'=>$currentday);
 	   
-	   
-	   foreach ($this->data['timetable_list'] as $key => $element) {
+	    foreach ($this->data['timetable_list'] as $key => $element) {
 	   		
 		    if ($element->start_time=="") {
 		    	
 		        unset($this->data['timetable_list'][$key]);
 		    }
 		}
-		array_shift($this->data['timetable_list']);
-		
-	   $result[] = array(
+		$this->data['timetable_list']= array_values($this->data['timetable_list']); 
+	   	$result[] = array(
                         'listarray'=>$this->data['timetable_list'],
                         
                         'data_array'=>$data_array

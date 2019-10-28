@@ -44,7 +44,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 <link rel="stylesheet" href="<?php echo $path_url; ?>css/intlTelInput.css">
 
-<div class="col-sm-10 col-md-10 col-lg-10 class-page "  ng-controller="class_report_ctrl" ng-init="processfinished=false">
+<div class="col-sm-10 col-md-10 col-lg-10 class-page "  ng-controller="class_report_ctrl" ng-init="getBaseUrl('<?php echo base_url(); ?>')">
 
 <div id="myUserModal" class="modal fade">
 
@@ -341,6 +341,10 @@ require APPPATH.'views/__layout/leftnavigation.php';
 			   &nbsp;&nbsp;&nbsp;<a href="<?php echo $path_url; ?>add_timtble" class="btn btn-primary" style="color: #fff !important;">Add Schedule</a>
      
 		</label>
+        <label class="right-controllers">
+            <a href="javascript:void(0)" class="link-student" ng-click="download()" title="Download"><i class="fa fa-file-pdf-o" aria-hidden="true"></i></a>
+            
+        </label>
 	</div>
     <div class="panel-body">
         <div class="row">
@@ -412,53 +416,6 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 			                        <tbody >
 
-                                        
-
-                                            
-
-                                           <!-- <tr ng-repeat="d in data | startFrom:currentPage*pageSize | limitTo:pageSize"> -->
-                                            <!-- <tr ng-repeat="d in schedulelist">    
-                                            <td> {{d.subject_name}}</td>
-                                                
-                                                <td>{{d.grade}}</td>
-                                                <td>{{d.username}}</td>
-                                                <td>{{d.mon_start_time}}</td>
-                                                <td>{{d.mon_end_time}}</td>
-                                                <td>
-                                                   
-                                                    
-                                                    <a  href="<?php echo $path_url; ?>add_timtble/{{d.id}}" id="{{d.id}}" class='edit' title="Edit">
-
-                                                     <i class="fa fa-edit" aria-hidden="true"></i>
-
-                                                        </a>
-
-                                                <a  href="javascript:void(0)" title="Delete" id="{{d.id}}" class="del">
-                                                <i class="fa fa-remove" aria-hidden="true"></i>
-                                                    
-                                                
-                                                </a></td>
-                                                
-                                            </tr>
-                                            
-                                             <tr ng-hide="schedulelist.length > 0">
-                                                <td colspan="11" class="no-record">No data found</td>
-                                            </tr> -->
-
-                                            <!-- <tr>
-                                            <td colspan="11">
-                                                <button ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
-                                                    Previous
-                                                </button>
-                                                {{currentPage+1}}/{{numberOfPages()}}
-                                                <button ng-disabled="currentPage >= data.length/pageSize - 1" ng-click="currentPage=currentPage+1">
-                                                    Next
-                                                </button>
-                                            </td>
-                                             </tr> -->
-
-
-
                                     </tbody>
 
 
@@ -466,6 +423,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 			                    </table>
 		
 	</div>
+    <div id="timetable" style="min-height:280px;" ></div>
 </div>
 
 </div>
@@ -487,6 +445,10 @@ require APPPATH.'views/__layout/footer.php';
 ?>
 
 
+<script src="<?php echo base_url(); ?>js/angular-datatables.min.js"></script>
+<script src="<?php echo base_url(); ?>js/pdfmake.min.js"></script>
+<script src="<?php echo base_url(); ?>js/vfs_fonts.js"></script>
+<script src="<?php echo  base_url(); ?>js/ui-bootstrap-tpls-2.5.0.js"></script>
 
 <script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
 
@@ -699,18 +661,7 @@ require APPPATH.'views/__layout/footer.php';
                 "pageLength": 10,
 
             })
-            // $('#table-body-phase-tow tbody').on( 'click', '.fa-edit', function () {
-            //     var data = table.row( $(this).parents('tr') ).data();
-            //     window.location.href = '<?php echo $path_url; ?>add_timtble/'+data['id'];
             
-            // } );
-            // $('#table-body-phase-tow tbody').on( 'click', '.fa-remove', function () {
-            //     var data = table.row( $(this).parents('tr') ).data();
-            //     $("#myUserModal").modal('show');
-            //     dvalue =  data['id'];
-            //     rowdata = table.row( $(this).parents('tr') ).data();
-            // } );
-
             table.columns(0).every( function () {
                 var column = this;
                 var select = $('<select><option value="">All</option></select>')
@@ -765,25 +716,118 @@ require APPPATH.'views/__layout/footer.php';
 
 
         }
+        // pdf
+        $scope.renderprintdata = function()
+        {
+            try{
 
+                var docDefinition = {
+                    pageOrientation: 'portrait',
+                    content: [
+                        
+                        {text:$scope.drawTable,style:'report_header'},
+                        
+                        //table($scope.drawTable),  
+                        //table($scope.subjectlist,["Subject","Obtained Marks","Total Marks","Grade"],["subject","evalution",]),
+                                           
 
+                   ],
+
+                    styles: {
+                        report_header: {
+                            fontSize: 14,
+                            bold: false,
+                            alignment: 'center',
+                            margin: [0, 10, 0, 40]
+                        },
+                        report_logo: {
+                            alignment: 'center'
+                        },
+                        
+                    }
+                };
+                return docDefinition;
+            }
+            catch(e){}
+        }
+        $scope.download = function()
+        {
+            var reportobj = $scope.renderprintdata();
+            var filename = "Schedule";
+            
+             pdfMake.createPdf(reportobj).download(filename);
+        }
 
     });
+// Pdf Graph
+    $scope.scheduleData = null;
+    $scope.isDataAvailable = 1;
+    $("#ttable").show();
+
+        $scope.getBaseUrl = function(url)
+        {
+          google.charts.load('current', {'packages':['corechart','timeline','table', 'controls']});
+          $scope.baseUrl = url;
+          $scope.getScheduleGraph();
+          
+        }
+
+        $scope.getScheduleGraph = function()
+        {
+          $scope.result = $http.get('dashboardschedule',({})).then(function(response){
+
+              if(response.data.length > 0){
+                $scope.timetableloaded = true;
+                $scope.scheduleData = response.data;
+                google.charts.setOnLoadCallback($scope.drawTable);
+              } 
+              else{
+                $scope.timetableloaded = true;
+                $("#timetable").html('No  schedule found')
+              }
+            });
+        }
+
+        $scope.drawTable = function()
+        {
+          $scope.isDataAvailable = null;
+
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Class Name');
+          data.addColumn('string', 'Subject Name');
+          data.addColumn('date', 'Start Time');
+          data.addColumn('date', 'End Time');
+
+          angular.forEach($scope.scheduleData,function(value, key)
+          {
+            $scope.isDataAvailable = 1;
+
+            var sdate = value.start_time.split(":")
+            var edate = value.end_time.split(":")
+            data.addRows([
+                [ value.grade +' '+value.section_name, value.subject_name+'( '+value.screenname+' )',  new Date(0,0,0,sdate[0],sdate[1],0) , new Date(0,0,0,edate[0],edate[1],0)]
+            ]);
+            
+          });
+          
+
+          $('#table_window').css('display','block');
+          $('#noDataMessage2').css('display','none');
+          $("#timetable").html('')
+          var table = new google.visualization.Timeline(document.getElementById('timetable'));
+          table.draw(data, {width: '100%',height:'100%'});//, height: '300px'
+
+          if($scope.isDataAvailable == null)
+          {
+            $('#table_window').css('display','none');
+            $('#noDataMessage2').css('display','block');
+          }
+          
+        }
 });
 </script>
-
-<script type="text/javascript">
-
-
-
-
-
-</script>
-
-
-
 <script src="<?php echo $path_url; ?>js/jquery.easyResponsiveTabs.js"></script>
-
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
 
 
