@@ -803,7 +803,17 @@ require APPPATH.'views/__layout/footer.php';
                     if(i==1)
                     {
                         var strArray = row[column].split("|");
-                        dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 10, 0, 5]});
+                        
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 10, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 10, 0, 5]});
+                            
+                        }
                     }
                     else if(i==2)
                     {
@@ -856,17 +866,32 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#806000',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#806000',margin: [0, 5, 0, 5],});
                             
                         }
                         
                     }
                     else if(i==6)
+                    {
+                        var strArray = row[column].split("|");
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#1a3300',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#1a3300',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        
+                    }
+                    else if(i==7)
                     {
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
@@ -881,6 +906,22 @@ require APPPATH.'views/__layout/footer.php';
                         }
                         
                     }
+                    else if(i==8)
+                    {
+                        var strArray = row[column].split("|");
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#993333',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#993333',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        
+                    }
+                    
                     
                     else
                     {
@@ -896,7 +937,11 @@ require APPPATH.'views/__layout/footer.php';
                             
                         }
                         
-                    i = 0;
+                    
+                    }
+                    if(i==$scope.schedulecolumns.length)
+                    {
+                        i = 0;
                     }
                     i++;
                 })
@@ -973,7 +1018,7 @@ require APPPATH.'views/__layout/footer.php';
                         $scope.schedulecolumns =response[0]['colums'];
                          $scope.grade_name = response[0]['data_array']['grade_name'];
                          $scope.day_name = response[0]['data_array']['day_array'];
-                        
+                       // console.log($scope.schedulecolumns.length);
                         var reportobj = $scope.renderprintdata();
             
                         pdfMake.createPdf(reportobj).download("Schedule - "+$scope.grade_name);
