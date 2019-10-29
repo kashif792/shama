@@ -460,7 +460,7 @@ require APPPATH.'views/__layout/footer.php';
     var app = angular.module('invantage', []);
     app.filter('startFrom', function() {
     return function(input, start) {
-        start = +start; //parse to int
+        start = +start; 
         return input.slice(start);
     }
     });

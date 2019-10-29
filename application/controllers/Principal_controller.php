@@ -2989,7 +2989,7 @@ function uploadContent()
                     $is_yellow_section_found = false;
                     foreach ($query as $key => $value)
                     {
-                        // add assembly to each class
+                        
                         $grade = parent::getClass($value->class_id);
                         $section = parent::getSectionList($value->section_id);
                         $subject = parent::GetSubject($value->subject_id);
@@ -2998,7 +2998,7 @@ function uploadContent()
                        	
 				 	 		$mon_status = "Active";
 				 	 		$subject_array[] = $value->subject_id;
-				 	 		
+
 				 	 		$mon_array[$value->subject_id] =  $subject[0]->subject_name.'| ('.date('H:i', strtotime($value->mon_start_time)).' - '.date('H:i', strtotime($value->mon_end_time)).')';
 				 	 		$tue_array[$value->subject_id] =  $subject[0]->subject_name.'| ('.date('H:i', strtotime($value->tue_start_time)).' - '.date('H:i', strtotime($value->tue_end_time)).')';
 				 	 		$wed_array[$value->subject_id] =  $subject[0]->subject_name.'| ('.date('H:i', strtotime($value->wed_start_time)).' - '.date('H:i', strtotime($value->wed_end_time)).')';
@@ -3006,71 +3006,7 @@ function uploadContent()
 				 	 		$fri_array[$value->subject_id] =  $subject[0]->subject_name.'| ('.date('H:i', strtotime($value->fri_start_time)).' - '.date('H:i', strtotime($value->fri_end_time)).')';
 				 	 		$sat_array[$value->subject_id] =  $subject[0]->subject_name.'| ('.date('H:i', strtotime($value->sat_start_time)).' - '.date('H:i', strtotime($value->sat_end_time)).')';
 				 	 		$sun_array[$value->subject_id] =  $subject[0]->subject_name.'| ('.date('H:i', strtotime($value->sun_start_time)).' - '.date('H:i', strtotime($value->sun_end_time)).')';
-				 	 		//$mon_timing = ;
 				 	 		
-				 	 	
-				 	 	
-				 	 		//$day_array[] =  "Tuesday";
-				 	 		//$tue_status = "Active";
-				 	 		//$day_array['tue'][] = array("subject"=>$subject[0]->subject_name.' ('.date('H:i', strtotime($value->tue_start_time)).' - '.date('H:i', strtotime($value->tue_end_time)));
-				 	 		//$tue_timing = date('H:i', strtotime($value->tue_start_time)).' - '.date('H:i', strtotime($value->tue_end_time));
-				 	 	
-				 	 	// if($value->wed_start_time=="00:00:00")
-				 	 	// {
-				 	 	// 	$wed_timing = "";
-				 	 	// }
-				 	 	// else
-				 	 	// {
-				 	 	// 	$day_array[] =  "Wednesday";
-				 	 	// 	$wed_status = "Active";
-				 	 	// 	$wed_timing = date('H:i', strtotime($value->wed_start_time)).' - '.date('H:i', strtotime($value->wed_end_time));
-				 	 	// }
-				 	 	// if($value->thu_start_time=="00:00:00")
-				 	 	// {
-				 	 	// 	$thu_timing = "";
-				 	 	// }
-				 	 	// else
-				 	 	// {
-				 	 	// 	$day_array[] =  "Thursday";
-				 	 	// 	$thu_status = "Active";
-				 	 	// 	$thu_timing = date('H:i', strtotime($value->thu_start_time)).' - '.date('H:i', strtotime($value->thu_end_time));
-				 	 	// }
-
-				 	 	// if($value->fri_start_time=="00:00:00")
-				 	 	// {
-				 	 	// 	$fri_timing = "";
-				 	 	// }
-				 	 	// else
-				 	 	// {
-				 	 	// 	$day_array[] =  "Friday";
-				 	 	// 	$fri_status = "Active";
-				 	 	// 	$fri_timing = date('H:i', strtotime($value->fri_start_time)).' - '.date('H:i', strtotime($value->fri_end_time));
-				 	 	// }
-				 	 	// if($value->sat_start_time=="00:00:00")
-				 	 	// {
-				 	 	// 	$sat_timing = "";
-				 	 	// }
-				 	 	// else
-				 	 	// {
-				 	 	// 	$day_array[] =  "Saturday";
-				 	 	// 	$sat_status = "Active";
-				 	 	// 	$sat_timing = date('H:i', strtotime($value->sat_start_time)).' - '.date('H:i', strtotime($value->sat_end_time));
-				 	 	// }
-				 	 	// if($value->sun_start_time=="00:00:00")
-				 	 	// {
-				 	 	// 	$sun_timing = "";
-				 	 	// }
-				 	 	// else
-				 	 	// {
-				 	 	// 	$day_array[] =  "Sunday";
-				 	 	// 	$sun_status = "Active";
-				 	 	// 	$sun_timing = date('H:i', strtotime($value->sun_start_time)).' - '.date('H:i', strtotime($value->sun_end_time));
-				 	 	// }
-
-                        //$schedule[] = array('mon_timing' => $subject[0]->subject_name.$mon_timing,'tue_timing' => $subject[0]->subject_name.$tue_timing,'wed_timing' => $subject[0]->subject_name.$wed_timing,'thu_timing' => $subject[0]->subject_name.$thu_timing,'fri_timing' => $subject[0]->subject_name.$fri_timing,'sat_timing' => $subject[0]->subject_name.$sat_timing,'sun_timing' => $subject[0]->subject_name.$sun_timing, 'grade' => $grade, 'subject_name' => $subject[0]->subject_name, 'screenname' => $teacher[0]->screenname,'mon_break'=>$mon_break,'tue_break'=>$tue_break,'wed_break'=>$wed_break,'thu_break'=>$thu_break,'fri_break'=>$fri_break);
-                    	//$schedule[] = array('mon_timing' => $subject[0]->subject_name.$mon_timing,'tue_timing' => $subject[0]->subject_name.$tue_timing,'wed_timing' => $subject[0]->subject_name.$wed_timing,'thu_timing' => $subject[0]->subject_name.$thu_timing,'fri_timing' => $subject[0]->subject_name.$fri_timing,'sat_timing' => $subject[0]->subject_name.$sat_timing,'sun_timing' => $subject[0]->subject_name.$sun_timing, 'grade' => $grade, 'subject_name' => $subject[0]->subject_name, 'screenname' => $teacher[0]->screenname,'mon_break'=>$mon_break,'tue_break'=>$tue_break,'wed_break'=>$wed_break,'thu_break'=>$thu_break,'fri_break'=>$fri_break);
-                    	//$schedule[] = array('mon_timing' =$mon_timing,'tue_timing' => $tue_timing,'wed_timing' => $wed_timing,'thu_timing' => $thu_timing,'fri_timing' => $fri_timing,'sat_timing' => $sat_timing,'sun_timing' => $sun_timing, 'grade' => $grade, 'subject_name' => $subject[0]->subject_name, 'screenname' => $teacher[0]->screenname,'mon_break'=>$mon_break,'tue_break'=>$tue_break,'wed_break'=>$wed_break,'thu_break'=>$thu_break,'fri_break'=>$fri_break);
-                    	
                     }
                     $schedule = array($mon_array,$tue_array,$wed_array,$thu_array,$fri_array,$sat_array,$sun_array);
                     //$schedule['day_array'] = array('mon'=>'Monday','tue'=>'Tuesday','wed'=>'Wednesday','thu'=>'Thursday','fri'=>'Friday','sat'=>'Saturday','sun'=>'Sunday');
