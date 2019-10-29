@@ -728,11 +728,11 @@ require APPPATH.'views/__layout/footer.php';
 
                         {image:'<?php echo $logo ?>',style:'report_logo'},
                         {
-                            margin: [0, 10, 0, 30],
+                            margin: [0, 10, 0, 10],
                             columns: [
                                {
                                     width: '*',
-                                    text: ' Time Table of class: '+$scope.grade_name,
+                                    text: ' Time Table: '+$scope.grade_name,
                                     alignment: 'center',
                                     fontSize: '24',
                                     bold: true,
@@ -743,18 +743,12 @@ require APPPATH.'views/__layout/footer.php';
                         
                         {
                         columns: [
-                            
-                               table($scope.scheduletimetable,["subject_name","mon_timing","tue_timing","wed_timing","thu_timing","fri_timing","sat_timing","sun_timing"]),
+                                
+                               table($scope.scheduletimetable,$scope.schedulecolumns),
                         ]
                         },
                    ],
-                   footer: {
-                    margin: [0, 0, 30, 0],
-                    columns: [
-
-                      { text: 'Principal: _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ', alignment: 'right',fontSize:'14',bold:true }
-                    ]
-                  },
+                   
 
                     styles: {
                         report_header: {
@@ -765,7 +759,7 @@ require APPPATH.'views/__layout/footer.php';
                         },
                         report_logo: {
                             alignment: 'center',
-                            margin: [0, 10, 0, 20]
+                            margin: [0, 10, 0, 10]
                         },
                         header_txt: {
                             alignment: 'left',
@@ -789,44 +783,119 @@ require APPPATH.'views/__layout/footer.php';
             var back_color = ['#008000','#ff66ff','#ff0000','#0099cc','#cc0066'];
             var i = 1;
             var temp = [];
-                    temp.push({ text: 'Subject', bold: true,style:'header_txt' });
-                    temp.push({ text: 'Monday', bold: true,style:'header_txt' });
-                    temp.push({ text: 'Tuesday', bold: true,style:'header_txt' });
-                    temp.push({ text: 'Wednesday', bold: true,style:'header_txt' });
-                    temp.push({ text: 'Thursday', bold: true,style:'header_txt' });
-                    temp.push({ text: 'Friday', bold: true,style:'header_txt' });
-                    temp.push({ text: 'Saturday', bold: true,style:'header_txt' });
-                    temp.push({ text: 'Sunday', bold: true,style:'header_txt' });
-                    body.push(temp)
+                    // temp.push({ text: 'Subject', bold: true,style:'header_txt' });
+                    // temp.push({ text: 'Monday', bold: true,style:'header_txt' });
+                    // temp.push({ text: 'Tuesday', bold: true,style:'header_txt' });
+                    // temp.push({ text: 'Wednesday', bold: true,style:'header_txt' });
+                    // temp.push({ text: 'Thursday', bold: true,style:'header_txt' });
+                    // temp.push({ text: 'Friday', bold: true,style:'header_txt' });
+                    // temp.push({ text: 'Saturday', bold: true,style:'header_txt' });
+                    // temp.push({ text: 'Sunday', bold: true,style:'header_txt' });
+                    // body.push(temp)
 
             data.forEach(function(row) {
                 var dataRow = [];
+               // temp.push({ text: row, bold: true,style:'header_txt' });
                 //console.log(row);
+                //dataRow.push({text :"Monday", alignment : 'left', color : '#fff',width:'*',fillColor: '#663300',margin: [0, 10, 0, 10],});
                 columns.forEach(function(column) {
-                    
+
                     if(i==1)
                     {
-                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#663300',margin: [0, 10, 0, 10],});
+                        var strArray = row[column].split("|");
+                        dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 10, 0, 5]});
                     }
                     else if(i==2)
                     {
-                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#cc3300',margin: [0, 10, 0, 10],});
+                        var strArray = row[column].split("|");
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#999966',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#999966',margin: [0, 5, 0, 5],});
+                            
+                        }
+
+                        
                     }
                     else if(i==3)
                     {
-                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#993300',margin: [0, 10, 0, 10],});
+                        var strArray = row[column].split("|");
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#993300',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#993300',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        
                     }
                     else if(i==4)
                     {
-                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#990000',margin: [0, 10, 0, 10],});
+                        var strArray = row[column].split("|");
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#990000',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#990000',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        
                     }
                     else if(i==5)
                     {
-                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 10, 0, 10],});
+                        var strArray = row[column].split("|");
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#cc6600',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        
                     }
+                    else if(i==6)
+                    {
+                        var strArray = row[column].split("|");
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#006600',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#006600',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        
+                    }
+                    
                     else
                     {
-                        dataRow.push({text : row[column].toString(), alignment : 'left', color : '#fff',width:'*',fillColor: '#333300',margin: [0, 10, 0, 10],});
+                        var strArray = row[column].split("|");
+                        if(strArray['1'].toString()==' (00:00 - 00:00)')
+                        {
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#333300',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        else
+                        {
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#fff',width:'*',fillColor: '#333300',margin: [0, 5, 0, 5],});
+                            
+                        }
+                        
                     i = 0;
                     }
                     i++;
@@ -839,14 +908,18 @@ require APPPATH.'views/__layout/footer.php';
         }
         function table(data, columns ) {
             try{
+                var w_columns = [];
+                columns.forEach(function() {
+                    w_columns.push('*');
+                })
                 return {
-                    fontSize: 14,
-                    alignment: "left",
+                    fontSize: 12,
+                    alignment: "center",
                     style: 'tableExample',
                     width: '*',
                     table: {
                         headerRows: 1,
-                        widths: [ '*', '*', '*', '*', '*', '*', '*','*'],
+                        widths: w_columns,
                         body: buildTableBody(data,columns),
 
                         alignment: "center",
@@ -897,18 +970,13 @@ require APPPATH.'views/__layout/footer.php';
                     {
 
                         $scope.scheduletimetable = response[0]['details'];
-                        //console.log($scope.datesheetlistinfo);
+                        $scope.schedulecolumns =response[0]['colums'];
                          $scope.grade_name = response[0]['data_array']['grade_name'];
-                        // $scope.grade = response[0]['data_array']['grade'];
-                        // $scope.session_dates = response[0]['data_array']['session_dates'];
-                        // $scope.semester_dates = response[0]['data_array']['semester_dates'];
-                        // $scope.semester_name = response[0]['data_array']['semester_name'];
-                        // $scope.notes = response[0]['data_array']['notes'];
-                        // $scope.notes_text = response[0]['data_array']['notes_text'];
+                         $scope.day_name = response[0]['data_array']['day_array'];
                         
                         var reportobj = $scope.renderprintdata();
             
-                        pdfMake.createPdf(reportobj).download("Schedule");
+                        pdfMake.createPdf(reportobj).download("Schedule - "+$scope.grade_name);
 
                     }
                     else{
