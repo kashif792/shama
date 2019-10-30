@@ -30,7 +30,7 @@
                                                 <div class="panel panel-default" ng-repeat="sub in s.subjectlist">
                                                     <div class="panel-heading">
                                                         <h4 class="panel-title subjectheading">
-                                                            <a data-toggle="collapse" ng-click="getSubjectProgressReport(sub.sbid,s.sid,p.semsterid,p.sessionid,p.classid);getSubjectEvualtionReport(p.classid,s.sid,sub.sbid,p.semsterid,p.sessionid)"   class="subject {{sub.cssclass}}" data-parent="#sectioncontainer_{{p.classid}}{{s.sid}}" href="#sub_{{p.classid}}{{sub.sbid}}">
+                                                            <a data-toggle="collapse" ng-click="getSubjectProgressReport(sub.sbid,s.sid,p.semsterid,p.sessionid,p.classid);"   class="subject {{sub.cssclass}}" data-parent="#sectioncontainer_{{p.classid}}{{s.sid}}" href="#sub_{{p.classid}}{{sub.sbid}}">
                                                                 {{sub.subject_name}}
                                                             </a>
                                                         </h4>
@@ -44,7 +44,7 @@
                                                                     <?php $attributes = array('name' => "form{{p.classid}}{{sub.sbid}}", 'id' => "form_{{p.classid}}{{sub.sbid}}",'class'=>'form-inline'); echo form_open('', $attributes);?>
                                                                     <div class="panel-heading">
                                                                         <h4 class="panel-title cheading">
-                                                                            <a data-toggle="collapse" aria-expanded="false" class="detail-section {{sub.cssclass}}" ng-click="getSubjectProgressReport(sub.sbid,s.sid,p.semsterid,p.sessionid,p.classid)" data-parent="#data_attributes" href="#c{{sub.sbid}}{{s.sid}}">
+                                                                            <a data-toggle="collapse" aria-expanded="true" class="detail-section {{sub.cssclass}}" ng-click="getSubjectProgressReport(sub.sbid,s.sid,p.semsterid,p.sessionid,p.classid)" data-parent="#data_attributes" href="#c{{sub.sbid}}{{s.sid}}">
                                                                             Course Progress</a>
 
                                                                             <button type="button" ng-hide="cedit || !cprocessfinished" ng-click="editProgressReport();" data-parent="#data_attributes">
@@ -425,13 +425,15 @@
         var rinterval
         $scope.reloadcontent = function()
         {
+
             $scope.cprocessfinished = false;
             rinterval = $interval(function(){
                 if($scope.isCourseTabActive)
                 {
+                    console.log("Callling");
                     getCourseDetail($scope.subjectid,$scope.sectionid,$scope.semesterid,$scope.sessionid,$scope.classid)
                 }
-            },60000);
+            },11110000);
         }
 
         $scope.stopcontent = function() {
@@ -448,9 +450,9 @@
             sinterval = $interval(function(){
                 if($scope.isExamTabActive)
                 {
-                    GetEvulationHeader($scope.subjectid,$scope.classid,$scope.sectionid,$scope.semesterid,$scope.sessionid)
+                    //GetEvulationHeader($scope.subjectid,$scope.classid,$scope.sectionid,$scope.semesterid,$scope.sessionid)
                 }
-            },60000); 
+            },30000); 
         }
 
 
@@ -539,6 +541,8 @@
 
                     if(response != null && response.length > 0)
                     {
+                        
+                        
                         $scope.planheader = response;
                         getCourseDetail(subjectid,sectionid,semsterid,sessionid,classid)
                         message("",'hide');
@@ -557,7 +561,7 @@
             }
              catch(ex){}
         }
-
+        
         $scope.progressChanged = function(subjectid,lessonid, studentid){
             if($scope.cedit){
                 var read = $('#p_'+subjectid+'_'+lessonid+'_'+studentid).val()>0;
@@ -664,6 +668,9 @@ $scope.doneProgressReport = function(){
                                 })).then(function(response){
                     if(response != null && response.length > 0)
                     {
+                        // Reset Timer
+                        clearInterval(rinterval);
+
                          $scope.progresslist = response;
                          $scope.finished();
                     }
@@ -1120,7 +1127,7 @@ $scope.doneProgressReport = function(){
                 $("#result_message").html('Saving mark')
                 try{
                    httppostrequest(urlist.savestudentmarks,data).then(function(response){
-                        console.log(response);
+                        //console.log(response);
                         if(response != null && response.message  == true)
                         {
                             $("#result_message").html('Mark saved');
@@ -1227,6 +1234,7 @@ $('#submit_insert').click( function (event){
         }
     });
 });
+
 // Midterm Marks
 // function midterm()
 // {

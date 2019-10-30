@@ -486,7 +486,7 @@ class MY_Controller extends CI_Controller {
     {   
         $obtain_grade = 'F';
         
-       
+        
         $this->operation->table_name = 'semester_dates';
         $this->operation->primary_key ='session_id';
         $is_semester_dates_found = $this->operation->GetByWhere(array('session_id'=>$sessionid,'semester_id'=>$semesterid));
