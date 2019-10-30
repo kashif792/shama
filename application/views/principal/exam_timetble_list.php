@@ -803,12 +803,12 @@ require APPPATH.'views/__layout/footer.php';
                         
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#cac0d9',margin: [0, 10, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#000',width:'*',fillColor: '#fff',margin: [0, 10, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#cac0d9',margin: [0, 10, 0, 5]});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#fff',margin: [0, 10, 0, 5]});
                             
                         }
                     }
@@ -817,12 +817,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#ff68cf',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#fffcd7',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#ff68cf',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#fffcd7',margin: [0, 5, 0, 5],});
                             
                         }
 
@@ -833,12 +833,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#ff5152',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#f9d7e5',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#ff5152',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#f9d7e5',margin: [0, 5, 0, 5],});
                             
                         }
                         
@@ -848,12 +848,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#e26a0b',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#cde8d5',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#e26a0b',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#cde8d5',margin: [0, 5, 0, 5],});
                             
                         }
                         
@@ -863,12 +863,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#ffcefe',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#ffe8d0',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#ffcefe',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#ffe8d0',margin: [0, 5, 0, 5],});
                             
                         }
                         
@@ -878,12 +878,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#db9794',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#c9eafb',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#db9794',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#c9eafb',margin: [0, 5, 0, 5],});
                             
                         }
                         
@@ -893,12 +893,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#ccfecd',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#fffcd7',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#ccfecd',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#fffcd7',margin: [0, 5, 0, 5],});
                             
                         }
                         
@@ -908,12 +908,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#cac0d9',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#cde8d5',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#cac0d9',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#cde8d5',margin: [0, 5, 0, 5],});
                             
                         }
                         
@@ -923,12 +923,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#00b0f3',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#fee9ce',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#00b0f3',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#fee9ce',margin: [0, 5, 0, 5],});
                             
                         }
                         
@@ -939,12 +939,12 @@ require APPPATH.'views/__layout/footer.php';
                         var strArray = row[column].split("|");
                         if(strArray['1'].toString()==' (00:00 - 00:00)')
                         {
-                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#978a55',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : "", alignment : 'center', color : '#fff',width:'*',fillColor: '#c9eafb',margin: [0, 5, 0, 5],});
                             
                         }
                         else
                         {
-                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#978a55',margin: [0, 5, 0, 5],});
+                            dataRow.push({text : strArray['0'].toString()+'\n'+strArray['1'].toString(), alignment : 'center', color : '#000',width:'*',fillColor: '#c9eafb',margin: [0, 5, 0, 5],});
                             
                         }
                         
