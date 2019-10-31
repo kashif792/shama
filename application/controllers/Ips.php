@@ -1677,6 +1677,7 @@ class Ips extends MY_Controller
         }
         if ($roles[0]['role_id'] == 4)
         {
+            
             if ($this->input->get('inputclassid'))
             {
                 $classlist = $this->operation->GetByWhere(array('id' => $this->input->get('inputclassid')));

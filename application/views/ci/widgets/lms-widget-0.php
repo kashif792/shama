@@ -301,6 +301,7 @@
                 if(response != null && response.length > 0)
                 {
                     $scope.classlist = response
+                    
                     $scope.filterobj.class = response[0]
                     loadSections();
                 }else{

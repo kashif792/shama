@@ -3,6 +3,24 @@
         <div class="panel-heading">
             <label>Progress Report</label>
         </div>
+        <div class="col-sm-12">
+                    <form class="form-inline" >
+                      <!-- <div class="form-group">
+                          <label for="email">Email address:</label>
+                          <input type="email" class="form-control" id="email">
+                      </div> -->
+                        
+                        <div class="form-group">
+                            <label for="select_class">Grade:</label>
+                            <select class="form-control" ng-options="item.name for item in classlist track by item.id"  name="select_class" id="select_class"  ng-model="filterobj.class" ng-change="chnagefilter()"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputSection">Section:</label>
+                            <select class="form-control"  ng-options="item.name for item in sectionslist track by item.id"  name="inputSection" id="inputSection"  ng-model="filterobj.section" ng-change="chnagefilter()"></select>
+                        </div>
+                        
+                    </form>
+                </div>
         <div class="panel-body whide" id="progress_report" ng-class="{'loader2-background': processfinished == false}">
             <div class="loader2" ng-hide="processfinished" ></div>
             <div class="panel-group" id="accordion"  ng-hide="!processfinished">
@@ -378,7 +396,11 @@
 
     app.controller('progress_ctrl', function($scope, $window, $http, $document, $timeout,$interval,$compile){
         $("#progress_report").show();
-        $scope.evulationlist = [];
+        $scope.filterobj = {};
+         $scope.subjectlist = {};
+         $scope.selected_subject = {};
+         $scope.progresslist = [];
+         $scope.selected_subject = {};
         var urlist = {
             progressreport:'getprogressreport',
             getcourselesson:'getcourselesson',
@@ -463,6 +485,7 @@
                     if(response != null && response.length > 0)
                     {
                         $scope.progressreportlist = response
+
                         $scope.progress_no_data = 0;
                         if(response[0].sectionlist[0].subjectlist.length > 0)
                         {
@@ -483,22 +506,48 @@
             }
              catch(ex){}
         }
+        function getClassList()
+        {
+            httprequest('getclasslist',({})).then(function(response){
+                if(response != null && response.length > 0)
+                {
+                    $scope.classlist = response;
+                    
+                    $scope.filterobj.class = response[0]
+                    loadSections();
+                }else{
+                    $scope.finished();
+                }
+            });
+        }
+        getClassList();
 
+        function loadSections()
+        {
+            
+            try{
+                console.log($scope.filterobj.class.id);
+                var data = ({inputclassid:$scope.filterobj.class.id})
+                httprequest('getsectionbyclass',data).then(function(response){
+                    if(response.length > 0 && response != null)
+                    {
+                        $scope.sectionslist = response;
+                        $scope.filterobj.section = response[0];
+                        //getSemesterData()
+                    }
+                    else{
+                        $scope.sectionslist = [];
+                    }
+                })
+            }
+            catch(ex){}
+        }
         $scope.getSubjectProgressReport = function(subjid,sectionid,semsterid,sessionid,classid){
             $scope.cprocessfinished = false; 
             $scope.isCourseTabActive = true;
             $scope.isExamTabActive = false;
             getLessonPlanList(subjid,sectionid,semsterid,sessionid,classid);
-            //console.log(subjid);
-            // var subjecttab = $("#sbj"+subjid).attr('aria-expanded');
-            // if(subjecttab=='false')
-            // {
-                
-            //     $("#p"+subjid).attr('aria-expanded','true');
-            //     $("#c"+subjid+sectionid).addClass('in');
-            //    // $("#c"+subjid+sectionid).css('height','auto');
-               
-            // }
+            
         }
 
 
