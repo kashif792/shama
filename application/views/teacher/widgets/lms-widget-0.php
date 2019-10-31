@@ -13,7 +13,7 @@
                             {{p.classname}}</a>
                         </h4>
                     </div>
-                    <div id="{{p.classid}}" class="panel-collapse collapse {{p.cssclass}}">
+                    <div id="{{p.classid}}"  class="panel-collapse collapse {{p.cssclass}}">
                         <div class="panel-body">
                             <div class="panel-group" id="sec_{{p.classid}}">
                                 <div class="panel panel-default" ng-repeat="s in p.sectionlist">
@@ -35,7 +35,7 @@
                                                             </a>
                                                         </h4>
                                                     </div>
-                                                    <div id="sub_{{p.classid}}{{sub.sbid}}" class="panel-collapse collapse {{sub.cssclass}}">
+                                                    <div id="sub_{{p.classid}}{{sub.sbid}}"  class="panel-collapse collapse {{sub.cssclass}}">
                                                         <div class="panel-body" >
                                                             <div class="panel-group" id="data_attributes">
                                                                 <div class="panel panel-default" ng-class="{'loader2-background': cprocessfinished == false}">
@@ -44,7 +44,7 @@
                                                                     <?php $attributes = array('name' => "form{{p.classid}}{{sub.sbid}}", 'id' => "form_{{p.classid}}{{sub.sbid}}",'class'=>'form-inline'); echo form_open('', $attributes);?>
                                                                     <div class="panel-heading">
                                                                         <h4 class="panel-title cheading">
-                                                                            <a data-toggle="collapse" aria-expanded="true" class="detail-section {{sub.cssclass}}" ng-click="getSubjectProgressReport(sub.sbid,s.sid,p.semsterid,p.sessionid,p.classid)" data-parent="#data_attributes" href="#c{{sub.sbid}}{{s.sid}}">
+                                                                            <a data-toggle="collapse" id="p{{sub.sbid}}" aria-expanded="true" class="detail-section {{sub.cssclass}}" ng-click="getSubjectProgressReport(sub.sbid,s.sid,p.semsterid,p.sessionid,p.classid)" data-parent="#data_attributes" href="#c{{sub.sbid}}{{s.sid}}">
                                                                             Course Progress</a>
 
                                                                             <button type="button" ng-hide="cedit || !cprocessfinished" ng-click="editProgressReport();" data-parent="#data_attributes">
@@ -55,7 +55,7 @@
                                                                         </h4>
                                                                     </div>
 
-                                                                    <div id="c{{sub.sbid}}{{s.sid}}" class="panel-collapse collapse {{sub.cssclass}}">
+                                                                    <div id="c{{sub.sbid}}{{s.sid}}"  class="panel-collapse collapse {{sub.cssclass}}">
                                                                         <div class="loader2" ng-hide="cprocessfinished"></div>
                                                                         <div class="panel-body" ng-hide="!cprocessfinished">
                                                                             <div ng-hide="progresslist.length <= 0 " style="overflow: auto;">
@@ -489,6 +489,8 @@
             $scope.isCourseTabActive = true;
             $scope.isExamTabActive = false;
             getLessonPlanList(subjid,sectionid,semsterid,sessionid,classid)
+            
+            
         }
 
 
@@ -503,6 +505,7 @@
 
          $scope.getPlanList = function(subjectid)
         {
+            
             var check = angular.element("#lessonplan_"+subjectid).hasClass('in');
             if(check == false)
             {
@@ -514,6 +517,7 @@
 
         $scope.getResultReport = function(subjectid)
         {
+
             var check = angular.element("#result_"+subjectid).hasClass('in');
             if(check == false)
             {
@@ -521,7 +525,7 @@
                 getSubjectResult(subjectid)
             }
         }
-
+        
         function getLessonPlanList(subjectid,sectionid,semsterid,sessionid,classid)
         {
             $scope.classid = classid;
@@ -546,6 +550,13 @@
                         $scope.planheader = response;
                         getCourseDetail(subjectid,sectionid,semsterid,sessionid,classid)
                         message("",'hide');
+                        var tabstatus = $("#p"+subjectid).attr('aria-expanded');
+                        
+                        if(tabstatus=='true')
+                        {
+                            $("#c"+subjectid+sectionid).addClass('in')
+                            
+                        }
                         
                     }
                     else{
