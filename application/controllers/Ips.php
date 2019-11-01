@@ -948,7 +948,7 @@ class Ips extends MY_Controller
     function GetQuizDetail()
     {
         $quizarray = array();
-
+        $quizdetailarray = array();
         if (!is_null($this->input->get('subjectlist')) && !is_null($this->input->get('inputsemester')) && !is_null($this->input->get('inputsession')) && !is_null($this->input->get('inputclassid')) && !is_null($this->input->get('inputsectionid')))
         {
             $quizlist = $this->GetQuizeListBySubject($this->input->get('subjectlist'), $this->input->get('inputsession'), $this->input->get('inputsemester'), $this->input->get('inputclassid'), $this->input->get('inputsectionid'));
@@ -976,8 +976,10 @@ class Ips extends MY_Controller
                     if (count($studentprogress))
                     {
                         $quizdetailarray = array();
+
                         foreach ($studentprogress as $key => $spvalue)
                         {
+
                             //$correctlist = $this->operation->GetRowsByQyery('SELECT qz.quizid,qz.questionid as quesid,qo.qoption_id  FROM quiz_evaluation qz INNER JOIN quizeoptions qo ON qo.qoption_id = qz.optionid Where qz.studentid =' . $value->studentid . " AND qz.quizid=" . $spvalue->id);
                             //$quizid = 0;
                             // if (count($correctlist))
@@ -1003,14 +1005,18 @@ class Ips extends MY_Controller
                             //     $quizdetailarray[] = array('correntanswer' => 0, 'total_question' => 0, 'quizid' => $quizid, 'term_status' => $spvalue->quiz_term, 'totalpercent' => 0);
                             // }
                             // Mid Quize Results
+                            
+                        
                             $studentmidresult = $this->operation->GetRowsByQyery('SELECT * FROM `quizzes_marks`  where student_id = '.$value->studentid.' AND subject_id =' . $this->input->get('subjectlist') . " AND class_id = " . $this->input->get('inputclassid') . " and section_id = " . $this->input->get('inputsectionid') . " AND semester_id = " . $this->input->get('inputsemester') . " AND session_id = " . $this->input->get('inputsession') . " AND quiz_id = ".$spvalue->id." "); 
                             if(count($studentmidresult))
                             {
+
                                 foreach ($studentmidresult as $key => $rval)
                                 {
                                     $marks = $rval->marks;
                                 }
                                 $quizdetailarray[] = array('correntanswer' => 0, 'total_question' => 0, 'quizid' => $quizid, 'term_status' => $spvalue->quiz_term, 'totalpercent' => $marks);
+                            
                             }
                             else
                             {
@@ -1019,7 +1025,7 @@ class Ips extends MY_Controller
                             
                         }
                     }
-
+                    
                     $termlist = $this->operation->GetRowsByQyery('SELECT * FROM temr_exam_result  where subjectid = ' . $this->input->get('subjectlist') . ' AND studentid= ' . $value->studentid . " AND sessionid = " . $this->input->get('inputsession') . " AND semsterid = " . $this->input->get('inputsemester') . " order by termid asc");
                     $student_result = array();
                     if (count($termlist) == 2)
@@ -1053,6 +1059,7 @@ class Ips extends MY_Controller
                         $student_result[] = array('marks' => 0);
                         $student_result[] = array('marks' => 0);
                     }
+                    
                     $quizarray[] = array('studentid' => $value->studentid, 'screenname' => $this->GetStudentName($value->studentid), 'score' => $quizdetailarray, 'term_result' => $student_result);
                 }
             }
@@ -1677,7 +1684,7 @@ class Ips extends MY_Controller
         }
         if ($roles[0]['role_id'] == 4)
         {
-            
+
             if ($this->input->get('inputclassid'))
             {
                 $classlist = $this->operation->GetByWhere(array('id' => $this->input->get('inputclassid')));
@@ -2750,6 +2757,7 @@ class Ips extends MY_Controller
     }
     function GetQuizList()
     {
+
         if ($this->session->userdata('type') == 'p')
         {
             $quiz_list = $this->operation->GetRowsByQyery("SELECT q.id,grade,section_name,subject_name,qname,isdone from quize q INNER JOIN classes c on q.classid=c.id INNER JOIN sections sc on q.sectionid=sc.id INNER JOIN subjects sb on q.subjectid=sb.id");
