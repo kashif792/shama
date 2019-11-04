@@ -123,7 +123,7 @@
                                                             Edit</button>
 
                                                             <button  type="button"  ng-hide="!cedit" ng-click='doneProgressReport("form_",sub.sbid,s.sid,p.semsterid,p.sessionid,p.classid)' data-parent="#data_attributes">
-                                                            Done</button>
+                                                            Save</button>
                                                     </h4>
                                                 </div>
                                                 <div id="p_{{s.sbid}}" class="panel-collapse collapse {{s.first_subject}}">
@@ -577,7 +577,10 @@
                 var myEl = angular.element( document.querySelector( '#p_'+$scope.selected_subject.sbid ) );
                 myEl.collapse('toggle');
                 getLessonPlanList();
-                
+                // Revert Edit button and array empty
+                lessionarray = [];
+                $scope.cedit = false;
+                // end here
             }
             catch(ex){}
         }
@@ -678,13 +681,16 @@
              catch(ex){}
         }
 // Edit code
-//var lessionarray = [];
+var lessionarray = [];
 $scope.progressChanged = function(subjectid,lessonid, studentid){
             if($scope.cedit){
                 var read = $('#p_'+subjectid+'_'+lessonid+'_'+studentid).val()>0;
-                //lessionarray.push(subjectid+'_'+lessonid+'_'+studentid);
-                $scope.saveLessonProgress(!read, subjectid, lessonid,studentid);
+                lessionarray.push(subjectid+'_'+lessonid+'_'+studentid);
+                
+                $scope.statusupdate(!read, subjectid, lessonid,studentid);
+                //$scope.saveLessonProgress(!read, subjectid, lessonid,studentid);
             }
+
             //console.log(lessionarray);
         }
 
@@ -704,37 +710,103 @@ $scope.doneProgressReport = function(){
     $scope.cedit = false;
     $scope.isCourseTabActive=true;
     //$scope.reloadcontent();
+    //console.log('doneProgressReport');
+    //console.log(lessionarray);
+    //console.log('doneProgressReport');
+    if(lessionarray.length>0)
+    {
+        $scope.saveProgressReport(lessionarray);
+    }
+    
 }
+    // status update with array
+    var str = [];
+    $scope.saveProgressReport = function(lessionarray){
+            //$scope.cprocessfinished = false;
+            //console.log('saveProgressReport');
+            //console.log(lessionarray);
 
-        $scope.saveProgressReport = function(formid,subjectid,sectionid,semesterid,sessionid,classid){
-            $scope.cprocessfinished = false;
-                var $container = $("#"+formid+classid+subjectid);
-                 var str = $container.serializeArray();
-                $.ajax({
-                    url:'UpdateSemesterLessonProgress',
-                    type: 'POST',
-                    data: str,
-                    success: function(res){
-                        if(res==1){
-                            getCourseDetail(subjectid,sectionid,semesterid,sessionid,classid);
-                            $scope.cedit = false;
-                            $scope.isCourseTabActive=true;
-                            $scope.reloadcontent();
-                        }else{
-                            alert("Unable to save progress at the moment.");
-                        }
-                        $scope.cprocessfinished = true;
-                        //$this.button('reset');
-                    },
-                    error: function(){
-                        alert("Fail to save progress at the moment.");
-                        $scope.cprocessfinished = true;
-                        //$this.button('reset');
+            //var $container = $("#"+formid+classid+subjectid);
+            //var str = $container.serializeArray();
+            //str = lessionarray;
+           // console.log(str);
+             dataString = lessionarray ; // array?
+             var jsonString = JSON.stringify(dataString);
+            $.ajax({
+                url:'UpdateSemesterLessonProgress',
+                type: 'POST',
+                data: {data : jsonString}, 
+                success: function(res){
+                    if(res==1){
+                        getCourseDetail(subjectid,sectionid,semesterid,sessionid,classid);
+                        $scope.cedit = false;
+                        $scope.isCourseTabActive=true;
+                        $scope.reloadcontent();
+                    }else{
+                        alert("Unable to save progress at the moment.");
                     }
-                });
-        }   
+                    $scope.cprocessfinished = true;
+                    //$this.button('reset');
+                },
+                error: function(){
+                    alert("Fail to save progress at the moment.");
+                    $scope.cprocessfinished = true;
+                    //$this.button('reset');
+                }
+            });
+        }  
+    // End here
+        // $scope.saveProgressReport = function(formid,subjectid,sectionid,semesterid,sessionid,classid){
+        //     $scope.cprocessfinished = false;
+        //         var $container = $("#"+formid+classid+subjectid);
+        //          var str = $container.serializeArray();
+        //         $.ajax({
+        //             url:'UpdateSemesterLessonProgress',
+        //             type: 'POST',
+        //             data: str,
+        //             success: function(res){
+        //                 if(res==1){
+        //                     getCourseDetail(subjectid,sectionid,semesterid,sessionid,classid);
+        //                     $scope.cedit = false;
+        //                     $scope.isCourseTabActive=true;
+        //                     $scope.reloadcontent();
+        //                 }else{
+        //                     alert("Unable to save progress at the moment.");
+        //                 }
+        //                 $scope.cprocessfinished = true;
+        //                 //$this.button('reset');
+        //             },
+        //             error: function(){
+        //                 alert("Fail to save progress at the moment.");
+        //                 $scope.cprocessfinished = true;
+        //                 //$this.button('reset');
+        //             }
+        //         });
+        // }   
+        // Toggal read and unread
+        $scope.statusupdate = function(isread, subjectid, lessonid,studentid){
+                isread = isread?1:0;
+                //console.log("saveLessonProgress lessonid "+ lessonid + " studentid "+ studentid + " status "+ isread);
+                if(isread)
+                {
+                    $('#pi_'+subjectid+'_'+lessonid+'_'+studentid).addClass('fa-check');
+                    $('#pi_'+subjectid+'_'+lessonid+'_'+studentid).removeClass('fa-times');
+                
+                    $('#ptd_'+subjectid+'_'+lessonid+'_'+studentid).removeClass('unread');
+                    $('#ptd_'+subjectid+'_'+lessonid+'_'+studentid).addClass('read');
+                }else{
+                    $('#pi_'+subjectid+'_'+lessonid+'_'+studentid).removeClass('fa-check');
+                    $('#pi_'+subjectid+'_'+lessonid+'_'+studentid).addClass('fa-times');
 
-         $scope.saveLessonProgress = function(isread, subjectid, lessonid,studentid){
+                    $('#ptd_'+subjectid+'_'+lessonid+'_'+studentid).removeClass('read');
+                    $('#ptd_'+subjectid+'_'+lessonid+'_'+studentid).addClass('unread');
+                }
+                
+                
+            }
+
+        // End here
+        $scope.saveLessonProgress = function(isread, subjectid, lessonid,studentid){
                 isread = isread?1:0;
                 console.log("saveLessonProgress lessonid "+ lessonid + " studentid "+ studentid + " status "+ isread);
                 $.ajax({
@@ -788,7 +860,7 @@ $scope.doneProgressReport = function(){
                     if(response != null && response.length > 0)
                     {
                         
-                        
+                        clearInterval(rinterval);
                         $scope.progresslist = response;
                     }
                     else{
@@ -1161,7 +1233,21 @@ $scope.doneProgressReport = function(){
 
             
         })
+        // before mid modal hide
+        $('#midtermmodal').on('hidden.bs.modal', function () {
+            $scope.isExamTabActive = true;
+            getQuizDetail($scope.subjid,$scope.classid,$scope.sectionid,$scope.semesterid,$scope.sessionid)
 
+            
+        })
+        // after mid modal hide
+        $('#finaltermmodal').on('hidden.bs.modal', function () {
+            $scope.isExamTabActive = true;
+            getQuizDetail($scope.subjid,$scope.classid,$scope.sectionid,$scope.semesterid,$scope.sessionid)
+
+            
+        })
+        
         $(document).on('change','#term_result',function(){
             if($(this).val().length > 0 && $(this).val() >= 0 && $(this).val() <= 100 ){
               var data = {

@@ -3187,30 +3187,47 @@ public function exportdata()
 				parent::redirectUrl('signin');
 				return;
 			}
-
-			// $data = $_POST;
-			// $debug .= var_export($data, true);
-
-			foreach($_POST as $key => $lesson_read)
+			$data = json_decode(stripslashes($_POST['data']));
+			//print_r($data);
+			 // $data = $_POST;
+			 // //$debug .= var_export($data, true);
+			 // print_r($debug);
+			 // echo "Calling";
+			 // exit;
+			foreach($data as $key => $lesson_read)
 			{
-				$parts = explode('_', $key);
+				$parts = explode('_', $lesson_read);
 				$type = $parts[0];
 				$lessonid = $parts[1];
 				$studentid = $parts[2];
-				if ($lessonid > 0 && $studentid > 0 && $type == "prog")
+				//echo $lesson_read;
+				//if ($lessonid > 0 && $studentid > 0 && $type == "prog")
+				
+				if ($lessonid > 0 && $studentid > 0)
 				{
+					
 					$is_student_found = $this->operation->GetRowsByQyery("Select * from invantageuser where id= '" . $studentid . "'");
 					if (count($is_student_found))
 					{
+
 						$this->operation->table_name = 'lessonprogress';
 						$data_lesson_read = $this->operation->GetRowsByQyery("Select * from lessonprogress where lessonid = " . $lessonid . " AND studentid =" . $studentid);
 						$is_lesson_found = $this->operation->GetRowsByQyery("Select * from semester_lesson_plan where id = " . $lessonid);
+						
 						if (count($data_lesson_read) == 0 && count($is_lesson_found))
 						{
+							if($lesson_read=='read')
+							{
+								$status_leason = 'unread'; 
+							}
+							else
+							{
+								$status_leason = 'read'; 
+							}
 							$lesson_progress = array(
 								'studentid' => $studentid,
 								'lessonid' => $lessonid,
-								'status' => ($lesson_read == 1 ? 'read' : 'unread') ,
+								'status' => ($status_leason) ,
 								'count' => 1,
 								'last_updated' => date('Y-m-d h:i:s')
 							);
@@ -3222,15 +3239,30 @@ public function exportdata()
 						}
 						else
 						{
+
+							//echo "else";
+							$lesson_read = $data_lesson_read[0]->status;
+							//echo $lesson_read;
+							if($lesson_read=='read')
+							{
+								$status_leason = 'unread'; 
+								$data_lesson_count = 0;
+							}
+							else
+							{
+								$status_leason = 'read';
+								$data_lesson_count= $data_lesson_read[0]->count+1;
+							}
+							
 							$student_progress = array(
-								'status' => ($lesson_read == 1 ? 'read' : 'unread') ,
-								'count' => ($lesson_read == 1 ? $data_lesson_read[0]->count : 0) ,
+								'status' => $status_leason ,
+								'count' => $data_lesson_count ,
 								'last_updated' => date('Y-m-d h:i:s') ,
 							);
 							$is_value_saved = $this->operation->Create($student_progress, $data_lesson_read[0]->id);
 
-							// $debug .= "," . $this->db->last_query();
-
+							 //$debug .= "," . $this->db->last_query();
+							//echo $this->db->last_query();
 						}
 
 						if (count($is_value_saved))
