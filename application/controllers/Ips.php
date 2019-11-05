@@ -752,13 +752,13 @@ class Ips extends MY_Controller
     }
     function GetStudentProgress($lessonid, $studentid)
     {
-        $studentprogress = $this->operation->GetRowsByQyery('SELECT * FROM `lessonprogress` where lessonid =' . $lessonid . " AND studentid=" . $studentid);
+        $studentprogress = $this->operation->GetRowsByQyery('SELECT le.*,slp.subjectid FROM `lessonprogress` as le inner join semester_lesson_plan as slp on slp.id = le.lessonid  where le.lessonid =' . $lessonid . " AND le.studentid=" . $studentid);
         $sparray = array();
         if (count($studentprogress))
         {
             foreach ($studentprogress as $key => $spvalue)
             {
-                $sparray = array('lessonid' => $spvalue->lessonid, 'status' => $spvalue->status, 'last_updated' => $spvalue->last_updated,);
+                $sparray = array('subjectid' =>$spvalue->subjectid,'studentid' => $studentid,'lessonid' => $spvalue->lessonid, 'status' => $spvalue->status, 'last_updated' => $spvalue->last_updated,);
             }
         }
         else
@@ -767,6 +767,7 @@ class Ips extends MY_Controller
         }
         return $sparray;
     }
+    
     function GetEvulationHeader()
     {
         $quizlist = array();

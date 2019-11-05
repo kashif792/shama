@@ -151,8 +151,8 @@
                                                                         <td ng-repeat="t in p.studentplan" class="{{t.status}}" 
                                                                         id="ptd_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" ng-click="progressChanged(s.sbid,t.lessonid, p.studentid)">
                                                                             <span >
-                                                                                <input type="hidden" id="p_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" value="{{t.status == 'read'?1:0}}"/> 
-                                                                                <i id="pi_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}"  class="fa {{t.status == 'read'?'fa-check':(t.show?'fa-times':'')}}" aria-hidden="true"></i>
+                                                                                <!-- <input type="hidden" id="p_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" value="{{t.status == 'read'?1:0}}"/>  -->
+                                                                                <i id="pi_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" data-status="{{t.status}}" class="fa {{t.status == 'read'?'fa-check':(t.show?'fa-times':'')}}" aria-hidden="true"></i>
                                                                             </span>
                                                                         </td>
                                                                     </tr>
@@ -484,7 +484,8 @@
         var rinterval
         $scope.isCourseTabActive = true;
         $scope.isExamTabActive = false;
-    
+
+        $scope.autoCall = false;
         $scope.reloadcontent = function()
         {
             $scope.cprocessfinished = false;
@@ -495,9 +496,10 @@
                 //console.log("Activetab");
                 if($scope.isCourseTabActive)
                 {
-                    getCourseDetail($scope.subjectid,$scope.sectionid,$scope.semesterid,$scope.sessionid,$scope.classid)
+                    $scope.autoCall = true;
+                    getCourseDetail($scope.subjectid,$scope.sectionid,$scope.semesterid,$scope.sessionid,$scope.classid,$scope.autoCall)
                 }
-            },60000);
+            },30000);
         }
 
         var sinterval
@@ -854,24 +856,62 @@ $scope.doneProgressReport = function(){
                                     inputsemester:$scope.filterobj.semester.id,
                                     inputsession:$scope.filterobj.session.id,
                                     inputclassid:$scope.filterobj.class.id,
+                                    autocall:$scope.autoCall,
                                 })).then(function(response){
                     if(response != null && response.length > 0)
                     {
                         
                         clearInterval(rinterval);
-                        //$("#"+$scope.selected_subject.sbid).attr("data-id")
-                        //console.log($scope.selected_subject.sbid);
+                        
+                        
                         if($("#p_"+$scope.selected_subject.sbid).attr('aria-expanded')=='true')
                         {
                             $scope.isCourseTabActive = true;
-                            console.log("true");
                         }
                         else
                         {
                             $scope.isCourseTabActive = false;
-                            console.log("false");
                         }
-                        $scope.progresslist = response;
+                        
+                        //console.log(response);
+                        if($scope.autoCall==true)
+                        {
+                            //$scope.progresslist = response;
+                            // var old_studentplan = [];
+                            // var new_studentplan = [];
+                            $.each(response, function (index, value) {
+                                //new_studentplan.push(value['studentplan']['status']);
+                                //ptd_979_8370_737
+               
+                                                
+                                var stdPlan = $filter('filter')($scope.progresslist,{studentid:value['studentid']},true);
+                                if(stdPlan!=null && stdPlan.length>0) stdPlan = stdPlan[0];
+                                
+                                $.each(value['studentplan'], function (index, val) {
+                                    //console.log(val['status']);
+
+                                    var stdLesson = $filter('filter')(stdPlan.studentplan,{lessonid:val['lessonid']},true);
+                                    if(stdLesson!=null && stdLesson.length>0) stdLesson = stdLesson[0];
+                                    
+                                    if(stdLesson.status != val['status']){
+                                        console.log("Change status "+ val['status'] + " for lesson "+ val['lessonid'] + " student "+ value['studentid']);
+                                        stdLesson.status = val['status'];
+                                    }
+                                })
+                            });
+                            
+                            console.log('autocalll');
+                        }
+                        else
+                        {
+
+                            $scope.progresslist = response;
+                            console.log(response);
+                            
+                            //console.log('autocalllfalse');
+                        }
+                        $scope.autoCall=false;
+                        //$scope.progresslist = response;
                     }
                     else{
                         $scope.progresslist = [];
