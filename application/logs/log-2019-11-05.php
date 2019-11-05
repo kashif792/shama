@@ -49,3 +49,4 @@ ERROR - 2019-11-05 13:20:18 --> Query error: Unknown table 'le' - Invalid query:
 ERROR - 2019-11-05 13:20:42 --> Query error: Unknown table 'le' - Invalid query: SELECT le.*,slp.subjectid FROM `lessonprogress` inner join semester_lesson_plan as slp where lessonid =8370 AND studentid=551
 ERROR - 2019-11-05 13:20:44 --> Query error: Unknown table 'le' - Invalid query: SELECT le.*,slp.subjectid FROM `lessonprogress` inner join semester_lesson_plan as slp where lessonid =8370 AND studentid=551
 ERROR - 2019-11-05 13:21:18 --> Query error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where lessonid =8370 AND studentid=551' at line 1 - Invalid query: SELECT le.*,slp.subjectid FROM `lessonprogress` as le inner join semester_lesson_plan as slp on slp.id =  where lessonid =8370 AND studentid=551
+ERROR - 2019-11-05 11:28:44 --> Unable to connect to the database

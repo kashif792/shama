@@ -690,13 +690,20 @@
 // Edit code
 var lessonarray = [];
 $scope.progressChanged = function(subjectid,lessonid, studentid){
-            if($scope.cedit){
-                var read = $('#p_'+subjectid+'_'+lessonid+'_'+studentid).val()>0;
-                lessonarray.push(subjectid+'_'+lessonid+'_'+studentid);
-                
-                $scope.statusupdate(!read, subjectid, lessonid,studentid);
-                //$scope.saveLessonProgress(!read, subjectid, lessonid,studentid);
-            }
+             if($scope.cedit){
+                var status = $('#pi_'+subjectid+"_"+lessonid+"_"+studentid).attr('data-status');
+                var datastatus = subjectid+'_'+lessonid+'_'+studentid;
+                var idx = $.inArray(datastatus, lessonarray);
+                if (idx == -1) {
+                  lessonarray.push(datastatus);
+                } else {
+                  lessonarray.splice(idx, 1);
+                }
+               
+                $scope.statusupdate(status, subjectid, lessonid,studentid);
+               
+             }
+            
 
             //console.log(lessonarray);
         }
@@ -716,10 +723,7 @@ $scope.cancelProgressReport = function(){
 $scope.doneProgressReport = function(){
     $scope.cedit = false;
     $scope.isCourseTabActive=true;
-    //$scope.reloadcontent();
-    //console.log('doneProgressReport');
-    //console.log(lessonarray);
-    //console.log('doneProgressReport');
+    
     if(lessonarray.length>0)
     {
         $scope.saveProgressReportbulkStatus(lessonarray);
@@ -739,9 +743,12 @@ $scope.doneProgressReport = function(){
                 success: function(res){
                     if(res==1){
                         //getCourseDetail(subjectid,sectionid,semesterid,sessionid,classid);
+                        lessonarray.length = 0;
                         $scope.cedit = false;
                         $scope.isCourseTabActive=true;
-                        $scope.reloadcontent();
+                        //$scope.reloadcontent();
+                        message('Updated Successfully','show');
+                        //console.log(lessonarray);
                     }else{
                         alert("Unable to save progress at the moment.");
                     }
@@ -785,21 +792,28 @@ $scope.doneProgressReport = function(){
         }   
         // Toggal read and unread
         $scope.statusupdate = function(isread, subjectid, lessonid,studentid){
-                isread = isread?1:0;
+                //isread = isread?1:0;
                 //console.log("saveLessonProgress lessonid "+ lessonid + " studentid "+ studentid + " status "+ isread);
-                if(isread)
+                
+                if(isread=='unread')
                 {
+                    
                     $('#pi_'+subjectid+'_'+lessonid+'_'+studentid).addClass('fa-check');
                     $('#pi_'+subjectid+'_'+lessonid+'_'+studentid).removeClass('fa-times');
-                
+                    $('#pi_'+subjectid+"_"+lessonid+"_"+studentid).attr('data-status','read');
+
                     $('#ptd_'+subjectid+'_'+lessonid+'_'+studentid).removeClass('unread');
                     $('#ptd_'+subjectid+'_'+lessonid+'_'+studentid).addClass('read');
+                    
                 }else{
+                    
                     $('#pi_'+subjectid+'_'+lessonid+'_'+studentid).removeClass('fa-check');
                     $('#pi_'+subjectid+'_'+lessonid+'_'+studentid).addClass('fa-times');
-
+                    $('#pi_'+subjectid+"_"+lessonid+"_"+studentid).attr('data-status','unread');
+                    
                     $('#ptd_'+subjectid+'_'+lessonid+'_'+studentid).removeClass('read');
                     $('#ptd_'+subjectid+'_'+lessonid+'_'+studentid).addClass('unread');
+                    
                 }
                 
                 
@@ -873,28 +887,21 @@ $scope.doneProgressReport = function(){
                             $scope.isCourseTabActive = false;
                         }
                         
-                        //console.log(response);
+                        
                         if($scope.autoCall==true)
                         {
-                            //$scope.progresslist = response;
-                            // var old_studentplan = [];
-                            // var new_studentplan = [];
+                           
                             $.each(response, function (index, value) {
-                                //new_studentplan.push(value['studentplan']['status']);
-                                //ptd_979_8370_737
-               
-                                                
-                                var stdPlan = $filter('filter')($scope.progresslist,{studentid:value['studentid']},true);
+                               var stdPlan = $filter('filter')($scope.progresslist,{studentid:value['studentid']},true);
                                 if(stdPlan!=null && stdPlan.length>0) stdPlan = stdPlan[0];
                                 
                                 $.each(value['studentplan'], function (index, val) {
-                                    //console.log(val['status']);
-
+                                
                                     var stdLesson = $filter('filter')(stdPlan.studentplan,{lessonid:val['lessonid']},true);
                                     if(stdLesson!=null && stdLesson.length>0) stdLesson = stdLesson[0];
                                     
                                     if(stdLesson.status != val['status']){
-                                        console.log("Change status "+ val['status'] + " for lesson "+ val['lessonid'] + " student "+ value['studentid']);
+                                        //console.log("Change status "+ val['status'] + " for lesson "+ val['lessonid'] + " student "+ value['studentid']);
                                         stdLesson.status = val['status'];
                                     }
                                 })
@@ -906,12 +913,10 @@ $scope.doneProgressReport = function(){
                         {
 
                             $scope.progresslist = response;
-                            console.log(response);
                             
-                            //console.log('autocalllfalse');
                         }
                         $scope.autoCall=false;
-                        //$scope.progresslist = response;
+                        
                     }
                     else{
                         $scope.progresslist = [];
