@@ -3175,7 +3175,6 @@ public function exportdata()
 
 		echo json_encode($result);
 	}
-
 	public function UpdateSemesterLessonProgress()
 	{
 		$debug = '';
@@ -3187,13 +3186,82 @@ public function exportdata()
 				parent::redirectUrl('signin');
 				return;
 			}
+
+			// $data = $_POST;
+			// $debug .= var_export($data, true);
+
+			foreach($_POST as $key => $lesson_read)
+			{
+				$parts = explode('_', $key);
+				$type = $parts[0];
+				$lessonid = $parts[1];
+				$studentid = $parts[2];
+				if ($lessonid > 0 && $studentid > 0 && $type == "prog")
+				{
+					$is_student_found = $this->operation->GetRowsByQyery("Select * from invantageuser where id= '" . $studentid . "'");
+					if (count($is_student_found))
+					{
+						$this->operation->table_name = 'lessonprogress';
+						$data_lesson_read = $this->operation->GetRowsByQyery("Select * from lessonprogress where lessonid = " . $lessonid . " AND studentid =" . $studentid);
+						$is_lesson_found = $this->operation->GetRowsByQyery("Select * from semester_lesson_plan where id = " . $lessonid);
+						if (count($data_lesson_read) == 0 && count($is_lesson_found))
+						{
+							$lesson_progress = array(
+								'studentid' => $studentid,
+								'lessonid' => $lessonid,
+								'status' => ($lesson_read == 1 ? 'read' : 'unread') ,
+								'count' => 1,
+								'last_updated' => date('Y-m-d h:i:s')
+							);
+							$this->operation->table_name = 'lessonprogress';
+							$is_value_saved = $this->operation->Create($lesson_progress);
+
+							// $debug .= "," . $this->db->last_query();
+
+						}
+						else
+						{
+							$student_progress = array(
+								'status' => ($lesson_read == 1 ? 'read' : 'unread') ,
+								'count' => ($lesson_read == 1 ? $data_lesson_read[0]->count : 0) ,
+								'last_updated' => date('Y-m-d h:i:s') ,
+							);
+							$is_value_saved = $this->operation->Create($student_progress, $data_lesson_read[0]->id);
+
+							// $debug .= "," . $this->db->last_query();
+
+						}
+
+						if (count($is_value_saved))
+						{
+							$result['message'] = true;
+						}
+					}
+				}
+			}
+		}
+
+		catch(Exception $e)
+		{
+		}
+
+		// $result['debug'] = $debug;
+
+		echo $result['message'];
+	}
+	public function UpdateSemesterLessonProgressBulk()
+	{
+		$debug = '';
+		$result['message'] = false;
+		try
+		{
+			if (!($this->session->userdata('id')))
+			{
+				parent::redirectUrl('signin');
+				return;
+			}
 			$data = json_decode(stripslashes($_POST['data']));
-			//print_r($data);
-			 // $data = $_POST;
-			 // //$debug .= var_export($data, true);
-			 // print_r($debug);
-			 // echo "Calling";
-			 // exit;
+			
 			foreach($data as $key => $lesson_read)
 			{
 				$parts = explode('_', $lesson_read);

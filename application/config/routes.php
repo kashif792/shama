@@ -237,6 +237,7 @@ $route['sSavedata'] = 'Teacher/Savedata';
 $route['SaveGradedata'] = 'Teacher/saveGradePlan';
 $route['UpdateLessonProgress'] = 'Teacher/UpdateLessonProgress';
 $route['UpdateSemesterLessonProgress'] = 'Teacher/UpdateSemesterLessonProgress';
+$route['UpdateSemesterLessonProgressBulk'] = 'Teacher/UpdateSemesterLessonProgressBulk';
 $route['UpdateSemesterLessonPlan'] = 'Teacher/UpdateSemesterLessonPlan';
 $route['ResetLessonPlan'] = 'Teacher/ResetLessonPlan';
 $route['DeleteDefaultLessonPlan'] = 'Principal_controller/ResetLessonPlan';

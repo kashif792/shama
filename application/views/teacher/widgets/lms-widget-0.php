@@ -737,7 +737,7 @@ $scope.doneProgressReport = function(){
              dataString = lessonarray ; // array?
              var jsonString = JSON.stringify(dataString);
             $.ajax({
-                url:'UpdateSemesterLessonProgress',
+                url:'UpdateSemesterLessonProgressBulk',
                 type: 'POST',
                 data: {data : jsonString}, 
                 success: function(res){
