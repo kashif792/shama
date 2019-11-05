@@ -489,17 +489,14 @@
         $scope.reloadcontent = function()
         {
             $scope.cprocessfinished = false;
-            //console.log($('.course_progress').find().attr('data_attributes'));
             
             rinterval = $interval(function(){
-                //console.log($scope.isCourseTabActive);
-                //console.log("Activetab");
                 if($scope.isCourseTabActive)
                 {
                     $scope.autoCall = true;
                     getCourseDetail($scope.subjectid,$scope.sectionid,$scope.semesterid,$scope.sessionid,$scope.classid,$scope.autoCall)
                 }
-            },30000);
+            },60000);
         }
 
         var sinterval
@@ -792,8 +789,6 @@ $scope.doneProgressReport = function(){
         }   
         // Toggal read and unread
         $scope.statusupdate = function(isread, subjectid, lessonid,studentid){
-                //isread = isread?1:0;
-                //console.log("saveLessonProgress lessonid "+ lessonid + " studentid "+ studentid + " status "+ isread);
                 
                 if(isread=='unread')
                 {
@@ -1182,51 +1177,6 @@ $scope.doneProgressReport = function(){
         var studentData = [];
          var container = document.getElementById('result_container');
          $scope.subjid = 0
-        // $scope.addfinaltermresult = function(classid,sectionid,subjectid,semesterid,sessionid)
-        // {
-        //     try{
-        //          $scope.subjid = subjectid
-        //         studentData = [];
-        //         var cont_str = '';
-        //         httprequest(urlist.getfinaltermsubjectresult,({
-        //                         class_id:classid,
-        //                         section_id:sectionid,
-        //                         subject_id:subjectid,
-        //                         semesterid:semesterid,
-        //                         sessionid:sessionid,
-        //                         })).then(function(response){
-        //             GetEvulationHeader(subjectid,classid,sectionid,semesterid,sessionid);
-        //             if(response != null &&  response.length > 0)
-        //             {
-                        
-        //                 var columnname = ['m','f']
-        //                 for (var i = 0; i <= response.length-1; i++) {
-        //                     cont_str += '<tr>'
-        //                     cont_str += '<td width="60%">'+response[i].name+'</td>'
-        //                     for (var k = 0; k < response[i].marks.length; k++) {
-        //                         cont_str += '<td width="20%"><input type="number" min="0" max="100" name="term_result" id="mid_result" data-studentsemesterid= "'+semesterid+'" data-studentsessionid= "'+sessionid+'" data-studentid = "'+response[i].studentid+'" data-marksid = "'+response[i].id+'" data-classid = "'+classid+'" data-sectionid = "'+sectionid+'" data-subjectid = "'+subjectid+'"  data-column ="'+columnname[k]+'"  data-quizid="'+response[i].quizid[k].quizid+'" value="'+response[i].marks[k].studentmarks+'"/></td>'
-        //                     }
-        //                    cont_str += '</tr>'
-        //                 }
-        //                 $("#resultfinalbody").html(cont_str)
-        //             }
-        //             else{
-        //                 $("#resultfinalbody").html("<tr><td colspan='3' class='text-center'>No Quizzes found</td></tr>")
-        //             }
-        //         });
-
-        //         $scope.classid = classid;
-        //         $scope.sectionid = sectionid;
-        //         $scope.subjectid = subjectid;
-        //          $scope.semesterid = semesterid;
-        //          $scope.sessionid = sessionid;
-        //         $("#result_message").html('Marks will be saved automatically')
-        //         $("#finaltermmodal").modal('show');
-        //         $scope.isExamTabActive = false;
-        //     }
-        //     catch(ex){}
-
-        // }
         
         var studentData = [];
          var container = document.getElementById('result_container');
