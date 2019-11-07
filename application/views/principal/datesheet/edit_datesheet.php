@@ -132,7 +132,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                             </div> 
 	                	<div class="form-group">
 	                		<div class="col-sm-12">
-	                			<button type="button" tabindex="8" class="btn btn-primary"  id="save" ng-click="savedatesheettable()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
+	                			<button type="button" tabindex="8" class="btn btn-primary save-data"  id="save" ng-click="savedatesheettable()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
 	                			<a tabindex="9" href="<?php echo $path_url; ?>datesheetlist" tabindex="6" title="cancel">Cancel</a>
 	                		</div>
 	                	</div>
@@ -193,7 +193,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                 
             </div>
             <div class="alert alert-success success_datesheet" style="display: none;">
-              Successfully save.
+              Successfully saved.
             </div>
                 <div class="modal-body">
                 <?php $attributes = array('role'=>'form','name' => 'addquestionform', 'id' => 'addquestionform','class'=>'form-container-input');
@@ -454,7 +454,7 @@ $(document).on('click','#UserDelete',function(){
                 $("#date_error").show();
                 return false;
             }
-             var $this = $(".btn-primary");
+             var $this = $(".save-data");
              $this.button('loading');
 
             var formdata = new FormData();
@@ -1038,8 +1038,8 @@ $scope.savedatesheetdatail = function()
                 return false;
             }
 
-             var $this = $(".btn-primary");
-             $this.button('loading');
+             // var $this = $(".btn-primary");
+             // $this.button('loading');
 
             var formdata = new FormData();
             formdata.append('select_subject',$scope.inputSubject.id);

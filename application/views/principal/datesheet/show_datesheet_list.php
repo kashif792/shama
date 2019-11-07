@@ -546,7 +546,7 @@ $(document).on('click','#UserDelete',function(){
                         
                         var reportobj = $scope.renderprintdata();
             
-                        pdfMake.createPdf(reportobj).download("Datesheet-"+response[0]['data_array']['file_name']);
+                        pdfMake.createPdf(reportobj).download(response[0]['data_array']['file_name']);
 
                     }
                     else{

@@ -6718,7 +6718,8 @@ if(!$this->session->userdata('id'))
 
             //$school_name_q = $this->operation->GetByWhere(array('id'=>$locations[0]['school_id']));
 	    	// Create file name
-	    	$file_name = $session_dates_file_name.'-'.$semester_name_q[0]->semester_name.'-'.$type.'-'.$is_class[0]->grade; 
+	    	//$file_name = $session_dates_file_name.'-'.$semester_name_q[0]->semester_name.'-'.$type.'-'.$is_class[0]->grade; 
+	    	$file_name = $type.'-Term-Datesheet'.'-'.$semester_name_q[0]->semester_name.'-'.$session_dates_file_name.'-'.str_replace(' ','-',$is_class[0]->grade); 
 	    	$data_array = array('type'=>$type,'notes_text'=>$notes_text,'notes'=>$notes,'grade'=>$is_class[0]->grade,'session_dates'=>$session_dates,'semester_dates'=>$semester_dates,'semester_name' =>$semester_name_q[0]->semester_name,'school_name'=>$school_name_q[0]->name,'file_name'=>$file_name);
 	    	
 	    	 

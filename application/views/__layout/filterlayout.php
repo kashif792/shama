@@ -137,7 +137,7 @@
 						
 					}
 					else if($this->uri->segment(1) == 'classreport'){
-							echo "<li><i>Report</i></li>";
+							echo "<li><i>Reports</i></li>";
 						echo "<li class='active'>Class Report</li>";
 						
 					}
@@ -148,6 +148,20 @@
 					}
 					else if($this->uri->segment(1) == 'admindashboard'){
 						echo "<li><i>Dashboard</i></li>";
+						
+					}
+					else if($this->uri->segment(1) == 'datesheetlist'){
+						echo "<li><i>Datesheet list</i></li>";
+						
+					}
+					else if($this->uri->segment(1) == 'midreport'){
+						echo "<li><i>Reports</i></li>";
+						echo "<li class='active'>Mid Term Report</li>";
+						
+					}
+					else if($this->uri->segment(1) == 'finalreport'){
+						echo "<li><i>Reports</i></li>";
+						echo "<li class='active'>Final Result Card</li>";
 						
 					}
 
