@@ -355,7 +355,7 @@
 				</li>
 			</ul>
 		</li>
-		<li class="">
+		<!-- <li class="">
 			<a  href="javascript:void(0)" id="exams">
 				<i class="fa fa-film" aria-hidden="true"></i>
 				<span class="link_text"> Exams</span>
@@ -369,7 +369,7 @@
 			</li>
 				
 			</ul>
-		</li>
+		</li> -->
 		<li class="">
 			<a  href="<?php echo base_url(); ?>datesheetlist">
 				<i class="fa fa-question-circle" aria-hidden="true"></i>
