@@ -1008,6 +1008,7 @@ class Ips extends MY_Controller
                             // Mid Quize Results
                             
                         
+                            //$studentmidresult = $this->operation->GetRowsByQyery('SELECT * FROM `quizzes_marks`  where student_id = '.$value->studentid.' AND subject_id =' . $this->input->get('subjectlist') . " AND class_id = " . $this->input->get('inputclassid') . " and section_id = " . $this->input->get('inputsectionid') . " AND semester_id = " . $this->input->get('inputsemester') . " AND session_id = " . $this->input->get('inputsession') . " AND quiz_id = ".$spvalue->id." "); 
                             $studentmidresult = $this->operation->GetRowsByQyery('SELECT * FROM `quizzes_marks`  where student_id = '.$value->studentid.' AND subject_id =' . $this->input->get('subjectlist') . " AND class_id = " . $this->input->get('inputclassid') . " and section_id = " . $this->input->get('inputsectionid') . " AND semester_id = " . $this->input->get('inputsemester') . " AND session_id = " . $this->input->get('inputsession') . " AND quiz_id = ".$spvalue->id." "); 
                             if(count($studentmidresult))
                             {

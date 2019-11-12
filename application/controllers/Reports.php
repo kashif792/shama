@@ -34,7 +34,7 @@ class Reports extends MY_Controller
         {
             parent::redirectUrl('signin');
         }
-        $this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/small_nrlogo.png");
+        $this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/logo_nr_school.png");
         $this->data['schoolname'] = $this->campus;
         $this->data['campuscity'] = $this->usercity;
         $this->load->view("reports/mid_report",$this->data);
@@ -45,7 +45,7 @@ class Reports extends MY_Controller
         {
             parent::redirectUrl('signin');
         }
-        $this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/small_nrlogo.png");
+        $this->data['logo'] = parent::ImageConvertorToBase64(base_url()."images/logo_nr_school.png");
         $this->data['schoolname'] = $this->campus;
         $this->data['campuscity'] = $this->usercity;
         $this->load->view("reports/final_report",$this->data);

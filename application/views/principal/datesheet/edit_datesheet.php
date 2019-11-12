@@ -78,7 +78,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                                 <select class="form-control" ng-options="item.name for item in classlist track by item.id"  id="select_class" name="select_class" ng-model="select_class" ng-change="changeclass()"></select>
                             </div>
                 			<div class="col-md-6">
-                            <label for="inputRSession">Term <span class="required">*</span></label>
+                            <label for="inputRSession"><span class="icon-user"></span>Term <span class="required">*</span></label>
                         	<select class="form-control" id="exam_type" name="exam_type">
                                 <option value="Mid" <?php if($result['type']=="Mid") {echo 'selected="selected"';} ?>>Mid</option>
                                 <option value="Final" <?php if($result['type']=="Final") {echo 'selected="selected"';} ?>>Final</option>
@@ -721,7 +721,7 @@ $(document).ready(function(){
                     manual: []                // Optional extra entries for minutes
                 },
                 onMinuteShow: OnMinuteShowCallback,
-                onHourShow: OnHourEShowCallback,
+                onHourShow: OnHourShowCallback,
                 defaultTime:''
 
            });
