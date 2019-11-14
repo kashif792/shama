@@ -315,11 +315,15 @@ class LMSApi extends REST_Controller
 
     function GetSubjectSchedule($subject_id,$class_id,$section_id)
     {
+        // Making compatible to day based schedule
+        $currentday = strtolower(date('D'));
+        $s_time =  $currentday.'_start_time';
+        $e_time =  $currentday.'_end_time';
         $is_schedule_found = $this->operation->GetRowsByQyery("Select s.* from schedule s where s.subject_id = ".$subject_id." AND s.class_id = ".$class_id." AND s.section_id = ".$section_id);
         if(count($is_schedule_found)){
             return array(
-                    'start_time'=>$is_schedule_found[0]->start_time,
-                    'end_time'=>$is_schedule_found[0]->end_time,
+                    'start_time'=>$is_schedule_found[0]->$s_time,
+                    'end_time'=>$is_schedule_found[0]->$e_time,
                     'last_update'=>$is_schedule_found[0]->last_update
             );
         }
@@ -331,10 +335,20 @@ class LMSApi extends REST_Controller
     function GetSubjectList_post()
     {
         try{
-            $locations = $this->session->userdata('locations');
-                $this->operation->table_name = 'sessions';
-                $active_session = $this->operation->GetByWhere(array('school_id'=>$locations[0]['school_id'],'status'=>'a'));
 
+            // Overrid location when given
+            if($this->post('school_id')){
+                $this->operation->table_name = 'sessions';
+                $active_session = $this->operation->GetByWhere(array('school_id'=>$this->post('school_id'),'status'=>'a'));
+
+            }else{
+
+            $locations = $this->session->userdata('locations');
+            $this->operation->table_name = 'sessions';
+            $active_session = $this->operation->GetByWhere(array('school_id'=>$locations[0]['school_id'],'status'=>'a'));
+            }
+             //   echo $this->db->last_query();exit();
+            //var_dump($active_session);exit();
 
             $this->operation->table_name = 'semester_dates';
             $active_semester = $this->operation->GetByWhere(array('session_id'=>$active_session[0]->id,'status'=>'a'));
@@ -347,7 +361,7 @@ class LMSApi extends REST_Controller
               
                 if(is_null($this->post('section_id')))
                 {
-                      $this->operation->table_name = "assignsections";
+                    $this->operation->table_name = "assignsections";
                     $query = $this->operation->GetByWhere(array('classid'=>$class_id,'status'=>'a'));
                     
                     $section_id = $query[0]->sectionid;
@@ -358,9 +372,8 @@ class LMSApi extends REST_Controller
                 else{
                     $section_id = $this->post('section_id');
                     $this->operation->table_name = "subjects";
-                $query = $this->operation->GetByWhere(array('class_id'=>$class_id,'semsterid'=>$active_semester[0]->semester_id,'session_id'=>$active_session[0]->id));
+                    $query = $this->operation->GetByWhere(array('class_id'=>$class_id,'semsterid'=>$active_semester[0]->semester_id,'session_id'=>$active_session[0]->id));
                 }
-                
          
                 $result = array();
                 if(count($query))
@@ -373,8 +386,8 @@ class LMSApi extends REST_Controller
                             'subject_code'=>$value->subject_code,
                             'subject_name'=>trim($value->subject_name),
                             'subject_image'=>$value->subject_image,
-                             'start_time'=>($schedule != false ? date('Y-m-d H:i',$schedule['start_time']) : date('Y-m-d') ),
-                             'end_time'=>($schedule != false ? date('Y-m-d H:i',$schedule['end_time']) : date('Y-m-d') ),
+                             'start_time'=>($schedule != false ? $schedule['start_time'] : date('Y-m-d') ),
+                             'end_time'=>($schedule != false ? $schedule['end_time'] : date('Y-m-d') ),
                             'last_update'=>$value->last_update,
                             'schedule_last_update'=>$schedule['last_update']
                         );
@@ -497,10 +510,13 @@ class LMSApi extends REST_Controller
 
     function getSchedule($subject_id,$class_id,$section_id)
     {
+        $currentday = strtolower(date('D'));
+        $s_time =  $currentday.'_start_time';
+        $e_time =  $currentday.'_end_time';
         $is_schedule_found = $this->operation->GetRowsByQyery("Select s.* from schedule s where s.subject_id = ".$subject_id." AND s.class_id = ".$class_id." AND s.section_id = ".$section_id);
         if(count($is_schedule_found)){
-            return array('start_time'=>$is_schedule_found[0]->start_time,
-                'end_time'=>$is_schedule_found[0]->end_time,
+            return array('start_time'=>$is_schedule_found[0]->$s_time,
+                'end_time'=>$is_schedule_found[0]->$e_time,
             'last_update'=>$is_schedule_found[0]->last_update);
         }
         else{
@@ -1759,12 +1775,15 @@ class LMSApi extends REST_Controller
     function GetPeriodSchedule_post()
     {
         try{
+            $currentday = strtolower(date('D'));
+            $s_time =  $currentday.'_start_time';
+            $e_time =  $currentday.'_end_time';
             date_default_timezone_set("Asia/Karachi");
             if($this->post('classid') && $this->post('sectionid'))
             {
                 $school_off=$this->operation->GetRowsByQyery("
                         SELECT s.* FROM schedule s  
-                        where s.class_id=".$this->post('classid')." and s.section_id= ".$this->post('sectionid')." order by s.start_time");
+                        where s.class_id=".$this->post('classid')." and s.section_id= ".$this->post('sectionid')." order by s.$s_time");
              
                 if(count($school_off))
                 {
@@ -1773,20 +1792,24 @@ class LMSApi extends REST_Controller
                     foreach ($school_off as $key => $value) {
                         $currentperiod = false;
                         $subjectname = trim($this->GetSubjectName($value->subject_id));
-                        $start_time = date('Y-m-d H:i',$value->start_time);
-                        $end_time = date('Y-m-d H:i',$value->end_time);
-
+                        //$start_time = date('Y-m-d H:i',$value->start_time);
+                        //$end_time = date('Y-m-d H:i',$value->end_time);
+                        $currentday = strtolower(date('D'));
+                        $s_time =  $currentday.'_start_time';
+                        $e_time =  $currentday.'_end_time';
+                        $start_time = date('Y-m-d H:i',$value->$s_time);
+                        $end_time = date('Y-m-d H:i',$value->$e_time);
                         if( date('H:i') >= date('H:i',strtotime($start_time))  && date('H:i') <= date('H:i',strtotime($end_time))){
                             $currentperiod = true;
                             $have_any_period_found = true;
                         }
-                   
+
                         $subjectname = $this->GetSubjectName($value->subject_id);
                         $result[] = array(
                             'id'=>$value->id,
                             'subject_id'=>$value->subject_id,
-                            'start_time'=>date('Y-m-d H:i',$value->start_time),
-                            'end_time'=>date('Y-m-d H:i',$value->end_time),
+                            'start_time'=>date('Y-m-d H:i',$value->$s_time),
+                            'end_time'=>date('Y-m-d H:i',$value->$e_time),
                             'currentperiod'=>$currentperiod,
                             'subject'=>trim(ucfirst($subjectname[0]->subject_name))
                         );
@@ -1804,11 +1827,16 @@ class LMSApi extends REST_Controller
                     {
                         asort($school_off);
                         $hours = array();
+
                         foreach ($school_off as $key => $value) {
-                             $subjectname = $this->GetSubjectName($value->subject_id);
+                            $subjectname = $this->GetSubjectName($value->subject_id);
+                            $currentday = strtolower(date('D'));
+                            $s_time =  $currentday.'_start_time';
+                            $e_time =  $currentday.'_end_time';
+
                             $hours[] = array(
-                                'hour'=>date('H:i',$value->end_time),
-                                'start_time'=>date('H:i',$value->start_time),
+                                'hour'=>date('H:i',strtotime($value->$e_time)),
+                                'start_time'=>date('H:i',strtotime($value->$s_time)),
                                 'subject_id'=>$value->subject_id,
                                 'subject'=>trim(ucfirst($subjectname[0]->subject_name))
                             );
@@ -1828,9 +1856,12 @@ class LMSApi extends REST_Controller
                             $hours = array();
                             foreach ($school_off as $key => $value) {
                                 $subjectname = $this->GetSubjectName($value->subject_id);
+                                $currentday = strtolower(date('D'));
+                                $s_time =  $currentday.'_start_time';
+                                $e_time =  $currentday.'_end_time';
                                 $hours[] = array(
-                                    'hour'=>date('H:i',$value->end_time),
-                                    'start_time'=>date('H:i',$value->start_time),
+                                    'hour'=>date('H:i',strtotime($value->$e_time)),
+                                    'start_time'=>date('H:i',strtotime($value->$s_time)),
                                     'subject_id'=>$value->subject_id,
                                     'subject'=>trim(ucfirst($subjectname[0]->subject_name))
                                 );
@@ -1839,10 +1870,14 @@ class LMSApi extends REST_Controller
                         
                             $result = array();
                             $have_any_period_found = false;
+
                             foreach ($hours as $key => $value) {
                                 if( $value['start_time']  > date('H:i') && $have_any_period_found == false){
                                     $have_any_period_found = true;
                                     $subjectname = $this->GetSubjectName($value['subject_id']);
+                                    $currentday = strtolower(date('D'));
+                                    $s_time =  $currentday.'_start_time';
+                                    $e_time =  $currentday.'_end_time';
                                     $result[] = array(
                                         'subject_id'=>$value['subject_id'],
                                         'start_time'=>date('Y-m-d H:i',strtotime($value['start_time'])),
