@@ -322,8 +322,8 @@ class LMSApi extends REST_Controller
         $is_schedule_found = $this->operation->GetRowsByQyery("Select s.* from schedule s where s.subject_id = ".$subject_id." AND s.class_id = ".$class_id." AND s.section_id = ".$section_id);
         if(count($is_schedule_found)){
             return array(
-                    'start_time'=>$is_schedule_found[0]->$s_time,
-                    'end_time'=>$is_schedule_found[0]->$e_time,
+                    'start_time'=>strtotime($is_schedule_found[0]->$s_time),
+                    'end_time'=>strtotime($is_schedule_found[0]->$e_time),
                     'last_update'=>$is_schedule_found[0]->last_update
             );
         }
@@ -386,8 +386,8 @@ class LMSApi extends REST_Controller
                             'subject_code'=>$value->subject_code,
                             'subject_name'=>trim($value->subject_name),
                             'subject_image'=>$value->subject_image,
-                             'start_time'=>($schedule != false ? $schedule['start_time'] : date('Y-m-d') ),
-                             'end_time'=>($schedule != false ? $schedule['end_time'] : date('Y-m-d') ),
+                             'start_time'=>($schedule != false ? date('Y-m-d H:i',$schedule['start_time']) : date('Y-m-d ') ),
+                             'end_time'=>($schedule != false ? date('Y-m-d H:i',$schedule['end_time']) : date('Y-m-d') ),
                             'last_update'=>$value->last_update,
                             'schedule_last_update'=>$schedule['last_update']
                         );
