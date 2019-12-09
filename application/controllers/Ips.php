@@ -688,7 +688,7 @@ class Ips extends MY_Controller
             {
                 foreach ($query as $key => $value)
                 {
-                    $lessonlist[] = array('id' => $value->id, 'name' => $value->concept, 'topic' => $value->topic, 'date' => (!is_null($value->read_date) ? date('d-M-Y', strtotime($value->read_date)) : ''), 'type' => ucfirst($value->type),);
+                    $lessonlist[] = array('id' => $value->id, 'name' => $value->concept, 'topic' => $value->topic,'sort_topic' => mb_strimwidth($value->topic, 0, 30, "..."), 'date' => (!is_null($value->read_date) ? date('d-M-Y', strtotime($value->read_date)) : ''), 'type' => ucfirst($value->type),);
                 }
             }
         }

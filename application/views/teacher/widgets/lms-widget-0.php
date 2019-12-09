@@ -141,8 +141,8 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <th></th>
-                                                                            <th ng-repeat="p in planheader">
-                                                                                {{p.topic}} ({{p.type}})
+                                                                            <th ng-repeat="p in planheader" title="{{p.topic}}">
+                                                                                {{p.sort_topic}} ({{p.type}})
                                                                             </th>
                                                                         </tr>
                                                                     </thead>

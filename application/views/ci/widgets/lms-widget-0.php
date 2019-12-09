@@ -144,8 +144,8 @@
                                                                     </tr>
                                                                     <tr>
                                                                         <th>&nbsp;</th>
-                                                                        <th ng-repeat="p in planheader">
-                                                                            {{p.topic}} ({{p.type}})
+                                                                        <th ng-repeat="p in planheader" title="{{p.topic}}">
+                                                                            {{p.sort_topic}} ({{p.type}})
                                                                         </th>
                                                                     </tr>
                                                                 </thead>
@@ -265,7 +265,7 @@
                 {
                     getCourseDetail($scope.subjectid,$scope.sectionid,$scope.semesterid,$scope.sessionid,$scope.classid)
                 }
-            },260000);
+            },60000);
         }
 
         var sinterval
