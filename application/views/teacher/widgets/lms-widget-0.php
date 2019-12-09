@@ -130,34 +130,36 @@
                                                     <div class="loader2" ng-hide="cprocessfinished"></div>
                                                     <div class="panel-body" ng-hide="!cprocessfinished">
                                                         <div ng-hide="progresslist.length <= 0 " style="overflow: auto;">
-                                                            <table datatable="ng"  class="table table-striped table-bordered row-border hover">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th>Students</th>
-                                                                        <th ng-repeat="p in planheader">
-                                                                            {{p.date}}
-                                                                        </th>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <th></th>
-                                                                        <th ng-repeat="p in planheader">
-                                                                            {{p.topic}} ({{p.type}})
-                                                                        </th>
-                                                                    </tr>
-                                                                </thead>
-                                                                 <tbody id="reporttablebody-phase-two" class="report-body" >
-                                                                    <tr ng-repeat="p in progresslist"  ng-init="$last && finished()">
-                                                                        <td>{{p.screenname}}</td>
-                                                                        <td ng-repeat="t in p.studentplan" class="{{t.status}}" 
-                                                                        id="ptd_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" ng-click="progressChanged(s.sbid,t.lessonid, p.studentid)">
-                                                                            <span >
-                                                                                <!-- <input type="hidden" id="p_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" value="{{t.status == 'read'?1:0}}"/>  -->
-                                                                                <i id="pi_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" data-status="{{t.status}}" class="fa {{t.status == 'read'?'fa-check':(t.show?'fa-times':'')}}" aria-hidden="true"></i>
-                                                                            </span>
-                                                                        </td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
+                                                            <div class="tscroll">
+                                                                <table  class="table table-striped table-bordered row-border hover zui-table flex-table">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th>Students</th>
+                                                                            <th ng-repeat="p in planheader">
+                                                                                {{p.date}}
+                                                                            </th>
+                                                                        </tr>
+                                                                        <tr>
+                                                                            <th></th>
+                                                                            <th ng-repeat="p in planheader">
+                                                                                {{p.topic}} ({{p.type}})
+                                                                            </th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                     <tbody id="reporttablebody-phase-two" class="report-body" >
+                                                                        <tr ng-repeat="p in progresslist"  ng-init="$last && finished()">
+                                                                            <td>{{p.screenname}}</td>
+                                                                            <td ng-repeat="t in p.studentplan" class="{{t.status}}" 
+                                                                            id="ptd_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" ng-click="progressChanged(s.sbid,t.lessonid, p.studentid)">
+                                                                                <span >
+                                                                                    <!-- <input type="hidden" id="p_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" value="{{t.status == 'read'?1:0}}"/>  -->
+                                                                                    <i id="pi_{{s.sbid}}_{{t.lessonid}}_{{p.studentid}}" data-status="{{t.status}}" class="fa {{t.status == 'read'?'fa-check':(t.show?'fa-times':'')}}" aria-hidden="true"></i>
+                                                                                </span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
                                                         </div>
                                                         <div class="row" ng-hide="progresslist.length > 0">
                                                             <div class="col-sm-12">

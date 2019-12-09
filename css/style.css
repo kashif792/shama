@@ -3528,3 +3528,87 @@ div#midbefore_container table td {
 {
     color:#fff !important;
 }
+/*.tscroll table{
+  display: inline-grid;
+  grid-template-areas: 
+  "head-fixed";
+}
+
+.tscroll thead {
+  grid-area: head-fixed;
+  
+}
+
+.tscroll tbody {
+  
+  
+  overflow-y: scroll;
+  overflow-x: scroll;
+  height: 350px;
+  width: auto;
+}
+*/
+
+
+.tscroll th,.tscroll td {
+  min-width: 100px;
+  
+}
+.tscroll {
+  
+  /*overflow-x: hidden;
+  overflow-y: hidden;*/
+  height: 550px;
+}
+
+.tscroll table td:first-child {
+  position: sticky;
+  left: 0;
+  background-color: #fff;
+}
+
+
+
+table.flex-table {
+  display: inline-grid;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: scroll;
+height: 550px;
+}
+table.flex-table tbody {
+  flex: 1;
+
+}
+table.flex-table tr {
+  width: auto;
+  display: inline-flex;
+}
+
+table.flex-table thead{
+  display: block;
+}
+
+table.flex-table tbody {
+  display: block;
+
+}
+table.flex-table thead {
+    margin-right: 0px;
+    position: sticky;
+    top: 0px;
+    background-color: #fff;
+    z-index: 100;
+}
+
+
+table.flex-table tr td,
+table.flex-table tr th {
+  display: block;
+  flex: 1;
+}
+/*
+table.flex-widths.flex-table-aligned thead > tr {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}*/

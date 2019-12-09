@@ -104,6 +104,7 @@
                     </form>
                 </div>
             </div>
+            
             <div class="row padding-top" ng-hide="!processfinished">
                 <div class="col-sm-12">
                     <div class="panel-group" id="accordion">
@@ -126,11 +127,14 @@
                                                         </a>
                                                     </h4>
                                                 </div>
+
                                                 <div id="p_{{s.sbid}}" class="panel-collapse collapse {{s.first_subject}}">
                                                     <div class="loader2" ng-hide="cprocessfinished"></div>
                                                     <div class="panel-body" ng-hide="!cprocessfinished">
-                                                        <div ng-hide="progresslist.length <= 0 " style="overflow: auto;">
-                                                            <table datatable="ng"  class="table table-striped table-bordered row-border hover">
+                                                        <div ng-hide="progresslist.length <= 0 " class="progrss-table" style="overflow-y: hidden;">
+                                                            
+                                                            <div class="tscroll">
+                                                                <table datatable="ng"  class="table table-striped table-bordered row-border hover zui-table flex-table">
                                                                 <thead>
                                                                     <tr>
                                                                         <th>Students</th>
@@ -139,7 +143,7 @@
                                                                         </th>
                                                                     </tr>
                                                                     <tr>
-                                                                        <th></th>
+                                                                        <th>&nbsp;</th>
                                                                         <th ng-repeat="p in planheader">
                                                                             {{p.topic}} ({{p.type}})
                                                                         </th>
@@ -147,13 +151,16 @@
                                                                 </thead>
                                                                 <tbody id="reporttablebody-phase-two" class="report-body" >
                                                                     <tr ng-repeat="p in progresslist"  ng-init="$last && finished()">
-                                                                        <td>{{p.screenname}}</td>
+                                                                        <td class="zui-sticky-col">{{p.screenname}}</td>
                                                                         <td ng-repeat="s in p.studentplan"  class="{{s.status}}">
                                                                             <i id="pi_{{sub.sbid}}_{{s.lessonid}}_{{p.studentid}}"  class="fa {{s.status == 'read'?'fa-check':(s.show?'fa-times':'')}}" aria-hidden="true"></i>
                                                                         </td>
                                                                     </tr>
                                                                 </tbody>
                                                             </table>
+                                                        </div>
+                                                                
+                                                            
                                                         </div>
                                                         <div class="row" ng-hide="progresslist.length > 0">
                                                             <div class="col-sm-12">
@@ -174,8 +181,8 @@
                                                 <div id="e_{{s.sbid}}" class="panel-collapse collapse custom-collapse">
                                                     <div class="loader2" ng-hide="eprocessfinished"></div>
                                                     <div class="panel-body" ng-hide="!eprocessfinished">
-                                                        <div  style="overflow: auto;">
-                                                            <table datatable="ng"  class="table table-striped table-bordered row-border hover">
+                                                        <div style="overflow: auto;" >
+                                                            <table datatable="ng"  class="table table-striped table-bordered row-border  hover">
                                                                 <thead>
                                                                     <tr>
                                                                         <th></th>
@@ -225,10 +232,10 @@
         </div>
     </div>
 </div>
-<link rel="stylesheet" href="<?php echo base_url(); ?>css/angular-datatables.css">
-<script src="<?php echo base_url(); ?>js/angular-datatables.min.js"></script>
 
-<script>
+  <script>
+
+
 
     app.controller('principal_report_controller', function($scope, $http, $filter,$interval){
          $scope.filterobj = {};
@@ -258,7 +265,7 @@
                 {
                     getCourseDetail($scope.subjectid,$scope.sectionid,$scope.semesterid,$scope.sessionid,$scope.classid)
                 }
-            },60000);
+            },260000);
         }
 
         var sinterval
@@ -582,4 +589,5 @@
             return (response.data);
         }
     });
+
 </script>
