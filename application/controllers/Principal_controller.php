@@ -6777,4 +6777,274 @@ if(!$this->session->userdata('id'))
         
 		echo json_encode($listarray);
     }
+
+    public function getAnnouncementList()
+    {
+    	if(!($this->session->userdata('id')))
+    	{
+			parent::redirectUrl('signin');
+		}
+		$data['title'] = "Announcement title";
+    	$this->load->view('principal/announcement/show_announcement_list',$this->data);
+    	
+    }
+    public function addAnnouncement()
+    {
+    	if(!($this->session->userdata('id')))
+    	{
+			parent::redirectUrl('signin');
+		}
+    	$data['title'] = "Announcement title";
+    	$this->load->view('principal/announcement/add_announcement',$this->data);
+    }
+    public function saveAnnouncement()
+    {
+    	if(!($this->session->userdata('id'))){
+			parent::redirectUrl('signin');
+
+		}
+
+		$result['message'] = false;
+		$locations = $this->session->userdata('locations');
+        
+		  
+        
+
+		
+			if($this->input->post('serial')){
+				$data =  array(
+							'title'=>$this->input->post('title'),
+						 	'message'=>$this->input->post('paigam'),
+						 	'target_type'=>$this->input->post('target'),
+						 	'reference'=>$this->input->post('reference'),
+						 	'status'=>'draft',
+						 	'updated_at'=> date('Y-m-d H:i'),
+						);
+				$this->operation->table_name = 'announcements';
+				$announcement_id = $this->operation->Create($data,$this->input->post('serial'));
+			}
+			
+			else{
+
+				// $username = "923136646887";///Your Username
+				// $password = "5914";///Your Password
+				// $mobile = "923136646887";///Recepient Mobile Number
+				// $sender = "Shama";
+				// $message = "Test Message";
+				 
+				// ////sending sms
+				 
+				// $post = "sender=".urlencode($sender)."&mobile=".urlencode($mobile)."&message=".urlencode($message)."";
+				// $url = "https://sendpk.com/api/sms.php?username=".$username."&password=".$password."";
+				// $ch = curl_init();
+				// $timeout = 10; // set to zero for no timeout
+				// curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
+				// curl_setopt($ch, CURLOPT_URL,$url);
+				// curl_setopt($ch, CURLOPT_POST, 1);
+				// curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
+				// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+				// curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+				// $result = curl_exec($ch);
+				
+				// /*Print Responce*/
+				// echo $result; 
+				// exit;
+				// Insert into Annoucement Table
+				$data =  array(
+							'title'=>$this->input->post('title'),
+						 	'message'=>$this->input->post('paigam'),
+						 	'target_type'=>$this->input->post('target'),
+						 	'reference'=>$this->input->post('reference'),
+						 	'status'=>'draft',
+						 	'created_at'=> date('Y-m-d H:i'),
+						);
+				$this->operation->table_name = 'announcements';
+				$announcement_id = $this->operation->Create($data);
+			}
+			$result['lastid'] = $announcement_id;
+			$result['message'] = true;
+			echo json_encode($result);
+    }
+    public function sendAnnouncement()
+    {
+
+
+				$locations = $this->session->userdata('locations');
+				$data =  array(
+							'title'=>$this->input->post('title'),
+						 	'message'=>$this->input->post('paigam'),
+						 	'target_type'=>$this->input->post('target'),
+						 	'reference'=>$this->input->post('reference'),
+						 	'status'=>'Sending',
+						 	'active'=>1,
+						);
+				$this->operation->table_name = 'announcements';
+				$announcement_id = $this->operation->Create($data,$this->input->post('serial'));
+				$announcement_record = $this->operation->GetRowsByQyery("Select * from announcements where id= ".$this->input->post('serial'));
+				if($announcement_record[0]->target_type=='Individual')
+				{
+					$data =  array(
+									'announcement_id'=>$this->input->post('serial'),
+								 	'phone_number'=>str_replace("-", "", $this->input->post('individual_no')),
+								 	'target_type'=>"i",
+								 	'status'=>'pending',
+								 	'created_at'=> date('Y-m-d H:i'),
+								);
+						$this->operation->table_name = 'announcement_details';
+						$announcement_id = $this->operation->Create($data);
+				}
+				else if($announcement_record[0]->target_type=='School')
+				{
+
+						$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where school_id= ".$locations[0]['school_id']);
+				        if (count($userlist))
+					    	{	
+
+					    		foreach ($userlist as $key => $value)
+					    		{
+					    			if($value->type=='t')
+					    			{
+					    				$phone = parent::getUserMeta($value->id,'teacher_phone');
+					    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'teacher_phone'),'type'=>$value->type);
+					    			}
+					    			else if($value->type=='p')
+					    			{
+					    				$phone = parent::getUserMeta($value->id,'principal_phone');
+					    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'principal_phone'),'type'=>$value->type);
+					    			}
+					    			else
+					    			{
+					    				$phone = parent::getUserMeta($value->id,'sphone');
+					    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'sphone'),'type'=>$value->type);
+					    			}
+					    			// insert into annoucement detail table
+					    			
+					    			$data =  array(
+												'announcement_id'=>$this->input->post('serial'),
+											 	'phone_number'=>str_replace("-", "", $phone),
+											 	'target_type'=>$value->type,
+											 	'user_id' =>$value->id,
+											 	'status'=>'pending',
+											 	'created_at'=> date('Y-m-d H:i'),
+											);
+									$this->operation->table_name = 'announcement_details';
+									$announcement_id = $this->operation->Create($data);
+					    		}
+
+					    	}
+					//print_r($listarray);
+				}
+				else if($announcement_record[0]->target_type=='Student')
+				{
+
+					if($this->input->post('checkall'))
+					{
+						$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where type = 's' AND school_id= ".$locations[0]['school_id']);
+				        if (count($userlist))
+					    	{	
+					    		foreach ($userlist as $key => $value)
+					    		{
+					    			$listarray[] =array('phone'=>parent::getUserMeta($value->id,'sphone'),'type'=>$value->type);
+					    		
+					    		$data =  array(
+												'announcement_id'=>$this->input->post('serial'),
+											 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->id,'sphone')),
+											 	'target_type'=>'s',
+											 	'user_id' =>$value->id,
+											 	'status'=>'pending',
+											 	'created_at'=> date('Y-m-d H:i'),
+											);
+									$this->operation->table_name = 'announcement_details';
+									$announcement_id = $this->operation->Create($data);
+					    		}
+					    	}
+					}
+					else
+					{
+						$userlist = $this->operation->GetRowsByQyery("SELECT * FROM `student_semesters` WHERE classid in(".$this->input->post('grade').") and status = 'r' ");
+				        if (count($userlist))
+					    	{	
+					    		foreach ($userlist as $key => $value)
+					    		{
+					    			$listarray[] =array('phone'=>parent::getUserMeta($value->studentid,'sphone'));
+					    			
+					    			$data =  array(
+												'announcement_id'=>$this->input->post('serial'),
+											 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->studentid,'sphone')),
+											 	'target_type'=>'s',
+											 	'user_id' =>$value->studentid,
+											 	'status'=>'pending',
+											 	'created_at'=> date('Y-m-d H:i'),
+											);
+									$this->operation->table_name = 'announcement_details';
+									$announcement_id = $this->operation->Create($data);
+					    		}
+					    	}
+					}
+					//print_r($listarray);
+				}
+				else if($announcement_record[0]->target_type=='Staff')
+				{
+
+					if($this->input->post('checkall'))
+					{
+						$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where type = 't' AND school_id= ".$locations[0]['school_id']);
+				        if (count($userlist))
+					    	{	
+					    		foreach ($userlist as $key => $value)
+					    		{
+					    			$listarray[] =array('phone'=>parent::getUserMeta($value->id,'teacher_phone'),'type'=>$value->type);
+					    			$data =  array(
+												'announcement_id'=>$this->input->post('serial'),
+											 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->id,'teacher_phone')),
+											 	'target_type'=>'t',
+											 	'user_id' =>$value->id,
+											 	'status'=>'pending',
+											 	'created_at'=> date('Y-m-d H:i'),
+											);
+									$this->operation->table_name = 'announcement_details';
+									$announcement_id = $this->operation->Create($data);
+					    		}
+					    	}
+					}
+					else
+					{
+
+						$userlist = $this->operation->GetRowsByQyery("SELECT DISTINCT(teacher_uid) FROM `schedule` WHERE class_id in(".$this->input->post('grade').") ");
+				        if (count($userlist))
+					    	{	
+					    		foreach ($userlist as $key => $value)
+					    		{
+
+					    			$listarray[] =array('phone'=>parent::getUserMeta($value->teacher_uid,'teacher_phone'));
+					    			$data =  array(
+												'announcement_id'=>$this->input->post('serial'),
+											 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->teacher_uid,'teacher_phone')),
+											 	'target_type'=>'t',
+											 	'user_id' =>$value->teacher_uid,
+											 	'status'=>'pending',
+											 	'created_at'=> date('Y-m-d H:i'),
+											);
+									$this->operation->table_name = 'announcement_details';
+									$announcement_id = $this->operation->Create($data);
+					    		}
+					    	}
+					}
+					//print_r($listarray);
+				}
+				$result['message'] = true;
+				echo json_encode($result);
+    }
+    public function stopAnnouncement()
+    {
+    	$data =  array(
+						'active'=>0,
+						);
+				$this->operation->table_name = 'announcements';
+				$announcement_id = $this->operation->Create($data,$this->input->post('serial'));
+				
+    	$result['message'] = true;
+		echo json_encode($result);
+    }
 }	
+

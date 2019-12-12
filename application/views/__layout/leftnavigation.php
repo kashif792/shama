@@ -376,6 +376,12 @@
 				<span class="link_text"> Datesheets</span>
 			</a>
 		</li>
+		<li class="">
+			<a  href="<?php echo base_url(); ?>announcementlist">
+				<i class="fa fa-bullhorn" aria-hidden="true"></i>
+				<span class="link_text"> Announcements</span>
+			</a>
+		</li>
 		<!-- <li class="<?php 
 					if($this->uri->segment(1) == 'classreport' || $this->uri->segment(1) == 'studentreport'){
 						echo 'active';

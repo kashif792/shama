@@ -3607,8 +3607,14 @@ table.flex-table tr th {
   display: block;
   flex: 1;
 }
-/*
-table.flex-widths.flex-table-aligned thead > tr {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}*/
+/* Sms */
+.long_desc
+{
+    height: 100px !important;
+}
+.grade_label
+{
+    float: left;
+    margin: 0px 10px;
+}
+/* End here */

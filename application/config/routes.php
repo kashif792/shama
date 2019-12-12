@@ -439,3 +439,9 @@ $route['updatelessonplan'] = 'Principal_Extension_controller/UpdateSemesterLesso
 $route['GetPreSchedularData'] = 'Lmsapi/GetPreSchedularData';
 
 $route['removesemesterdate'] = 'Ips/RemoveSemesterDate';
+// Sms Module
+$route['announcementlist'] = 'Principal_controller/getAnnouncementList';
+$route['add_announcement'] = 'Principal_controller/addAnnouncement';
+$route['saveAnnouncement'] = 'Principal_controller/saveAnnouncement';
+$route['sendAnnouncement'] = 'Principal_controller/sendAnnouncement';
+$route['stopAnnouncement'] = 'Principal_controller/stopAnnouncement';

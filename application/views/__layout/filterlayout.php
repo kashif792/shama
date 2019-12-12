@@ -172,7 +172,16 @@
 						echo "<li class='active'>Final Result Card</li>";
 						
 					}
-
+					else if($this->uri->segment(1) == 'announcementlist'){
+						echo "<li><i>Announcement List</i></li>";
+						
+						
+					}
+					else if($this->uri->segment(1) == 'add_announcement'){
+						echo "<li><i>Announcement</i></li>";
+						echo "<li class='active'>Add Announcement</li>";
+						
+					}
 					else{
 						echo "<li class='active'>Home</li>";
 					} 
