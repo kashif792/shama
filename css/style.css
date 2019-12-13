@@ -3408,8 +3408,10 @@ label.right-controllers {
 
 .disabled
 {
-    background-color: #eeeeee;
+    background-color: #eeeeee !important;
     cursor: pointer;
+    color:#000 !important;
+    border-color: #eeeeee !important;
 }
 
 
@@ -3617,4 +3619,5 @@ table.flex-table tr th {
     float: left;
     margin: 0px 10px;
 }
+
 /* End here */

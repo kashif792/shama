@@ -353,15 +353,15 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 				                          
 
-				                            <th>Subjects</th>
+				                            <th>Title</th>
 
-				                            <th>Grade</th>
+				                            <th>Message</th>
 
-				                            <th>Teachers</th>
+				                            <th>Target</th>
 
-		                                    <th>Start Time</th>
+		                                    <th>Status</th>
 
-		                                    <th>End Time</th>
+		                                    <th>Date Time</th>
 
 		                                    <th>Options</th>
 
@@ -373,21 +373,21 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
 				                        <tr>
 
-			                          
+                                          
 
-				                            <th>Subjets</th>
+                                            <th>Title</th>
 
-				                            <th>Grade</th>
+                                            <th>Message</th>
 
-				                            <th>Teachers</th>
+                                            <th>Target</th>
 
-		                                    <th>Start Time</th>
+                                            <th>Status</th>
 
-		                                    <th>End Time</th>
+                                            <th>Date Time</th>
 
-		                                    <th>Options</th>
+                                            <th>Options</th>
 
-				                        </tr>
+                                        </tr>
 
 				                    </tfoot>
 
@@ -517,7 +517,7 @@ require APPPATH.'views/__layout/footer.php';
                         
                     }
 
-                    httppostrequest('getschedulelist',data).then(function(response){
+                    httppostrequest('getAnnoucementList',data).then(function(response){
                        
                         $scope.data = [];
                         if(response.length > 0 && response != null)
@@ -527,14 +527,14 @@ require APPPATH.'views/__layout/footer.php';
                                 
                                 
                             }
-                            $("#inputDay").val(response[0]['data_array']['select_day']);
+                            
                             $("#table-body-phase-tow").dataTable().fnDestroy();
                             $scope.loaddatatable($scope.data);
                             
                         }
                         else{
-                            $scope.schedulelist = [];
-                         
+                            $("#table-body-phase-tow").dataTable().fnDestroy();
+                            $scope.loaddatatable($scope.data);
                         }
                     });
                 
@@ -606,18 +606,19 @@ require APPPATH.'views/__layout/footer.php';
         $scope.loaddatatable = function(data)
         {
             var listdata= data;
-            
+            console.log(data);
             var table = $('#table-body-phase-tow').DataTable( {
                 data: listdata,
                 responsive: true,
                 "order": [[ 0, "asc"  ]],
                 rowId: 'id',
                 columns: [
-                    { data: 'subject_name' },
-                    { data: 'grade' },
-                    { data: 'screenname' },
-                    { data: 'start_time' },
-                    { data: 'end_time' },
+                    { data: 'title' },
+                    { data: 'message' },
+                    { data: 'target_type' },
+                    
+                    { data: 'status' },
+                    { data: 'created_at' },
                     {
                      "className": '',
                      "orderable": false,
@@ -627,7 +628,7 @@ require APPPATH.'views/__layout/footer.php';
                      "render" : function ( data, type, full, meta ) {
                           if ( data != null && data != '') {
                              
-                             return "<a href='<?php echo $path_url; ?>add_timtble/"+data['id']+"'  ><i class='fa fa-edit' aria-hidden='true'></i></a> <a href='javascript:void(0)' id="+data['id']+" class='del'><i class='fa fa-remove' aria-hidden='true'></i></a>";
+                             return "<a href='<?php echo $path_url; ?>view_announcement/"+data['id']+"'  ><i class='fa fa-eye' aria-hidden='true'></i></a> </a>";
                          }
                          else {
                                  return;
@@ -657,23 +658,7 @@ require APPPATH.'views/__layout/footer.php';
           //       });
             
           // });
-            table.columns(1).every( function () {
-                var column = this;
-                var select = $('<select id="grade_id"><option value="">All</option></select>')
-                .appendTo( $(column.footer()).empty() )
-                .on( 'change', function () {
-                var val = $.fn.dataTable.util.escapeRegex(
-                $(this).val()
-                );
-                column
-                .search( val ? '^'+val+'$' : '', true, false )
-                .draw();
-                });
-                column.data().unique().sort().each( function ( d, j ) {
-                select.append( '<option value="'+d+'">'+d+'</option>' )
-                });
             
-          });
             table.columns(2).every( function () {
                 var column = this;
                 var select = $('<select><option value="">All</option></select>')

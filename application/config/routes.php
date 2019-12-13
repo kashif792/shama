@@ -445,3 +445,14 @@ $route['add_announcement'] = 'Principal_controller/addAnnouncement';
 $route['saveAnnouncement'] = 'Principal_controller/saveAnnouncement';
 $route['sendAnnouncement'] = 'Principal_controller/sendAnnouncement';
 $route['stopAnnouncement'] = 'Principal_controller/stopAnnouncement';
+$route['getAnnoucementList'] = 'Principal_controller/getAnnoucementList';
+
+$route['getAnnouncementDetailList'] = 'Principal_controller/getAnnouncementDetailList';
+$route['Test'] = 'Principal_controller/Test';
+$route['StopTest'] = 'Principal_controller/StopTest';
+$route['codetest'] = 'Principal_controller/testCall';
+$route['sendMessage/(:any)'] = 'Principal_controller/sendMessage/$1';
+$route['stopAnnouncementDetailList'] = 'Principal_controller/stopAnnouncementDetailList';
+$route['view_announcement/(:any)'] = 'Principal_controller/viewAnnouncement/$1';
+
+

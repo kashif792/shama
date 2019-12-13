@@ -140,14 +140,25 @@ require APPPATH.'views/__layout/leftnavigation.php';
         
             </div>
 
+    <div class="col-md-12 table_record" style="display: none;">
+        <table class="table table-striped table-bordered row-border hover" id="table-body-phase-tow">
+            <thead>
+                <tr>
+                    <th>Sr.</th>
+                    <th>Phone Number</th>
+                    <th>Date Time</th>
+                    <th>User</th>
+                    <th>Target Type</th>
+                    <th>Status</th>
+                 </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
     </div>
-
-
-
-<div class="col-sm-10">
-
+    <div class="clearfix"></div>
+    </div>
 </div>
-
 <script type="text/javascript">
 
     var app = angular.module('invantage', []);
@@ -173,6 +184,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
         $scope.select_target="";
         $scope.editresponse = [];
         $scope.firsttimeload = false;
+        $scope.requests = [];
         //$scope.classlist = [];
         angular.element(function(){
             if($scope.serial == '')
@@ -397,13 +409,16 @@ $scope.changetarget = function()
                     message('Something is wrong!','show')
                 });
         }
-
+        $scope.isCourseTabActive=false;
         $scope.sendAnnouncement = function()
         {
             
             // End here
-            
+            $('.table_record').show();
+            $scope.reloadcontent();
+            $scope.isCourseTabActive=true;
             $("#save").attr("disabled", true);
+            $(".save").addClass("disabled");
             $("#stop").show();
             
              var $this = $(".send");
@@ -464,10 +479,14 @@ $scope.changetarget = function()
                 .success(function (response) {
                     
                     if(response.message == true){
-                        message('Message sent Successfully ','show');
-                        $("#send").html("Sent");
-                        $("#send").attr("disabled", true);
-                        $("#stop").hide();
+                        //message('Message sent Successfully ','show');
+                        // $("#send").html("Sent");
+                        // $("#send").attr("disabled", true);
+                        // $("#stop").hide();
+                        //$scope.isCourseTabActive=false;
+                        $scope.isCourseTabActive=true;
+                        $("#stop").show();
+                        $scope.getAnnouncementData();
                     }
                     
                 })
@@ -479,9 +498,14 @@ $scope.changetarget = function()
                 });
         }
         // when start time change, update minimum for end timepicker
-        $scope.stopAnnouncement = function()
+
+        var clearRequest = function(request){
+            $scope.requests.splice($scope.requests.indexOf(request), 1);
+        };
+        $scope.stopAnnouncement = function(request)
         {
-            console.log("Stopkoll");
+            // request.cancel("User cancelled");
+            // clearRequest(request);
             var formdata = new FormData();
             formdata.append('serial',$scope.serial);
             
@@ -502,6 +526,9 @@ $scope.changetarget = function()
                         $(".send").removeClass("disabled");
                         $(".send").removeAttr("disabled");
                         $("#stop").hide();
+                        //$scope.stopAnnouncementData();
+                        $scope.isCourseTabActive = true;
+                        
                     }
                     
                 })
@@ -512,17 +539,124 @@ $scope.changetarget = function()
                     message('Something is wrong!','show')
                 });
         }
-        function httprequest(url,data)
-      {
-        var request = $http({
-          method:'GET',
-          url:url,
-          params:data,
-          headers : {'Accept' : 'application/json'}
-        });
-        return (request.then(responseSuccess,responseFail))
-      }
+        // Get Annoucement Table
+        $scope.getAnnouncementData = function()
+        {
+            try{
+                    var data ={
+                        serial:$scope.serial,
+                    }
+                    //console.log(data);
+                    httppostrequest('getAnnouncementDetailList',data).then(function(response){
+                        $scope.data = [];
+                        if(response.length > 0 && response != null)
+                        {
+                            for (var i=0; i<response[0]['listarray'].length; i++) {
+                                $scope.data.push(response[0]['listarray'][i]);
+                            }
+                            
+                            $("#table-body-phase-tow").dataTable().fnDestroy();
+                            $scope.loaddatatable($scope.data);
+                            
+                            if(response[0]['data_array']=="Stop")
+                            {
+                                message('Message sent Successfully ','show');
+                                 $("#send").html("Sent");
+                                 $("#send").attr("disabled", true);
+                                 $("#stop").hide();
+                                $scope.isCourseTabActive=false;
 
+                            }
+                            
+                        }
+                        else{
+                            $scope.list = [];
+                        }
+                    });
+                }
+            catch(e){}
+        }
+        $scope.stopAnnouncementData = function()
+        {
+            try{
+                    var data ={
+                        serial:$scope.serial,
+                    }
+                    //console.log(data);
+                    httppostrequest('stopAnnouncementDetailList',data).then(function(response){
+                        $scope.data = [];
+                        if(response.length > 0 && response != null)
+                        {
+                            for (var i=0; i<response[0]['listarray'].length; i++) {
+                                $scope.data.push(response[0]['listarray'][i]);
+                            }
+                            
+                            $("#table-body-phase-tow").dataTable().fnDestroy();
+                            $scope.loaddatatable($scope.data);
+                            
+                        }
+                        else{
+                            $scope.list = [];
+                        }
+                    });
+                }
+            catch(e){}
+        }
+        $(document).ready(function(){
+        $scope.loaddatatable = function(data)
+        {
+            var listdata= data;
+            
+            var table = $('#table-body-phase-tow').DataTable( {
+                data: listdata,
+                responsive: true,
+                "order": [[ 0, "asc"  ]],
+                rowId: 'id',
+                columns: [
+                    { data: 'id' },
+                    { data: 'phone_number' },
+                    { data: 'created_at' },
+                    { data: 'user_id' },
+                    { data: 'target_type' },
+                    { data: 'status' },
+                    
+                ],
+
+                "pageLength": 10,
+
+            })
+        }
+    })
+        $scope.reloadcontent = function()
+        {
+
+            rinterval = $interval(function(){
+                if($scope.isCourseTabActive)
+                {
+                    $scope.getAnnouncementData();
+                }
+            },3000);
+        }
+        function httprequest(url,data)
+          {
+            var request = $http({
+              method:'GET',
+              url:url,
+              params:data,
+              headers : {'Accept' : 'application/json'}
+            });
+            return (request.then(responseSuccess,responseFail))
+          }
+        function httppostrequest(url,data)
+        {
+            var request = $http({
+                method:'POST',
+                url:url,
+                data:data,
+                headers : {'Accept' : 'application/json'}
+            });
+            return (request.then(responseSuccess,responseFail))
+        }
 
       function responseSuccess(response){
         return (response.data);

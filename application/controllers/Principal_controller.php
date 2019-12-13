@@ -6868,7 +6868,7 @@ if(!$this->session->userdata('id'))
     public function sendAnnouncement()
     {
 
-
+    			$exist=true;
 				$locations = $this->session->userdata('locations');
 				$data =  array(
 							'title'=>$this->input->post('title'),
@@ -6880,160 +6880,208 @@ if(!$this->session->userdata('id'))
 						);
 				$this->operation->table_name = 'announcements';
 				$announcement_id = $this->operation->Create($data,$this->input->post('serial'));
-				$announcement_record = $this->operation->GetRowsByQyery("Select * from announcements where id= ".$this->input->post('serial'));
-				if($announcement_record[0]->target_type=='Individual')
+				$announcementcount = $this->operation->GetRowsByQyery("Select * from announcement_details where announcement_id= ".$this->input->post('serial'));
+				if (count($announcementcount)>0)
 				{
-					$data =  array(
-									'announcement_id'=>$this->input->post('serial'),
-								 	'phone_number'=>str_replace("-", "", $this->input->post('individual_no')),
-								 	'target_type'=>"i",
-								 	'status'=>'pending',
-								 	'created_at'=> date('Y-m-d H:i'),
-								);
-						$this->operation->table_name = 'announcement_details';
-						$announcement_id = $this->operation->Create($data);
+					$exist=false;
 				}
-				else if($announcement_record[0]->target_type=='School')
+				if($exist)
 				{
+					$announcement_record = $this->operation->GetRowsByQyery("Select * from announcements where id= ".$this->input->post('serial'));
+					// Check already exists
 
-						$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where school_id= ".$locations[0]['school_id']);
-				        if (count($userlist))
-					    	{	
-
-					    		foreach ($userlist as $key => $value)
-					    		{
-					    			if($value->type=='t')
-					    			{
-					    				$phone = parent::getUserMeta($value->id,'teacher_phone');
-					    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'teacher_phone'),'type'=>$value->type);
-					    			}
-					    			else if($value->type=='p')
-					    			{
-					    				$phone = parent::getUserMeta($value->id,'principal_phone');
-					    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'principal_phone'),'type'=>$value->type);
-					    			}
-					    			else
-					    			{
-					    				$phone = parent::getUserMeta($value->id,'sphone');
-					    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'sphone'),'type'=>$value->type);
-					    			}
-					    			// insert into annoucement detail table
-					    			
-					    			$data =  array(
-												'announcement_id'=>$this->input->post('serial'),
-											 	'phone_number'=>str_replace("-", "", $phone),
-											 	'target_type'=>$value->type,
-											 	'user_id' =>$value->id,
-											 	'status'=>'pending',
-											 	'created_at'=> date('Y-m-d H:i'),
-											);
-									$this->operation->table_name = 'announcement_details';
-									$announcement_id = $this->operation->Create($data);
-					    		}
-
-					    	}
-					//print_r($listarray);
-				}
-				else if($announcement_record[0]->target_type=='Student')
-				{
-
-					if($this->input->post('checkall'))
+					// End here
+					if($announcement_record[0]->target_type=='Individual')
 					{
-						$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where type = 's' AND school_id= ".$locations[0]['school_id']);
-				        if (count($userlist))
-					    	{	
-					    		foreach ($userlist as $key => $value)
-					    		{
-					    			$listarray[] =array('phone'=>parent::getUserMeta($value->id,'sphone'),'type'=>$value->type);
-					    		
-					    		$data =  array(
-												'announcement_id'=>$this->input->post('serial'),
-											 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->id,'sphone')),
-											 	'target_type'=>'s',
-											 	'user_id' =>$value->id,
-											 	'status'=>'pending',
-											 	'created_at'=> date('Y-m-d H:i'),
-											);
-									$this->operation->table_name = 'announcement_details';
-									$announcement_id = $this->operation->Create($data);
-					    		}
-					    	}
+						$data =  array(
+										'announcement_id'=>$this->input->post('serial'),
+									 	'phone_number'=>str_replace("-", "", $this->input->post('individual_no')),
+									 	'target_type'=>"Individual",
+									 	'status'=>'pending',
+									 	'created_at'=> date('Y-m-d H:i'),
+									);
+							$this->operation->table_name = 'announcement_details';
+							$announcement_id = $this->operation->Create($data);
 					}
-					else
-					{
-						$userlist = $this->operation->GetRowsByQyery("SELECT * FROM `student_semesters` WHERE classid in(".$this->input->post('grade').") and status = 'r' ");
-				        if (count($userlist))
-					    	{	
-					    		foreach ($userlist as $key => $value)
-					    		{
-					    			$listarray[] =array('phone'=>parent::getUserMeta($value->studentid,'sphone'));
-					    			
-					    			$data =  array(
-												'announcement_id'=>$this->input->post('serial'),
-											 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->studentid,'sphone')),
-											 	'target_type'=>'s',
-											 	'user_id' =>$value->studentid,
-											 	'status'=>'pending',
-											 	'created_at'=> date('Y-m-d H:i'),
-											);
-									$this->operation->table_name = 'announcement_details';
-									$announcement_id = $this->operation->Create($data);
-					    		}
-					    	}
-					}
-					//print_r($listarray);
-				}
-				else if($announcement_record[0]->target_type=='Staff')
-				{
-
-					if($this->input->post('checkall'))
-					{
-						$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where type = 't' AND school_id= ".$locations[0]['school_id']);
-				        if (count($userlist))
-					    	{	
-					    		foreach ($userlist as $key => $value)
-					    		{
-					    			$listarray[] =array('phone'=>parent::getUserMeta($value->id,'teacher_phone'),'type'=>$value->type);
-					    			$data =  array(
-												'announcement_id'=>$this->input->post('serial'),
-											 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->id,'teacher_phone')),
-											 	'target_type'=>'t',
-											 	'user_id' =>$value->id,
-											 	'status'=>'pending',
-											 	'created_at'=> date('Y-m-d H:i'),
-											);
-									$this->operation->table_name = 'announcement_details';
-									$announcement_id = $this->operation->Create($data);
-					    		}
-					    	}
-					}
-					else
+					else if($announcement_record[0]->target_type=='School')
 					{
 
-						$userlist = $this->operation->GetRowsByQyery("SELECT DISTINCT(teacher_uid) FROM `schedule` WHERE class_id in(".$this->input->post('grade').") ");
-				        if (count($userlist))
-					    	{	
-					    		foreach ($userlist as $key => $value)
-					    		{
+							$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where school_id= ".$locations[0]['school_id']);
+					        if (count($userlist))
+						    	{	
 
-					    			$listarray[] =array('phone'=>parent::getUserMeta($value->teacher_uid,'teacher_phone'));
-					    			$data =  array(
-												'announcement_id'=>$this->input->post('serial'),
-											 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->teacher_uid,'teacher_phone')),
-											 	'target_type'=>'t',
-											 	'user_id' =>$value->teacher_uid,
-											 	'status'=>'pending',
-											 	'created_at'=> date('Y-m-d H:i'),
-											);
-									$this->operation->table_name = 'announcement_details';
-									$announcement_id = $this->operation->Create($data);
-					    		}
-					    	}
+						    		foreach ($userlist as $key => $value)
+						    		{
+						    			if($value->type=='t')
+						    			{
+						    				$phone = parent::getUserMeta($value->id,'teacher_phone');
+						    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'teacher_phone'),'type'=>$value->type);
+						    			}
+						    			else if($value->type=='p')
+						    			{
+						    				$phone = parent::getUserMeta($value->id,'principal_phone');
+						    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'principal_phone'),'type'=>$value->type);
+						    			}
+						    			else
+						    			{
+						    				$phone = parent::getUserMeta($value->id,'sphone');
+						    				$listarray[] =array('phone'=>parent::getUserMeta($value->id,'sphone'),'type'=>$value->type);
+						    			}
+						    			// insert into annoucement detail table
+						    			if($value->type=='t')
+						    			{
+						    				$type = "Staff";
+						    			}
+						    			if($value->type=='s')
+						    			{
+						    				$type = "Student";
+						    			}
+						    			$data =  array(
+													'announcement_id'=>$this->input->post('serial'),
+												 	'phone_number'=>str_replace("-", "", $phone),
+												 	'target_type'=>$type,
+												 	'user_id' =>$value->id,
+												 	'status'=>'pending',
+												 	'created_at'=> date('Y-m-d H:i'),
+												);
+										$this->operation->table_name = 'announcement_details';
+										$announcement_id = $this->operation->Create($data);
+						    		
+						    		}
+
+						    	}
+						//print_r($listarray);
 					}
-					//print_r($listarray);
+					else if($announcement_record[0]->target_type=='Student')
+					{
+
+						if($this->input->post('checkall'))
+						{
+							$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where type = 's' AND school_id= ".$locations[0]['school_id']);
+					        if (count($userlist))
+						    	{	
+						    		foreach ($userlist as $key => $value)
+						    		{
+						    			$listarray[] =array('phone'=>parent::getUserMeta($value->id,'sphone'),'type'=>$value->type);
+						    		
+						    		$data =  array(
+													'announcement_id'=>$this->input->post('serial'),
+												 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->id,'sphone')),
+												 	'target_type'=>'Student',
+												 	'user_id' =>$value->id,
+												 	'status'=>'pending',
+												 	'created_at'=> date('Y-m-d H:i'),
+												);
+										$this->operation->table_name = 'announcement_details';
+										$announcement_id = $this->operation->Create($data);
+						    		}
+						    	}
+						}
+						else
+						{
+							$userlist = $this->operation->GetRowsByQyery("SELECT * FROM `student_semesters` WHERE classid in(".$this->input->post('grade').") and status = 'r' ");
+					        if (count($userlist))
+						    	{	
+						    		foreach ($userlist as $key => $value)
+						    		{
+						    			$listarray[] =array('phone'=>parent::getUserMeta($value->studentid,'sphone'));
+						    			
+						    			$data =  array(
+													'announcement_id'=>$this->input->post('serial'),
+												 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->studentid,'sphone')),
+												 	'target_type'=>'Student',
+												 	'user_id' =>$value->studentid,
+												 	'status'=>'pending',
+												 	'created_at'=> date('Y-m-d H:i'),
+												);
+										$this->operation->table_name = 'announcement_details';
+										$announcement_id = $this->operation->Create($data);
+						    		}
+						    	}
+						}
+						//print_r($listarray);
+					}
+					else if($announcement_record[0]->target_type=='Staff')
+					{
+
+						if($this->input->post('checkall'))
+						{
+							$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where type = 't' AND school_id= ".$locations[0]['school_id']);
+					        if (count($userlist))
+						    	{	
+						    		foreach ($userlist as $key => $value)
+						    		{
+						    			$listarray[] =array('phone'=>parent::getUserMeta($value->id,'teacher_phone'),'type'=>$value->type);
+						    			$data =  array(
+													'announcement_id'=>$this->input->post('serial'),
+												 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->id,'teacher_phone')),
+												 	'target_type'=>'Staff',
+												 	'user_id' =>$value->id,
+												 	'status'=>'pending',
+												 	'created_at'=> date('Y-m-d H:i'),
+												);
+										$this->operation->table_name = 'announcement_details';
+										$announcement_id = $this->operation->Create($data);
+						    		}
+						    	}
+						}
+						else
+						{
+
+							$userlist = $this->operation->GetRowsByQyery("SELECT DISTINCT(teacher_uid) FROM `schedule` WHERE class_id in(".$this->input->post('grade').") ");
+					        if (count($userlist))
+						    	{	
+						    		foreach ($userlist as $key => $value)
+						    		{
+
+						    			$listarray[] =array('phone'=>parent::getUserMeta($value->teacher_uid,'teacher_phone'));
+						    			$data =  array(
+													'announcement_id'=>$this->input->post('serial'),
+												 	'phone_number'=>str_replace("-", "",parent::getUserMeta($value->teacher_uid,'teacher_phone')),
+												 	'target_type'=>'Staff',
+												 	'user_id' =>$value->teacher_uid,
+												 	'status'=>'pending',
+												 	'created_at'=> date('Y-m-d H:i'),
+												);
+										$this->operation->table_name = 'announcement_details';
+										$announcement_id = $this->operation->Create($data);
+						    		}
+						    	}
+						}
+						//print_r($listarray);
+					}
 				}
+
+
+
+				$url = site_url()."/sendMessage/".$this->input->post('serial');
+				
+				$params = 1;
+				foreach ($params as $key => &$val) {
+			      if (is_array($val)) $val = implode(',', $val);
+			        $post_params[] = $key.'='.urlencode($val);
+			    }
+			    $post_string = implode('&', $post_params);
+
+			    $parts=parse_url($url);
+
+			    $fp = fsockopen($parts['host'],
+			        isset($parts['port'])?$parts['port']:80,
+			        $errno, $errstr, 30);
+
+			    $out = "POST ".$parts['path']." HTTP/1.1\r\n";
+			    $out.= "Host: ".$parts['host']."\r\n";
+			    $out.= "Content-Type: application/x-www-form-urlencoded\r\n";
+			    $out.= "Content-Length: ".strlen($post_string)."\r\n";
+			    $out.= "Connection: Close\r\n\r\n";
+			    if (isset($post_string)) $out.= $post_string;
+
+			    fwrite($fp, $out);
+			    fclose($fp);
+				
 				$result['message'] = true;
 				echo json_encode($result);
+				
     }
     public function stopAnnouncement()
     {
@@ -7045,6 +7093,184 @@ if(!$this->session->userdata('id'))
 				
     	$result['message'] = true;
 		echo json_encode($result);
+    }
+    public function sendMessage($id = NULL)
+    {
+
+    	$userlist = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status !='Sent' AND announcement_id= ".$id);
+			        if (count($userlist))
+				    {	
+						foreach ($userlist as $key => $value)
+				    	{
+				    		$annoucementstatus = $this->operation->GetRowsByQyery("Select active from announcements where id= ".$id);
+				    		if($annoucementstatus[0]->active==1)
+				    		{
+				    			// Update status
+				    			$data =  array(
+								'status'=>'Sent',
+							 	'sent_time'=> date('Y-m-d H:i:s'),
+								);
+								$this->operation->table_name = 'announcement_details';
+								$this->operation->Create($data,$value->id);
+							sleep(3);
+				    		}
+				    		else
+				    		{
+				    			$data =  array(
+								'status'=>'Cancelled',
+							 	
+								);
+								$this->operation->table_name = 'announcement_details';
+								$this->operation->Create($data,$value->id);
+
+				    		}
+				    	
+				    	}
+				    }
+
+				
+    }
+    public function Test()
+    {
+		echo "\nFinished";
+		$url = "http://localhost/shama/sendMessage";
+		$params = 1;
+		foreach ($params as $key => &$val) {
+	      if (is_array($val)) $val = implode(',', $val);
+	        $post_params[] = $key.'='.urlencode($val);
+	    }
+	    $post_string = implode('&', $post_params);
+
+	    $parts=parse_url($url);
+
+	    $fp = fsockopen($parts['host'],
+	        isset($parts['port'])?$parts['port']:80,
+	        $errno, $errstr, 30);
+
+	    $out = "POST ".$parts['path']." HTTP/1.1\r\n";
+	    $out.= "Host: ".$parts['host']."\r\n";
+	    $out.= "Content-Type: application/x-www-form-urlencoded\r\n";
+	    $out.= "Content-Length: ".strlen($post_string)."\r\n";
+	    $out.= "Connection: Close\r\n\r\n";
+	    if (isset($post_string)) $out.= $post_string;
+
+	    fwrite($fp, $out);
+	    fclose($fp);
+
+    }
+
+    
+    public function getAnnouncementDetailList()
+    {
+    	if(!($this->session->userdata('id')))
+	 	{
+			parent::redirectUrl('signin');
+		}
+		$request = json_decode(file_get_contents('php://input'));
+		$id = $this->security->xss_clean(trim($request->serial));
+		//$annoucementrow = $this->operation->GetRowsByQyery("SELECT * FROM announcements WHERE id =".$id);
+		$userlist = $this->operation->GetRowsByQyery("SELECT * FROM announcement_details WHERE announcement_id =".$id);
+	   	$listarray = array();
+	   	if (count($userlist))
+    	{	
+    		$i = 1;
+    		foreach ($userlist as $key => $value)
+    		{
+    			if($value->target_type!='Individual')
+    			{
+    				$listarray[] =array('id'=>$i,'phone_number'=>$value->phone_number,'created_at'=>date('Y-m-d H:i',strtotime($value->created_at)),'user_id'=>getUserName($value->user_id),'target_type'=>$value->target_type,'status'=>$value->status);
+    			}
+    			else
+    			{
+    				$listarray[] =array('id'=>$i,'phone_number'=>$value->phone_number,'created_at'=>date('Y-m-d H:i',strtotime($value->created_at)),'user_id'=>"",'target_type'=>$value->target_type,'status'=>$value->status);
+    			}
+    			$i++;
+    			
+    		}
+    	}
+    	// Check end process
+    	$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status ='Pending' OR status ='Cancelled' AND announcement_id= ".$id);
+    	if(count($endp)==0)
+    	{
+    		$data_array  = "Stop";
+    		//
+    		$data =  array(
+						'status'=>"Sent",
+						'updated_at'=> date('Y-m-d H:i:s'),
+						);
+				$this->operation->table_name = 'announcements';
+				$announcement_id = $this->operation->Create($data,$id);
+		
+    	}
+	   	$result[] = array(
+                        'listarray'=>$listarray,
+                        
+                        'data_array'=>$data_array
+                    );
+
+	    echo json_encode($result);
+	   	//echo json_encode($this->data['timetable_list']);
+    }
+    public function stopAnnouncementDetailList()
+    {
+    	if(!($this->session->userdata('id')))
+	 	{
+			parent::redirectUrl('signin');
+		}
+		$request = json_decode(file_get_contents('php://input'));
+		$id = $this->security->xss_clean(trim($request->serial));
+		$userlist = $this->operation->GetRowsByQyery("SELECT * FROM announcement_details WHERE announcement_id =".$id);
+	   	$listarray = array();
+	   	if (count($userlist))
+    	{	
+    		//$i = 1;
+    		// foreach ($userlist as $key => $value)
+    		// {
+
+    		// 	$listarray[] =array('id'=>$i,'phone_number'=>$value->phone_number,'created_at'=>date('Y-m-d H:i',strtotime($value->created_at)),'user_id'=>$value->user_id,'target_type'=>$value->target_type,'status'=>$value->status);
+    		// 	$i++;
+    		// }
+    	}
+	   	$result[] = array(
+                        'listarray'=>$listarray,
+                        
+                        'data_array'=>$data_array
+                    );
+	   	sleep(3);
+	    echo json_encode($result);
+	   	//echo json_encode($this->data['timetable_list']);
+    }
+    public function getAnnoucementList()
+    {
+
+	 	if(!($this->session->userdata('id')))
+	 	{
+			parent::redirectUrl('signin');
+		}
+		
+		
+		$request = json_decode(file_get_contents('php://input'));
+		
+		$listarray =array();
+		
+
+		 $datameta=$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT * FROM  announcements ORDER by id desc");
+		 
+		$result[] = array(
+                        'listarray'=>$this->data['timetable_list']
+                    );
+
+	    echo json_encode($result);
+    }
+    public function viewAnnouncement($id=null)
+    {
+    	
+    	if(!($this->session->userdata('id')))
+    	{
+			parent::redirectUrl('signin');
+		}
+    	$data['title'] = "Announcement View";
+    	$this->load->view('principal/announcement/view_announcement',$this->data);
     }
 }	
 
