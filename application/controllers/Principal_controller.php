@@ -6818,6 +6818,8 @@ if(!$this->session->userdata('id'))
 						 	'target_type'=>$this->input->post('target'),
 						 	'reference'=>$this->input->post('reference'),
 						 	'status'=>'draft',
+						 	'all_class'=>$this->input->post('checkall'),
+						 	'class_id'=>$this->input->post('grade'),
 						 	'updated_at'=> date('Y-m-d H:i'),
 						);
 				$this->operation->table_name = 'announcements';
@@ -6856,6 +6858,8 @@ if(!$this->session->userdata('id'))
 						 	'target_type'=>$this->input->post('target'),
 						 	'reference'=>$this->input->post('reference'),
 						 	'status'=>'draft',
+						 	'all_class'=>$this->input->post('checkall'),
+						 	'class_id'=>$this->input->post('grade'),
 						 	'created_at'=> date('Y-m-d H:i'),
 						);
 				$this->operation->table_name = 'announcements';
@@ -7087,6 +7091,7 @@ if(!$this->session->userdata('id'))
     {
     	$data =  array(
 						'active'=>0,
+						'status'=>"Cancelled",
 						);
 				$this->operation->table_name = 'announcements';
 				$announcement_id = $this->operation->Create($data,$this->input->post('serial'));
@@ -7097,7 +7102,7 @@ if(!$this->session->userdata('id'))
     public function sendMessage($id = NULL)
     {
 
-    	$userlist = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status !='Sent' AND announcement_id= ".$id);
+    		$userlist = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status !='Sent' AND announcement_id= ".$id);
 			        if (count($userlist))
 				    {	
 						foreach ($userlist as $key => $value)
@@ -7127,7 +7132,17 @@ if(!$this->session->userdata('id'))
 				    	
 				    	}
 				    }
-
+		// Check for status pending
+		$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status ='Pending' OR status ='Cancelled'  AND announcement_id= ".$id);
+    	if(count($endp)==0)
+    	{
+    		$data =  array(
+				'status'=>'Sent',
+			 	
+				);
+				$this->operation->table_name = 'announcements';
+				$this->operation->Create($data,$id);
+    	}
 				
     }
     public function Test()
@@ -7189,17 +7204,22 @@ if(!$this->session->userdata('id'))
     		}
     	}
     	// Check end process
-    	$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status ='Pending' OR status ='Cancelled' AND announcement_id= ".$id);
+    	$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status ='Pending' OR status ='Cancelled'  AND announcement_id= ".$id);
     	if(count($endp)==0)
     	{
     		$data_array  = "Stop";
     		//
-    		$data =  array(
+    		$ann_status = $this->operation->GetRowsByQyery("SELECT * FROM announcements WHERE id =".$id);
+    		if($ann_status[0]->status!='Draft')
+    		{
+    			$data =  array(
 						'status'=>"Sent",
 						'updated_at'=> date('Y-m-d H:i:s'),
 						);
 				$this->operation->table_name = 'announcements';
 				$announcement_id = $this->operation->Create($data,$id);
+    		}
+    		
 		
     	}
 	   	$result[] = array(
@@ -7253,11 +7273,24 @@ if(!$this->session->userdata('id'))
 		
 		$listarray =array();
 		
+		$userlist = $this->operation->GetRowsByQyery("SELECT * FROM  announcements ORDER by id desc");
+	   	$listarray = array();
+	   	if (count($userlist))
+    	{	
+    		
+    		foreach ($userlist as $key => $value)
+    		{
+    			
+    			$listarray[] =array('id'=>$value->id,'title'=>$value->title,'message'=>$value->message,'target_type'=>$value->target_type,'created_at'=>date('Y-m-d H:i',strtotime($value->created_at)),'status'=>$value->status);
+    		
+    		}
+    	}
 
-		 $datameta=$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT * FROM  announcements ORDER by id desc");
-		 
+
+		// $datameta=$this->data['timetable_list'] = $this->operation->GetRowsByQyery("SELECT * FROM  announcements ORDER by id desc");
+		
 		$result[] = array(
-                        'listarray'=>$this->data['timetable_list']
+                        'listarray'=>$listarray
                     );
 
 	    echo json_encode($result);
@@ -7269,8 +7302,41 @@ if(!$this->session->userdata('id'))
     	{
 			parent::redirectUrl('signin');
 		}
+		//$this->data['annoucement'] = $this->operation->GetRowsByQyery("SELECT  * from announcements where id = ".$id);
     	$data['title'] = "Announcement View";
     	$this->load->view('principal/announcement/view_announcement',$this->data);
+    }
+
+    public function getAnnouncementView()
+    {
+    	if(!($this->session->userdata('id')))
+	 	{
+			parent::redirectUrl('signin');
+		}
+
+		$request = json_decode(file_get_contents('php://input'));
+		$id = $this->security->xss_clean(trim($request->serial));
+		$locations = $this->session->userdata('locations');
+    	$ann_recorde = $this->operation->GetRowsByQyery("SELECT * FROM  announcements where id=".$id);
+	   	//$listarray = array();
+	   	if($ann_recorde[0]->target_type=="Individual")
+	   	{
+	   		$ann_d_recorde = $this->operation->GetRowsByQyery("SELECT * FROM  announcement_details where announcement_id=".$id);
+	   		$listarray =array('id'=>$ann_recorde[0]->id,'title'=>$ann_recorde[0]->title,'message'=>$ann_recorde[0]->message,'target_type'=>$ann_recorde[0]->target_type,'status'=>$ann_recorde[0]->status,'reference'=>$ann_recorde[0]->reference,'recepient_no'=>$ann_d_recorde[0]->phone_number);
+	   	}
+	   	else
+	   	{
+	   		$classlist = $this->operation->GetRowsByQyery("Select c.* from classes c  where  c.school_id =".$locations[0]['school_id']);
+	   		$listarray =array('id'=>$ann_recorde[0]->id,'title'=>$ann_recorde[0]->title,'message'=>$ann_recorde[0]->message,'target_type'=>$ann_recorde[0]->target_type,'status'=>$ann_recorde[0]->status,'all_class'=>$ann_recorde[0]->all_class,'class_id'=>$ann_recorde[0]->class_id);
+	   	}
+    		
+    		
+    	$result[] = array(
+                        'listarray'=>$listarray,
+                        'classlist'=>$classlist
+                    );
+
+	    echo json_encode($result);
     }
 }	
 

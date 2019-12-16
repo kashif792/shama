@@ -24,7 +24,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
             <div class="modal-body">
 
-                <p>Are you sure you want to delete this record?</p>
+                <p>Are you sure you want to send this Message?</p>
 
              </div>
 
@@ -32,7 +32,40 @@ require APPPATH.'views/__layout/leftnavigation.php';
 
                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
 
-                <button type="button" id="UserDelete" class="btn btn-default " value="save">Yes</button>
+                <button type="button" id="SendAnn" class="btn btn-default " value="save">Yes</button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<div id="stop_modal" class="modal fade">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <div class="modal-header">
+
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+
+                <h4 class="modal-title">Confirmation</h4>
+
+            </div>
+
+            <div class="modal-body">
+
+                <p>Are you sure you want to stop this Message?</p>
+
+             </div>
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+                <button type="button" id="StopAnn" class="btn btn-default " value="save">Yes</button>
 
             </div>
 
@@ -159,6 +192,14 @@ require APPPATH.'views/__layout/leftnavigation.php';
     <div class="clearfix"></div>
     </div>
 </div>
+<?php
+// require_footer
+require APPPATH.'views/__layout/footer.php';
+?>
+<script src="<?php echo base_url(); ?>js/angular-datatables.min.js"></script>
+
+<script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+
 <script type="text/javascript">
 
     var app = angular.module('invantage', []);
@@ -413,11 +454,17 @@ $scope.changetarget = function()
         $scope.sendAnnouncement = function()
         {
             
+            $("#detail_modal").modal('show');
+            
+            $(document).on('click','#SendAnn',function(){
+                
+            $("#detail_modal").modal('hide');
             // End here
             $('.table_record').show();
             $scope.reloadcontent();
             $scope.isCourseTabActive=true;
-            $("#save").attr("disabled", true);
+            //$("#save").attr("disabled", true);
+            $("#save").hide();
             $(".save").addClass("disabled");
             $("#stop").show();
             
@@ -496,7 +543,9 @@ $scope.changetarget = function()
                     initmodules();
                     message('Something is wrong!','show')
                 });
+                });
         }
+
         // when start time change, update minimum for end timepicker
 
         var clearRequest = function(request){
@@ -504,8 +553,13 @@ $scope.changetarget = function()
         };
         $scope.stopAnnouncement = function(request)
         {
+
             // request.cancel("User cancelled");
             // clearRequest(request);
+            $("#stop_modal").modal('show');
+            
+            $(document).on('click','#StopAnn',function(){
+            $("#stop_modal").modal('hide');
             var formdata = new FormData();
             formdata.append('serial',$scope.serial);
             
@@ -538,6 +592,7 @@ $scope.changetarget = function()
                     initmodules();
                     message('Something is wrong!','show')
                 });
+            })
         }
         // Get Annoucement Table
         $scope.getAnnouncementData = function()
@@ -562,7 +617,7 @@ $scope.changetarget = function()
                             {
                                 message('Message sent Successfully ','show');
                                  $("#send").html("Sent");
-                                 $("#send").attr("disabled", true);
+                                 $("#send").hide();
                                  $("#stop").hide();
                                 $scope.isCourseTabActive=false;
 
@@ -668,7 +723,4 @@ $scope.changetarget = function()
     });
 </script>
 
-<?php
-// require_footer
-require APPPATH.'views/__layout/footer.php';
-?>
+

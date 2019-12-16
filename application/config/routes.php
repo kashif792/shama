@@ -454,5 +454,7 @@ $route['codetest'] = 'Principal_controller/testCall';
 $route['sendMessage/(:any)'] = 'Principal_controller/sendMessage/$1';
 $route['stopAnnouncementDetailList'] = 'Principal_controller/stopAnnouncementDetailList';
 $route['view_announcement/(:any)'] = 'Principal_controller/viewAnnouncement/$1';
+$route['getAnnouncementView'] = 'Principal_controller/getAnnouncementView';
+
 
 

@@ -424,9 +424,6 @@ require APPPATH.'views/__layout/footer.php';
 
 
 <script src="<?php echo base_url(); ?>js/angular-datatables.min.js"></script>
-<script src="<?php echo base_url(); ?>js/pdfmake.min.js"></script>
-<script src="<?php echo base_url(); ?>js/vfs_fonts.js"></script>
-<script src="<?php echo  base_url(); ?>js/ui-bootstrap-tpls-2.5.0.js"></script>
 
 <script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
 
@@ -641,23 +638,23 @@ require APPPATH.'views/__layout/footer.php';
 
             })
             
-          //   table.columns(0).every( function () {
-          //       var column = this;
-          //       var select = $('<select><option value="">All</option></select>')
-          //       .appendTo( $(column.footer()).empty() )
-          //       .on( 'change', function () {
-          //       var val = $.fn.dataTable.util.escapeRegex(
-          //       $(this).val()
-          //       );
-          //       column
-          //       .search( val ? '^'+val+'$' : '', true, false )
-          //       .draw();
-          //       });
-          //       column.data().unique().sort().each( function ( d, j ) {
-          //       select.append( '<option value="'+d+'">'+d+'</option>' )
-          //       });
+            table.columns(3).every( function () {
+                var column = this;
+                var select = $('<select><option value="">All</option></select>')
+                .appendTo( $(column.footer()).empty() )
+                .on( 'change', function () {
+                var val = $.fn.dataTable.util.escapeRegex(
+                $(this).val()
+                );
+                column
+                .search( val ? '^'+val+'$' : '', true, false )
+                .draw();
+                });
+                column.data().unique().sort().each( function ( d, j ) {
+                select.append( '<option value="'+d+'">'+d+'</option>' )
+                });
             
-          // });
+          });
             
             table.columns(2).every( function () {
                 var column = this;
