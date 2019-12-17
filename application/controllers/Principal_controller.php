@@ -6817,6 +6817,7 @@ if(!$this->session->userdata('id'))
 						 	'message'=>$this->input->post('paigam'),
 						 	'target_type'=>$this->input->post('target'),
 						 	'reference'=>$this->input->post('reference'),
+						 	'individual_no'=>$this->input->post('individual_no'),
 						 	'status'=>'draft',
 						 	'all_class'=>$this->input->post('checkall'),
 						 	'class_id'=>$this->input->post('grade'),
@@ -6828,35 +6829,14 @@ if(!$this->session->userdata('id'))
 			
 			else{
 
-				// $username = "923136646887";///Your Username
-				// $password = "5914";///Your Password
-				// $mobile = "923136646887";///Recepient Mobile Number
-				// $sender = "Shama";
-				// $message = "Test Message";
-				 
-				// ////sending sms
-				 
-				// $post = "sender=".urlencode($sender)."&mobile=".urlencode($mobile)."&message=".urlencode($message)."";
-				// $url = "https://sendpk.com/api/sms.php?username=".$username."&password=".$password."";
-				// $ch = curl_init();
-				// $timeout = 10; // set to zero for no timeout
-				// curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1)');
-				// curl_setopt($ch, CURLOPT_URL,$url);
-				// curl_setopt($ch, CURLOPT_POST, 1);
-				// curl_setopt($ch, CURLOPT_POSTFIELDS,$post);
-				// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-				// curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
-				// $result = curl_exec($ch);
 				
-				// /*Print Responce*/
-				// echo $result; 
-				// exit;
 				// Insert into Annoucement Table
 				$data =  array(
 							'title'=>$this->input->post('title'),
 						 	'message'=>$this->input->post('paigam'),
 						 	'target_type'=>$this->input->post('target'),
 						 	'reference'=>$this->input->post('reference'),
+						 	'individual_no'=>$this->input->post('individual_no'),
 						 	'status'=>'draft',
 						 	'all_class'=>$this->input->post('checkall'),
 						 	'class_id'=>$this->input->post('grade'),
@@ -7095,13 +7075,25 @@ if(!$this->session->userdata('id'))
 						);
 				$this->operation->table_name = 'announcements';
 				$announcement_id = $this->operation->Create($data,$this->input->post('serial'));
-				
+		
     	$result['message'] = true;
 		echo json_encode($result);
     }
     public function sendMessage($id = NULL)
     {
+    		//Update announcement_details set status = "Pending" where announcement_id = 191 and status = "Cancelled"
+    		// Check already cancelled 
+    	$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status ='Cancelled'  AND announcement_id= ".$id);
+    	if(count($endp)>0)
+    	{
+    		$updateData = array(
+			    'status' => 'Pending'
+			);
 
+			$this->myDb->where('announcement_id', $id);
+			$this->myDb->where('status', "Cancelled");
+			$this->db->update('announcement_details', $updateData);
+		}
     		$userlist = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status !='Sent' AND announcement_id= ".$id);
 			        if (count($userlist))
 				    {	
@@ -7110,6 +7102,8 @@ if(!$this->session->userdata('id'))
 				    		$annoucementstatus = $this->operation->GetRowsByQyery("Select active from announcements where id= ".$id);
 				    		if($annoucementstatus[0]->active==1)
 				    		{
+				    			// Sms API write here
+				    			// End here 
 				    			// Update status
 				    			$data =  array(
 								'status'=>'Sent',
@@ -7133,7 +7127,7 @@ if(!$this->session->userdata('id'))
 				    	}
 				    }
 		// Check for status pending
-		$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status ='Pending' OR status ='Cancelled'  AND announcement_id= ".$id);
+		$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where (status ='Pending' OR status ='Cancelled')  AND announcement_id= ".$id);
     	if(count($endp)==0)
     	{
     		$data =  array(
@@ -7186,25 +7180,33 @@ if(!$this->session->userdata('id'))
 		//$annoucementrow = $this->operation->GetRowsByQyery("SELECT * FROM announcements WHERE id =".$id);
 		$userlist = $this->operation->GetRowsByQyery("SELECT * FROM announcement_details WHERE announcement_id =".$id);
 	   	$listarray = array();
+
 	   	if (count($userlist))
     	{	
+
+    				
     		$i = 1;
     		foreach ($userlist as $key => $value)
     		{
+
     			if($value->target_type!='Individual')
     			{
+    				
     				$listarray[] =array('id'=>$i,'phone_number'=>$value->phone_number,'created_at'=>date('Y-m-d H:i',strtotime($value->created_at)),'user_id'=>getUserName($value->user_id),'target_type'=>$value->target_type,'status'=>$value->status);
     			}
     			else
     			{
+    				$data_array  = "Stop";
+    			
     				$listarray[] =array('id'=>$i,'phone_number'=>$value->phone_number,'created_at'=>date('Y-m-d H:i',strtotime($value->created_at)),'user_id'=>"",'target_type'=>$value->target_type,'status'=>$value->status);
     			}
     			$i++;
     			
     		}
     	}
+
     	// Check end process
-    	$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status ='Pending' OR status ='Cancelled'  AND announcement_id= ".$id);
+    	$endp = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where (status ='Pending' OR status ='Cancelled')  AND announcement_id= ".$id);
     	if(count($endp)==0)
     	{
     		$data_array  = "Stop";
@@ -7222,6 +7224,12 @@ if(!$this->session->userdata('id'))
     		
 		
     	}
+    	// For Stop listing
+    	$stopquery = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status ='Cancelled'  AND announcement_id= ".$id);
+	   	if($stopquery>0)
+	   	{
+	   		$data_array  = "Cancelled";
+	   	}
 	   	$result[] = array(
                         'listarray'=>$listarray,
                         
@@ -7321,8 +7329,8 @@ if(!$this->session->userdata('id'))
 	   	//$listarray = array();
 	   	if($ann_recorde[0]->target_type=="Individual")
 	   	{
-	   		$ann_d_recorde = $this->operation->GetRowsByQyery("SELECT * FROM  announcement_details where announcement_id=".$id);
-	   		$listarray =array('id'=>$ann_recorde[0]->id,'title'=>$ann_recorde[0]->title,'message'=>$ann_recorde[0]->message,'target_type'=>$ann_recorde[0]->target_type,'status'=>$ann_recorde[0]->status,'reference'=>$ann_recorde[0]->reference,'recepient_no'=>$ann_d_recorde[0]->phone_number);
+	   		//$ann_d_recorde = $this->operation->GetRowsByQyery("SELECT * FROM  announcement_details where announcement_id=".$id);
+	   		$listarray =array('id'=>$ann_recorde[0]->id,'title'=>$ann_recorde[0]->title,'message'=>$ann_recorde[0]->message,'target_type'=>$ann_recorde[0]->target_type,'status'=>$ann_recorde[0]->status,'reference'=>$ann_recorde[0]->reference,'recepient_no'=>$ann_recorde[0]->individual_no);
 	   	}
 	   	else
 	   	{

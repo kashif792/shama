@@ -103,7 +103,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                         
                          <div class="form-group">
                             <div class="col-sm-12">
-                                <label><span class="icon-mail-alt"></span>Message</label>
+                                <label><span class="icon-mail-alt"></span> Message <span class="required">*</span></label>
                             </div>
                             <div class="col-sm-6">
                                 <textarea class="form-control long_desc"  placeholder="Message..." ng-model="message" id="paigam" name="paigam"  ></textarea>
@@ -125,20 +125,23 @@ require APPPATH.'views/__layout/leftnavigation.php';
                             </div>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="form-group recipient_no" style="display: none;">
-                           
-                            <div class="col-md-6">
-                               <label><span class="icon-mobile"></span> Recipient Number <span class="required">*</span></label>
-                                <input type="text" name="individual_no" id="individual_no" ng-model="individual_no" class="form-control">
-                            
+                        <div class="recipient_no" style="display: none;">
+                           <div class="form-group">
+                                <div class="col-md-6">
+                                   <label><span class="icon-mobile"></span> Recipient Number <span class="required">*</span></label>
+                                    <input type="text" name="individual_no" id="individual_no" ng-model="individual_no" class="form-control" placeholder="____-_______">
+                                
+                                </div>
                             </div>
                             <div class="clearfix"></div>
+                            <div class="form-group">
                             <div class="col-md-6">
                                <label><span class="icon-home"></span> Reference <span class="required">*</span></label>
                                 <input type="text" name="reference" id="reference" ng-model="reference" class="form-control">
                             
                             </div>
                             <div class="clearfix"></div>
+                            </div>
                         </div>
                         <div class="form-group staff_student" style="display: none;">
                            
@@ -156,7 +159,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <button type="button" tabindex="8" class="btn btn-primary save"  id="save" ng-click="addAnnouncement()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
-                                <a tabindex="9" href="<?php echo $path_url; ?>announcementlist" tabindex="6" title="cancel">Cancel</a>
+                                <a tabindex="9" href="<?php echo $path_url; ?>announcementlist" tabindex="6" title="cancel">Back</a>
                             </div>
                         </div>
                         <div class="form-group sendbtn" style="display: none">
@@ -199,7 +202,52 @@ require APPPATH.'views/__layout/footer.php';
 <script src="<?php echo base_url(); ?>js/angular-datatables.min.js"></script>
 
 <script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript">
+    function validate_int(myEvento) {
+        if ((myEvento.charCode >= 48 && myEvento.charCode <= 57) || myEvento.keyCode == 9 || myEvento.keyCode == 10 || myEvento.keyCode == 13 || myEvento.keyCode == 8 || myEvento.keyCode == 116 || myEvento.keyCode == 46 || (myEvento.keyCode <= 40 && myEvento.keyCode >= 37)) {
+            dato = true;
+        } else {
+            dato = false;
+        }
+        return dato;
+    }
 
+    document.getElementById("individual_no").onkeypress = validate_int;
+    document.getElementById("individual_no").onkeyup = phone_number_mask;
+
+    function phone_number_mask() {
+
+        var myMask = "____-_______";
+        var myCaja = document.getElementById("individual_no");
+        var myText = "";
+        var myNumbers = [];
+        var myOutPut = ""
+        var theLastPos = 1;
+        myText = myCaja.value;
+        //get numbers
+        for (var i = 0; i < myText.length; i++) {
+            if (!isNaN(myText.charAt(i)) && myText.charAt(i) != " ") {
+                myNumbers.push(myText.charAt(i));
+            }
+        }
+
+        //write over mask
+        for (var j = 0; j < myMask.length; j++) {
+            if (myMask.charAt(j) == "_") { //replace "_" by a number 
+                if (myNumbers.length == 0)
+                    myOutPut = myOutPut + myMask.charAt(j);
+                else {
+                    myOutPut = myOutPut + myNumbers.shift();
+                    theLastPos = j + 1; //set caret position
+                }
+            } else {
+                myOutPut = myOutPut + myMask.charAt(j);
+            }
+        }
+        document.getElementById("individual_no").value = myOutPut;
+        document.getElementById("individual_no").setSelectionRange(theLastPos, theLastPos);
+    }
+</script>
 <script type="text/javascript">
 
     var app = angular.module('invantage', []);
@@ -352,6 +400,30 @@ $scope.changetarget = function()
             $("#time_error").hide()
             $("#date_error").hide()
 
+            if(!title){
+                
+                message("Please Enter Title",'show')
+                return false;
+            }
+            else{
+                jQuery("#title").css("border", "1px solid #C9C9C9");
+            }
+            if(!paigam){
+                
+                message("Please Enter Message",'show')
+                return false;
+            }
+            else{
+                jQuery("#paigam").css("border", "1px solid #C9C9C9");
+            }
+            if(!$scope.select_target){
+                jQuery("#select_target").css("border", "1px solid red");
+                message("Please select target",'show')
+                return false;
+            }
+            else{
+                jQuery("#select_target").css("border", "1px solid #C9C9C9");
+            }
             if(!$scope.select_target){
                 jQuery("#select_target").css("border", "1px solid red");
                 message("Please select target",'show')
@@ -453,7 +525,25 @@ $scope.changetarget = function()
         $scope.isCourseTabActive=false;
         $scope.sendAnnouncement = function()
         {
-            
+            var title = $("#title").val();
+            var paigam = $("#paigam").val();
+            if(!title){
+                
+                message("Please Enter Title",'show')
+                return false;
+            }
+            else{
+                jQuery("#title").css("border", "1px solid #C9C9C9");
+            }
+            if(!paigam){
+                
+                message("Please Enter Message",'show')
+                return false;
+            }
+            else{
+                jQuery("#paigam").css("border", "1px solid #C9C9C9");
+            }
+
             $("#detail_modal").modal('show');
             
             $(document).on('click','#SendAnn',function(){
@@ -582,7 +672,8 @@ $scope.changetarget = function()
                         $("#stop").hide();
                         //$scope.stopAnnouncementData();
                         $scope.isCourseTabActive = true;
-                        
+                        //$scope.reloadcontent();
+                        //$scope.isCourseTabActive=false;
                     }
                     
                 })
@@ -617,10 +708,18 @@ $scope.changetarget = function()
                             {
                                 message('Message sent Successfully ','show');
                                  $("#send").html("Sent");
-                                 $("#send").hide();
+                                 $("#send").addClass("disabled");
                                  $("#stop").hide();
                                 $scope.isCourseTabActive=false;
 
+                            }
+                            if(response[0]['data_array']=="Cancelled")
+                            {
+                                $("#send").html("Send");
+                                $(".send").removeClass("disabled");
+                                $(".send").removeAttr("disabled");
+                                $("#stop").hide();
+                                $scope.isCourseTabActive=false;
                             }
                             
                         }
@@ -657,6 +756,7 @@ $scope.changetarget = function()
                 }
             catch(e){}
         }
+        $scope.pagenumber = 0;
         $(document).ready(function(){
         $scope.loaddatatable = function(data)
         {
@@ -680,6 +780,19 @@ $scope.changetarget = function()
                 "pageLength": 10,
 
             })
+            
+            
+
+            var table = $('#table-body-phase-tow').DataTable();
+
+$('#table-body-phase-tow').on( 'page.dt', function () {
+var info = table.page.info();
+
+$scope.pagenumber = info.page;
+
+} );
+        var table = $('#table-body-phase-tow').DataTable();
+        table.page($scope.pagenumber).draw(false);
         }
     })
         $scope.reloadcontent = function()
@@ -690,7 +803,7 @@ $scope.changetarget = function()
                 {
                     $scope.getAnnouncementData();
                 }
-            },3000);
+            },5000);
         }
         function httprequest(url,data)
           {

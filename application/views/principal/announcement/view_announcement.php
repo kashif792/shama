@@ -82,9 +82,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
     <div class="panel panel-default">
         <div class="panel-heading">
             <label>View Announcement </label>
-            <?php print_r($annoucement); 
-           //echo $annoucement['0']->title;
-            ?>
+            
         </div>
         <div class="panel-body">
                 <?php $attributes = array('name' => 'schedule_timetable', 'id' => 'schedule_timetable','class'=>'form-horizontal'); echo form_open('', $attributes);?>
@@ -106,7 +104,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                         
                          <div class="form-group">
                             <div class="col-sm-12">
-                                <label><span class="icon-mail-alt"></span>Message</label>
+                                <label><span class="icon-mail-alt"></span>Message <span class="required">*</span></label>
                             </div>
                             <div class="col-sm-6">
                                 <textarea class="form-control long_desc"  placeholder="Message..." ng-model="message" id="paigam" name="paigam"  ></textarea>
@@ -159,7 +157,7 @@ require APPPATH.'views/__layout/leftnavigation.php';
                         <div class="form-group">
                             <div class="col-sm-12">
                                 <button type="button" tabindex="8" class="btn btn-primary save"  id="save" ng-click="addAnnouncement()" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Saving...">Save</button>
-                                <a tabindex="9" href="<?php echo $path_url; ?>announcementlist" tabindex="6" title="cancel">Cancel</a>
+                                <a tabindex="9" href="<?php echo $path_url; ?>announcementlist" tabindex="6" title="cancel">Back</a>
                             </div>
                         </div>
                         <div class="form-group sendbtn" style="display: none">
@@ -412,6 +410,22 @@ $scope.getAnnouncementData = function()
             $("#time_error").hide()
             $("#date_error").hide()
 
+            if(!title){
+                
+                message("Please Enter Title",'show')
+                return false;
+            }
+            else{
+                jQuery("#title").css("border", "1px solid #C9C9C9");
+            }
+            if(!paigam){
+                
+                message("Please Enter Message",'show')
+                return false;
+            }
+            else{
+                jQuery("#paigam").css("border", "1px solid #C9C9C9");
+            }
             if(!$scope.select_target){
                 jQuery("#select_target").css("border", "1px solid red");
                 message("Please select target",'show')
@@ -515,6 +529,24 @@ $scope.getAnnouncementData = function()
         {
             
             // End here
+            var title = $("#title").val();
+            var paigam = $("#paigam").val();
+            if(!title){
+                
+                message("Please Enter Title",'show')
+                return false;
+            }
+            else{
+                jQuery("#title").css("border", "1px solid #C9C9C9");
+            }
+            if(!paigam){
+                
+                message("Please Enter Message",'show')
+                return false;
+            }
+            else{
+                jQuery("#paigam").css("border", "1px solid #C9C9C9");
+            }
             $("#detail_modal").modal('show');
             
             $(document).on('click','#SendAnn',function(){
@@ -638,7 +670,9 @@ $scope.getAnnouncementData = function()
                         $(".send").removeAttr("disabled");
                         $("#stop").hide();
                         //$scope.stopAnnouncementData();
-                        $scope.isCourseTabActive = true;
+                        //$scope.isCourseTabActive = true;
+                        $scope.reloadcontent();
+                        $scope.isCourseTabActive=false;
                         
                     }
                     
@@ -674,7 +708,7 @@ $scope.getAnnouncementData = function()
                             {
                                 message('Message sent Successfully ','show');
                                  $("#send").html("Sent");
-                                 $("#send").hide();
+                                 $("#send").addClass("disabled");
                                  $("#stop").hide();
                                 $scope.isCourseTabActive=false;
 
@@ -714,6 +748,14 @@ $scope.getAnnouncementData = function()
                             {
                                 $("#send").hide();
                             }
+                            if(response[0]['listarray'].status=='Sending')
+                            {
+                                var $this = $(".send");
+                                $this.button('loading');
+                                $("#stop").show();
+                                $scope.reloadcontent();
+                                $scope.isCourseTabActive=true;
+                            }
                             if($scope.select_target=="Individual")
                             {
                                 $('.recipient_no').show();
@@ -738,7 +780,7 @@ $scope.getAnnouncementData = function()
                                     $scope.classlist = response[0]['classlist']
                                     
                                     $scope.updateCheckUncheckAll(response[0]['listarray'].class_id);
-                                    console.log($scope.classlist);
+                                    //console.log($scope.classlist);
                                     
                                 }
                                 
@@ -808,6 +850,16 @@ $scope.getAnnouncementData = function()
                 "pageLength": 10,
 
             })
+            var table = $('#table-body-phase-tow').DataTable();
+
+            $('#table-body-phase-tow').on( 'page.dt', function () {
+            var info = table.page.info();
+
+            $scope.pagenumber = info.page;
+
+            } );
+                    var table = $('#table-body-phase-tow').DataTable();
+                    table.page($scope.pagenumber).draw(false);
         }
     })
         $scope.reloadcontent = function()
