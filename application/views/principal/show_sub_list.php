@@ -17,7 +17,7 @@ require APPPATH.'views/__layout/topbar.php';
 require APPPATH.'views/__layout/leftnavigation.php';
 
 ?>
-
+<script src="//cdn.datatables.net/1.10.10/js/jquery.dataTables.min.js"></script>
 <link href="<?php echo $path_url; ?>css/easy-responsive-tabs.css" rel="stylesheet">
 
 <link rel="stylesheet" href="<?php echo $path_url; ?>css/intlTelInput.css">

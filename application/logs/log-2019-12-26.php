@@ -1,0 +1,51 @@
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
+
+ERROR - 2019-12-26 04:48:55 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:48:55 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:04 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:04 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:04 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:10 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:10 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:10 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:10 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:21 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:21 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:21 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:21 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:21 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:34 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:34 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:35 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:35 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:35 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:49:35 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:50:22 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:52:33 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:52:34 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 04:56:34 --> Unable to connect to the database
+ERROR - 2019-12-26 04:58:32 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7093
+ERROR - 2019-12-26 05:00:30 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7095
+ERROR - 2019-12-26 05:00:30 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7095
+ERROR - 2019-12-26 05:01:31 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7095
+ERROR - 2019-12-26 05:01:31 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7095
+ERROR - 2019-12-26 05:01:31 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7095
+ERROR - 2019-12-26 05:02:50 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7096
+ERROR - 2019-12-26 05:03:20 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7096
+ERROR - 2019-12-26 05:03:20 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7096
+ERROR - 2019-12-26 05:03:21 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7096
+ERROR - 2019-12-26 05:03:21 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7096
+ERROR - 2019-12-26 05:04:24 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:24 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:24 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:24 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:25 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:49 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:49 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:49 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:49 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:49 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:04:50 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:05:50 --> Unable to connect to the database
+ERROR - 2019-12-26 05:10:19 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7098
+ERROR - 2019-12-26 05:17:26 --> Severity: error --> Exception: Call to a member function where() on null C:\wamp64\www\shama\application\controllers\Principal_controller.php 7095

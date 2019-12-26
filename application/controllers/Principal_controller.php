@@ -6869,12 +6869,15 @@ if(!$this->session->userdata('id'))
 				{
 					$exist=false;
 				}
+
 				if($exist)
 				{
 					$announcement_record = $this->operation->GetRowsByQyery("Select * from announcements where id= ".$this->input->post('serial'));
 					// Check already exists
 
-					// End here
+					// End here.
+					
+
 					if($announcement_record[0]->target_type=='Individual')
 					{
 						$data =  array(
@@ -6987,7 +6990,6 @@ if(!$this->session->userdata('id'))
 					}
 					else if($announcement_record[0]->target_type=='Staff')
 					{
-
 						if($this->input->post('checkall'))
 						{
 							$userlist = $this->operation->GetRowsByQyery("Select * from invantageuser where type = 't' AND school_id= ".$locations[0]['school_id']);
@@ -7076,6 +7078,13 @@ if(!$this->session->userdata('id'))
 				$this->operation->table_name = 'announcements';
 				$announcement_id = $this->operation->Create($data,$this->input->post('serial'));
 		
+		$updateData = array(
+			    'status' => 'Cancelled'
+			);
+
+			$this->db->where('announcement_id', $id);
+			$this->db->where('status', "Pending");
+			$this->db->update('announcement_details', $updateData);
     	$result['message'] = true;
 		echo json_encode($result);
     }
@@ -7090,8 +7099,8 @@ if(!$this->session->userdata('id'))
 			    'status' => 'Pending'
 			);
 
-			$this->myDb->where('announcement_id', $id);
-			$this->myDb->where('status', "Cancelled");
+			$this->db->where('announcement_id', $id);
+			$this->db->where('status', "Cancelled");
 			$this->db->update('announcement_details', $updateData);
 		}
     		$userlist = $this->operation->GetRowsByQyery("Select id,phone_number from announcement_details where status !='Sent' AND announcement_id= ".$id);
